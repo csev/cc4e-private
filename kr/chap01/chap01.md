@@ -891,47 +891,43 @@ called only once, just because it clarifies some piece of code.
 
 So far we have used only functions like **printf, getchar and**
 putchar that have been provided for us; now it's time to write a few of
-our own. Since C has no exponentiation operator like the \*\* of Fortran or
-**PL/I,** let us illustrate the mechanics of function definition by writing a function power (m, n) to raise an integer in to **a** positive integer power n.
+our own. Since C has no exponentiation operator like the `**` of Fortran or
+**PL/I,** let us illustrate the mechanics of function definition by writing a 
+function `power(m, n)` to raise an integer in to a positive integer power n.
 That is, the value of power (2, 5) is 32. This function certainly doesn't
-do the whole job of \*\* since it handles only positive powers of small
+do the whole job of `**` since it handles only positive powers of small
 integers, but it's best to confuse only one issue at a time.
 
 Here is the function power and a main program to exercise it, so you
 can see the whole structure at once.
 
-    main() /* test power function */
-
-    int i;
-
-    for (i = 0; i < 10; ++i)
-
-printf("%d %d %d\n", i, power(2,i), power(-3,i));
-
 [comment]: <> (page 23 , CHAPTER I A TUTORIAL INTRODUCTION 23 )
 
+    main() /* test power function */
+    {
+        int i;
+
+        for (i = 0; i < 10; ++i)
+            printf("%d %d %d\n", i, power(2,i), power(-3,i));
+    }
+           
     power(x, n) /* raise x to n-th power; n > 0 */
     int x, n;
+    {
+        int i,p;
 
-    int P;
-
-    p = 1;
-
-    for (i = 1; i <= n; ++i)
-
-    p = p * x;
-
-    return (p) ;
+        p = 1;
+        for (i = 1; i <= n; ++i)
+            p = p * x;
+        return (p);
+    }
 
 Each function has the same form:
 
-    _name (argument list, if any)_
-
-_argument declarations, if any_
-
-_declarations_
-
-_statements_
+    name (argument list, if any)
+    argument declarations, if any
+        declarations
+        statements
 
 The functions can appear in either order, and in one source file or in two.
 Of course if the source appears in two files, you will have to say more to
@@ -940,7 +936,7 @@ both functions are in the same file, so whatever you have learned about running 
 
 The function power is called twice in the line
 
-printf("%d %d %d\n", i, power(2,i), power(-2,i));
+    printf("%d %d %d\n", i, power(2,i), power(-2,i));
 
 Each call passes two arguments to power, which each time returns an
 integer to be formatted and printed. In an expression, power (2 , i) is an
@@ -957,16 +953,14 @@ argument list and the opening left brace; each declaration is terminated by a
 semicolon. The names used by power for its arguments are purely _local_ to
 power, and not accessible to any other function: other routines can use the
 same names without conflict. This is also true of the variables i and p: the
+`i` in `power` is unrelated to the `i` in `main`.
 
-in power is unrelated to the i in main.
+[comment]: <> (page 24 , **24** THE C PROGRAMMING LANGUAGE CHAPTER I )
 
 The value that power computes is returned to main by the return
 statement, which is just as in PL/I. Any expression may occur within the
 parentheses. A function need not return a value; a return statement with
 no expression causes control, but no useful value, to be returned to the
-
-[comment]: <> (page 24 , **24** THE C PROGRAMMING LANGUAGE CHAPTER I )
-
 caller, as does "falling off the end" of a function by reaching the terminating right brace.
 
 **Exercise 1-13.** Write a program to convert its input to lower case, using a
@@ -984,23 +978,23 @@ than are seen with "call by reference" languages like Fortran and PL/I, in
 which the called routine is handed the address of the argument, not its
 value.
 
-The main distinction is that in C the called function _cannot_ alter a variable in the calling function; it can only alter its private, temporary copy.
+The main distinction is that in C the called function _cannot_ alter a variable in the
+calling function; it can only alter its private, temporary copy.
 
 Call by value is an asset, however, not a liability. It usually leads to
 more compact programs with fewer extraneous variables, because arguments
 can be treated as conveniently initialized local variables in the called routine.
 For example, here is a version of power which makes use of this fact.
-
-    power(x, n) /* raise x to n-th power; n>0; version 2 */
+    
+    power(x, n) /* raise x to n-th power; n > 0 */
     int x, n;
+    {
+        int i,p;
 
-    int p;
-
-    for (p = 1; n > 0; _--n)_
-
-    P = P * x;
-
-    return (p)
+        for (p = 1; n > 0; --n)
+            p = p * x;
+        return (p);
+    }
 
 The argument n is used as a temporary variable, and is counted down until
 it becomes zero; there is no longer a need for the variable i. Whatever is
@@ -1014,11 +1008,10 @@ indirectly through it. We will cover this in detail in Chapter 5.
 When the name of an array is used as an argument, the value passed to
 the function is actually the location or address of the beginning of the array.
 (There is _no_ copying of array elements.) By subscripting this value, the
-
-[comment]: <> (page 25 , CHAPTER I A TUTORIAL INTRODUCTION 25 )
-
 function can access and alter any element of the array. This is the topic of
 the next section.
+
+[comment]: <> (page 25 , CHAPTER I A TUTORIAL INTRODUCTION 25 )
 
 1.9 Character Arrays
 --------------------
@@ -1028,13 +1021,10 @@ To illustrate the use of character arrays, and functions to manipulate them,
 let's write a program which reads a set of lines and prints the longest. The
 basic outline is simple enough:
 
-    while _(there's another line)_
-
-    if _(it's longer than the previous longest)_
-
-_save it and its length_
-
-_print longest line_
+    while (there's another line)
+        if (it's longer than the previous longest)
+            save it and its length
+        print longest line
 
 This outline makes it clear that the program divides naturally into pieces.
 One piece gets a new line, another tests it, another saves it, and the rest
@@ -1042,7 +1032,8 @@ controls the process.
 
 Since things divide so nicely, it would be well to write them that way
 too. Accordingly, let us first write a separate function getline to fetch the
-_next_ _line_ of input; this is a generalization of getchar. To make the function useful in other contexts, we'll try to make it as flexible as possible. At
+_next line_ of input; this is a generalization of getchar. To make the function
+useful in other contexts, we'll try to make it as flexible as possible. At
 the minimum, getline has to return a signal about possible end of file; a
 more generally useful design would be to return the length of the line, or
 zero if end of file is encountered. Zero is never a valid line length since
@@ -1058,7 +1049,7 @@ is the result.
 
 [comment]: <> (page 26 , 26 THE C PROGRAMMING LANGUAGE CHAPTER I )
 
-    \#define MAXLINE 1000 /* maximum input line size */
+    #define MAXLINE 1000 /* maximum input line size */
 
     main() /* find longest line */
 
@@ -1116,8 +1107,7 @@ a returned value. In getline, the arguments are declared by the lines
 
 [comment]: <> (page 27 , CHAPTER I A TUTORIAL INTRODUCTION 27 )
 
-    char all;
-
+    char a[];
     int lim;
 
 which specify that the first argument is an array, and the second is an
@@ -1127,12 +1117,14 @@ caller, just as the function power did. Some functions return a useful
 value; others, like copy, are only used for their effect and return no value.
 
 getline puts the character \ (the _null character,_ whose value is zero)
-at the end of the array it is creating, to mark the end of the string of characters. This convention is also used by the C compiler: when a string constant
-like
+at the end of the array it is creating, to mark the end of the string of characters
+This convention is also used by the C compiler: when a string constant like
 
-"hello\n"
+    "hello\n"
 
-is written in a C program, the compiler creates an array of characters containing the characters of the string, and terminates it with a \O so that functions such as printf can detect the end:
+is written in a C program, the compiler creates an array of characters containing
+the characters of the string, and terminates it with a '\O' so that functions such
+as printf can detect the end:
 
     ![](RackMultipart20210526-4-195acth_html_1579513ce5caf48a.gif)1 1 \n \
 
@@ -1160,7 +1152,7 @@ will correctly print the length of arbitrarily long input lines, and as much as
 possible of the text. 7
 
 Exercise 1-15. Write a program to print all lines that are longer than 80
-    characters.
+characters.
 
 Exercise 1-16. Write a program to remove trailing blanks and tabs from
 each line of input, and to delete entirely blank lines.
@@ -1196,7 +1188,8 @@ functions are called and exited, they retain their values even after the functio
 
 An external variable has to be _defined_ outside of any function; this allocates actual storage for it. The variable must also be _declared_ in each function that wants to access it; this may be done either by an explicit extern
 declaration or implicitly by context. To make the discussion concrete, let us
-rewrite the longest-line program with line, save and **max** as external variables. This requires changing the calls, declarations, and bodies of all three
+rewrite the longest-line program with line, save and **max** as external variables.
+This requires changing the calls, declarations, and bodies of all three
 functions.
 
 [comment]: <> (page 29 , CHAPTER I A TUTORIAL INTRODUCTION 29 )
@@ -1250,8 +1243,6 @@ line[i] =
 
     return(i);
 
-[comment]: <> (page 30 , 30 THE C PROGRAMMING LANGUAGE CHAPTER I )
-
     copy() /* specialized version */
 
     int i;
@@ -1261,6 +1252,8 @@ line[i] =
     i = 0;
 
     while ((saveli] = line[i]) (=
+    
+[comment]: <> (page 30 , 30 THE C PROGRAMMING LANGUAGE CHAPTER I )
 
 The external variables in main, getline and copy are _defined_ by the
 first lines of the example above, which state their type and cause storage to
@@ -1277,9 +1270,7 @@ variables at the beginning of the source file, and then omit all extern
 declarations.
 
 If the program is on several source files, and a variable is defined in,
-
 say, and used in _fi1e2,_ then an extern declaration is needed in _fi1e2_ to
-
 connect the two occurrences of the variable. This topic is discussed at
 length in Chapter 4.
 
@@ -1336,8 +1327,9 @@ long lines, and if there are no blanks or tabs before the specified column.
 Exercise 1-22. Write a program to remove all comments from a C program.
 Don't forget to handle quoted strings and character constants properly.
 
-Exercise 1-23. Write a program to check a C program for rudimentary syntax errors like unbalanced parentheses, brackets and braces. Don't forget
+Exercise 1-23. Write a program to check a C program for rudimentary syntax errors
+like unbalanced parentheses, brackets and braces. Don't forget
 about quotes, both single and double, and comments. (This program is hard
-    if you do it in full generality.)
+if you do it in full generality.)
 
 
