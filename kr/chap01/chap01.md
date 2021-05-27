@@ -164,7 +164,7 @@ Here is the program itself.
     upper = 300; \* | upper limit */
     step = 20; \* step size */
     fahr = lower;
-    
+
     while (fahr <= upper) (
         celsius = (5.0/9.0) * (fahr-32.0);
         printf("%4.0f %6.1f\n", fahr, celsius);
@@ -296,7 +296,7 @@ in. For instance, in the statement
 the conversion specification `%4.0f` says that a floating point number is to be
 printed in a space at least four characters wide, with no digits after the
 decimal point. `%6.1f` describes another number to occupy at least six
-spaces, with 1 digit after the decimal point, analogous to the F6.1 of Fortran or the F **(6,1)** of PL/I. Parts 
+spaces, with 1 digit after the decimal point, analogous to the F6.1 of Fortran or the F **(6,1)** of PL/I. Parts
 of a specification may be omitted: `%6f`
 says that the number is to be at least six characters wide; `%.2f` requests two
 places after the decimal point, but the width is not constrained; and `%f`
@@ -541,7 +541,7 @@ program.
     main() /* count characters in input */
     {
         long nc;
-        
+
         nc = 0;
         while (getchar() != EOF)
             ++nc;
@@ -577,7 +577,7 @@ illustrate an alternative way to write the loop.
             ;
         printf("%.0f\n", nc);
     }
-    
+
 printf uses %f for both float and double; %.0f suppresses printing of the non-existent fraction part.
 
 The body of the for loop here is _empty,_ because all of the work is done
@@ -874,7 +874,7 @@ called only once, just because it clarifies some piece of code.
 So far we have used only functions like **printf, getchar and**
 putchar that have been provided for us; now it's time to write a few of
 our own. Since C has no exponentiation operator like the `**` of Fortran or
-**PL/I,** let us illustrate the mechanics of function definition by writing a 
+**PL/I,** let us illustrate the mechanics of function definition by writing a
 function `power(m, n)` to raise an integer in to a positive integer power n.
 That is, the value of power (2, 5) is 32. This function certainly doesn't
 do the whole job of `**` since it handles only positive powers of small
@@ -892,7 +892,7 @@ can see the whole structure at once.
         for (i = 0; i < 10; ++i)
             printf("%d %d %d\n", i, power(2,i), power(-3,i));
     }
-           
+
     power(x, n) /* raise x to n-th power; n > 0 */
     int x, n;
     {
@@ -967,7 +967,7 @@ Call by value is an asset, however, not a liability. It usually leads to
 more compact programs with fewer extraneous variables, because arguments
 can be treated as conveniently initialized local variables in the called routine.
 For example, here is a version of power which makes use of this fact.
-    
+
     power(x, n) /* raise x to n-th power; n > 0 */
     int x, n;
     {
@@ -1169,72 +1169,65 @@ functions.
 
 [comment]: <> (page 29 , CHAPTER I A TUTORIAL INTRODUCTION 29 )
 
-    \#define MAXLINE 1000 /* maximum input line size */
+    #define MAXLINE 1000 /* maximum input line size */
 
     char line[MAXLINE]; /* input line */
-
     char save[MAXLINE]; /* longest line saved here */
-
     int max; /* length of longest line seen so far */
 
     main() /* find longest line; specialized version */
+    {
+        int len;
+        extern int max;
+        extern char save[];
+        max = 0;
+        while ((len = getline()) > 0)
 
-    int len;
+        if (len > max) {
+            max = len;
+            copy();
+        }
 
-    extern int max;
-
-    extern char save[];
-
-    max = 0;
-
-    while ((len = getline()) > 0)
-
-    if (len > max) 1
-
-    max = len;
-
-    copy();
-
-    if (max > 0) /* there was a line */
-    printf("%s", save);
+        if (max > 0) /* there was a line */
+            printf("%s", save);
+    }
 
     getline() /* specialized version */
+    {
+        int c, i;
+        extern char line[];
 
-    int c, i;
-
-    extern char line[];
-
-    for (i = 0; i < MAXLINE-1
-
-    AA (c=getchar()) != EOF AA c != '\n'; ++i)
-
-    line[i] = c;
-
-    if (c == '\n') (
-
-    line Ii] = c;
-
-line[i] =
-
-    return(i);
+        for (i = 0; i < MAXLINE-1
+            && (c=getchar()) != EOF && c != '\n'; ++i)
+                line[i] = c;
+        if (c == '\n') (
+            line [i] = c;
+            ++i;
+        }
+        line[i] = '\0';
+        return(i);
+    }
 
     copy() /* specialized version */
+    {
+        int i;
+        extern char line[], save[];
 
-    int i;
+        i = 0;
+        while ((save[i] = line[i]) != '\0')
+            ++i;
+    }
 
-    extern char line[], save[];
-
-    i = 0;
-
-    while ((saveli] = line[i]) (=
-    
 [comment]: <> (page 30 , 30 THE C PROGRAMMING LANGUAGE CHAPTER I )
 
 The external variables in main, getline and copy are _defined_ by the
 first lines of the example above, which state their type and cause storage to
 be allocated for them. Syntactically, external definitions are just like the
-declarations we have used previously, but since they occur outside of functions, the variables are external. Before a function can use an external variable, the name of the variable must be made known to the function. One
-way to do this is to write an extern _declaration_ in the function; the declaration is the same as before except for the added keyword extern.
+declarations we have used previously, but since they occur outside of functions,
+the variables are external. Before a function can use an external variable, the
+name of the variable must be made known to the function. One
+way to do this is to write an extern _declaration_ in the function; the
+declaration is the same as before except for the added keyword extern.
 
 In certain circumstances, the extern declaration can be omitted: if the
 external definition of a variable occurs in the source file _before_ its use in a
@@ -1257,9 +1250,11 @@ no storage is allocated.
 
 By the way, there is a tendency to make everything in sight an extern
 variable because it appears to simplify communications — argument lists are
-short and variables are always there when you want them. But external variables are always there even when you don't want them. This style of coding
+short and variables are always there when you want them. But external variables are
+always there even when you don't want them. This style of coding
 is fraught with peril since it leads to programs whose data connections are
-not at all obvious — variables can be changed in unexpected and even inadvertent ways, and the program is hard to modify if it becomes necessary.
+not at all obvious — variables can be changed in unexpected and even inadvertent
+ways, and the program is hard to modify if it becomes necessary.
 The second version of the longest-line program is inferior to the first, partly
 for these reasons, and partly because it destroys the generality of two quite
 useful functions by wiring into them the names of the variables they will
