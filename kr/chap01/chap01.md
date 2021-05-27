@@ -97,7 +97,7 @@ The line that says
     printf ("hello, world\n");
 
 is a function call, which calls a function named printf, with the argument
-"hello, world \ n". printf is a library function which prints output on
+"hello, world\n". printf is a library function which prints output on
 the terminal (unless some other destination is specified). In this case it
 prints the string of characters that make up its argument.
 
@@ -753,140 +753,122 @@ to hold the number of occurrences of each digit, rather than ten individual
 variables. Here is one version of the program:
 
     main() /* count digits, white space, others */
+    {
+        int c, 1, nwhite, nother;
+        int ndigit[10];
 
-    int c, 1, nwhite, nother;
+        nwhite = nother = 0;
+        for (i = 0; i < 10; ++i)
+            ndigit[i] = 0;
 
-    int ndigit[10];
+         while ((c = getchar()) != EOF) {
+            if (c >= '0' && c <= '9')
+                ++ndigit[c-'0'];
+            else if (c == ' ' || c == '\n' || c == '\t')
+                ++nwhite;
+            else
+                ++nother;
 
-    nwhite = nother = 0;
+        printf("digits =");
 
-    for (i = 0; i < 10; ++i)
+        for (i = 0; i < 10; ++i)
+            printf(" %d", ndigit[i]);
 
-    ndigit[i] = 0;
-
-    while ((c = getchar()) != EOF)
-
-    if (c >= '0' &amp;&amp; c <= '9')
-
-    ++ndigit[c-'0'];
-
-    else if (c == " II c == '\n' II c ==
-
-    ++nwhite;
-
-    else
-
-    ++nother;
-
-    printf("digits =");
-
-    for (i = 0; i < 10; ++i)
-
-    printf(" %d", ndigit[i]);
-
-    printf(u\nwhite space = %d, other =
-
-    nwhite, nother);
+        printf("\nwhite space = %d, other = %d\n",
+            nwhite, nother);
+    }
 
 The declaration
 
     int ndigit[10];
 
 declares ndigit to be an array of 10 integers. Array subscripts always start
-at zero in C (rather than 1 as in Fortran or PL/O, so the elements are
-
-ndigit [0] , ndigit [1 3 , , ndigit 193. This is reflected in the for
-
+at zero in C (rather than 1 as in Fortran or PL/I, so the elements are
+ndigit[0], ndigit[1], ... ndigit [9]. This is reflected in the for
 loops which initialize and print the array.
 
 A subscript can be any integer expression, which of course includes
-    integer variables like i, and integer constants.
+integer variables like i, and integer constants.
 
 This particular program relies heavily on the properties of the character
 representation of the digits. For example, the test
 
-    if (c >= '0' &amp;&amp; c <= '9') ...
+    if (c >= '0' && c <= '9') ...
 
 [comment]: <> (page 21 , CHAPTER 1 A TUTORIAL INTRODUCTION 21 )
 
 determines whether the character in c is a digit. If it is, the numeric value
 of that digit is
 
-C — 'O'
+    c — 'O'
 
-This works only if'O', '1 , etc., are positive and in increasing order, and
+This works only if 'O', '1', etc., are positive and in increasing order, and
 iF there is nothing but digits between 0 and 9'. Fortunately, this is true
-tor all conventional character sets.
+for all conventional character sets.
 
-13 definition, arithmetic involving char's and it's converts every-
+By definition, arithmetic involving char's and it's converts every-
 it before proceeding, so char variables and constants are essen-
 tiall identical to it's in arithmetic contexts. This is quite natural and
 convenient; for example, c — '0' is an integer expression with a value
-between 0 and 9 corresponding to the character'O' to 9' stored in c, and
-tile', a valid subscript for the array ndigit.
+between 0 and 9 corresponding to the character 'O' to '9' stored in c, and
+is thus, a valid subscript for the array ndigit.
 
-'r!ie decision as to whether a character is a digit, a white space, or some-
-    else is made with the sequence
+The decision as to whether a character is a digit, a white space, or some-
+else is made with the sequence
 
-    if (c >= '0' &amp;&amp; c <= '9')
-
-    ++ndigit[c—'01;
-
-    else if to == " II c '\n' II c
-
-    ++nwhite;
-
+    if (c >= '0' && c <= '9')
+        ++ndigit[c-'0'];
+    else if (c == ' ' || c == '\n' || c == '\t')
+        ++nwhite;
     else
-
-    ++nother;
+        ++nother;
 
 The pattern
 
-    if _(condition)_
-
-_statement_
-
-    else if _(condition)_
-
-_statement_
-
+    if (condition)
+        statement
+    else if (condition)
+        statement
     else
-
-_statement_
+        statement
 
 occurs frequently in programs as a way to express a multi-way decision. The
 code is simply read from the top until some _condition_ is satisfied; at that
-point the corresponding _statement_ part is executed, and the entire construction is finished. (Of course _statement_ can be several statements enclosed in
+point the corresponding _statement_ part is executed, and the entire construction
+is finished. (Of course _statement_ can be several statements enclosed in
 braces.) If none of the conditions is satisfied, the _statement_ after the final
-else is executed if it is present. If the final else and _statement_ are omitted (as in the word count program), no action takes place. There can be an
+else is executed if it is present. If the final else and _statement_ are omitted
+(as in the word count program), no action takes place. There can be an
 arbitrary number of
 
-    else _if (condition)_
-
-_statement_
+    else if (condition)
+        statement
 
 groups between the initial if and the final else. As a matter of style, it is
-advisable to formal this construction as we have shown, so that long decisions do not march off the right side of the page.
+advisable to formal this construction as we have shown, so that long decisions do not
+march off the right side of the page.
 
 [comment]: <> (page 22 , 22 THE C PROGRAMMING LANGUAGE CHAPTER I )
 
 The switch statement, to be discussed in Chapter 3, provides another
-way to write a multi-way branch that is particularly suitable when the condition being tested is simply whether some integer or character expression
+way to write a multi-way branch that is particularly suitable when the condition
+being tested is simply whether some integer or character expression
 matches one of a set of constants. For contrast, we will present a switch
-version of this program in Chapter **3.**
+version of this program in Chapter 3.
 
 **Exercise 1-12.** Write a program to print a histogram of the lengths of words
 in its input. It is easiest to draw the histogram horizontally; a vertical orientation is more challenging. E
 
 **1.7 Functions**
 
-**In** C, a _lancoon_ is equivalent to a subroutine or function in Fortran, or a
+In C, a _function_ is equivalent to a subroutine or function in Fortran, or a
 procedure in **PL/I,** Pascal, etc. A function provides a convenient way to
 encapsulate some computation in a black box, which can then be used
 without worrying about its innards. Functions are really the only way to
 cope with the potential complexity of large programs. With properly
 designed functions, it is possible to ignore _how_ a job is done; knowing _what_
-is done is sufficient. C is designed to make the use of functions easy, convenient and efficient; you will often see a function only a few lines long
+is done is sufficient. C is designed to make the use of functions easy,
+convenient and efficient; you will often see a function only a few lines long
 called only once, just because it clarifies some piece of code.
 
 So far we have used only functions like **printf, getchar and**
@@ -1000,7 +982,8 @@ The argument n is used as a temporary variable, and is counted down until
 it becomes zero; there is no longer a need for the variable i. Whatever is
 done to n inside power has no effect on the argument that power was originally called with.
 
-When necessary, it is possible to arrange for a function to modify a variable in a calling routine. The caller must provide the _address_ of the variable
+When necessary, it is possible to arrange for a function to modify a variable in
+a calling routine. The caller must provide the _address_ of the variable
 to be set (technically a _pointer_ to the variable), and the called function must
 declare the argument to be a pointer and reference the actual variable
 indirectly through it. We will cover this in detail in Chapter 5.
@@ -1052,55 +1035,47 @@ is the result.
     #define MAXLINE 1000 /* maximum input line size */
 
     main() /* find longest line */
+    {
+        int len; /* current line length */
+        int max; /* maximum length seen so far */
+        char line[MAXLINE]; /* current input line */
+        char save[MAXLINE]; /* longest line, saved */
 
-    int len; /* current line length */
-    int max; /* maximum length seen so far */
-    char line[MAXLINE]; /* current input line */
-    char save[MAXLINE]; /* longest line, saved */
-
-    max = 0;
-
-    while ((len = getline(line, MAXLINE)) > 0)
-
-    if (len > max) I
-
-    max = len;
-
-    copy(line, save);
-
-    if (max > 0) /* there was a line */
-
-    printf("%s", save);
+        max = 0;
+        while ((len = getline(line, MAXLINE)) > 0) {
+            if (len > max) {
+                max = len;
+                copy(line, save);
+            }
+            if (max > 0) /* there was a line */
+            printf("%s", save);
+    }
 
     getline(s, lim) /* get line into s, return length */
-
     char s[];
-
     int lim;
+    {
+        int c, i;
 
-    int c, i;
-
-for (i=0; i\&lt;lim-1 &amp;&amp; (c=getchar())!=EOF &amp;&amp; cl='\n'; ++i)
-
-    s[i] = c;
-
-    if (c ==
-
-    s[i] = c;
-
-s[i] =
-
-    return(i);
+        for (i=0; i<lim-1 && (c=getchar())!=EOF && cl='\n'; ++i)
+            s[i] = c;
+        if (c == '\n') {
+            s[i] = c;
+            ++i;
+        }
+        s[i] = '\0';
+        return(i);
+    }
 
     copy(s1, s2) /* copy s1 to s2; assume s2 big enough */
-
     char sl[], s2[];
+    {
+        int i;
 
-    int i;
-
-    i = 0;
-
-    while ((s2[i] s1[5.]) != 1\01)
+        i = 0;
+        while ((s2[i] = s1[i]) != '\0')
+            ++i;
+    }
 
 main and getline communicate both through a pair of arguments and
 a returned value. In getline, the arguments are declared by the lines
