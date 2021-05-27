@@ -38,8 +38,6 @@ hello, world
 
 This is the basic hurdle; to leap over it you have to be able to create the
 
-5
-
 [comment]: <> (page 6 , 6 THE C PROGRAMMING LANGUAGE CHAPTER I )
 
 program text somewhere, compile it successfully, load it, run it, and find out
@@ -48,7 +46,6 @@ where your output went. With these mechanical details mastered, everything else 
 In C, the program to print "hello, world" is
 
     main()
-
     printf("hello, world\n");
 
 Just how to run this program depends on the system you are using. As
@@ -62,7 +59,7 @@ If you haven't botched anything, such as omitting a character or misspelling
 something, the compilation will proceed silently, and make an executable
 file called _a.out._ Running that by the command
 
-_a. out_
+_a.out_
 
 will produce
 
@@ -115,8 +112,7 @@ line. If you leave out the \n (a worthwhile experiment), you will find that
 your output is not terminated by a line feed. The only way to get a newline
 character into the printf argument is with \n; if you try something like
 
-printf ("hello, world
-
+    printf ("hello, world
     ");
 
 the C compiler will print unfriendly diagnostics about missing quotes.
@@ -125,11 +121,8 @@ be used to build up an output line in stages. Our first program could just as
 well have been written
 
     main()
-
     printf ("hello, ");
-
     printf ("world");
-
     printf ("\n");
 
 to produce an identical output.
@@ -149,7 +142,7 @@ Exercise 1-2. Experiment to find out what happens when printf's argument string 
 The next program prints the following table of Fahrenheit temperatures
 and their centigrade or Celsius equivalents, using the formula
 
-    | _C_ = (5/9)(F-32). |
+| _C_ = (5/9)(F-32). |
 | --- |
 | 0 | -17.8 |
 | 20 | -6.7 |
@@ -162,49 +155,39 @@ and their centigrade or Celsius equivalents, using the formula
 Here is the program itself.
 
     /* print Fahrenheit-Celsius table
-
     for f = 0, 20, ..., 300 */
 
     main()
-
     int lower, upper, step;
-
     float fahr, celsius;
-
-| lower = | 0; | /\* | lower limit of temperature table \*/ |
-| --- | --- | --- | --- |
-| upper = | 300; | /\* | upper limit \*/ |
-| step = | 20; | /\* | step size \*/ |
-
+    lower = 0; /* lower limit of temperature table */
+    upper = 300; \* | upper limit */
+    step = 20; \* step size */
     fahr = lower;
-
+    
     while (fahr <= upper) (
-
-    celsius = (5.0/9.0) * (fahr-32.0);
-
-    printf("%4.0f %6.1f\n", fahr, celsius);
-
-    fahr = fahr + step;
+        celsius = (5.0/9.0) * (fahr-32.0);
+        printf("%4.0f %6.1f\n", fahr, celsius);
+        fahr = fahr + step;
+    }
 
 The first two lines
 
     /* print Fahrenheit-Celsius table
-
     for f = 0, 20, ..., 300 */
 
 are a _comment,_ which in this case explains briefly what the program does.
-Any characters between /\* and \*/ are ignored by the compiler; they may
+Any characters between /* and \*/ are ignored by the compiler; they may
 be used freely to make a program easier to understand. Comments may
 appear anywhere a blank or newline can.
 
 In C, _all_ variables must be declared before use, usually at the beginning
-of the function before any executable statements. If you forget a declaration, you will get a diagnostic from the compiler. A declaration consists of a
+of the function before any executable statements. If you forget a declaration,you will get a diagnostic from the compiler. A declaration consists of a
 _type_ and a list of variables which have that type, as in
 
 [comment]: <> (page 9 , CHAPTER I A TUTORIAL INTRODUCTION 9 )
 
     int lower, upper, step;
-
     float fahr, celsius;
 
 The type int implies that the variables listed are _integers;_ float stands for
@@ -218,15 +201,12 @@ between about 10-38 and 10+38. Chapter 2 lists sizes for other machines.
 C provides several other basic data types besides int and float:
 
     char character — a single byte
-
     short short integer
-
     long long integer
-
     double double-precision floating point
 
 The sizes of these objects are also machine-dependent; details are in Chapter
-2. There are also _arrays, structures_ and _unions_ of these basic types, _pointers_
+2. There are also _arrays_, _structures_ and _unions_ of these basic types, _pointers_
 to them, and _functions_ that return them, all of which we will meet in due
 course.
 
@@ -234,11 +214,8 @@ Actual computation in the temperature conversion program begins with
 the assignments
 
     lower = 0;
-
     upper = 300;
-
     step = 20;
-
     fahr = lower;
 
 which set the variables to their starting values. Individual statements are
@@ -247,12 +224,11 @@ terminated by semicolons.
 Each line of the table is computed the same way, so we use a loop which
 repeats once per line; this is the purpose of the while statement
 
-    while (fahr <= upper) (
-
-- . •
+    while (fahr <= upper) {
+        ...
+    }
 
 The condition in parentheses is tested. If it is true (fahr is less than or
-
 equal to upper), the body of the loop (all of the statements enclosed by
 
 the braces ( and is executed. Then the condition is re-tested, and if
@@ -268,15 +244,14 @@ braces, as in
 [comment]: <> (page 10 , ID THE C PROGRAMMING LANGUAGE CHAPTER I )
 
     while (i < j)
-
-i = 2 \*
+        i = 2 * i;
 
 In either case, the statements controlled by the while are indented by one
 tab stop so you can see at a glance what statements are inside the loop. The
 indentation emphasizes the logical structure of the program. Although C is
 quite permissive about statement positioning, proper indentation and use of
 white space are critical in making programs easy for people to read. We
-    recommend writing only one statement per line, and (usually) leaving
+recommend writing only one statement per line, and (usually) leaving
 blanks around operators. The position of braces is less important; we have
 chosen one of several popular styles. Pick a style that suits you, then use it
 consistently.
@@ -316,17 +291,18 @@ in. For instance, in the statement
 
 [comment]: <> (page 11 , CHAPTER I A TUTORIAL INTRODUCTION 11 )
 
-    printf ("%4. Of %6.1f \ n" , fahr, celsius);
+    printf ("%4.0f %6.1f\n" , fahr, celsius);
 
-the conversion specification %4 f says that a floating point number is to be
+the conversion specification `%4.0f` says that a floating point number is to be
 printed in a space at least four characters wide, with no digits after the
-decimal point. %6 .1 f describes another number to occupy at least six
-spaces, with 1 digit after the decimal point, analogous to the F6.1 of Fortran or the F **(6,1)** of PL/I. Parts of a specification may be omitted: **%6f**
-says that the number is to be at least six characters wide; 96.2f requests two
-places after the decimal point, but the width is not constrained; and %f
+decimal point. `%6.1f` describes another number to occupy at least six
+spaces, with 1 digit after the decimal point, analogous to the F6.1 of Fortran or the F **(6,1)** of PL/I. Parts 
+of a specification may be omitted: `%6f`
+says that the number is to be at least six characters wide; `%.2f` requests two
+places after the decimal point, but the width is not constrained; and `%f`
 merely says to print the number as floating point. printf also recognizes
-%d for decimal integer, 160 for octal, **%x** for hexadecimal, %c for character,
-    %s for character string, and %% for % itself.
+`%d` for decimal integer, `%o` for octal, `%x` for hexadecimal, `%c` for character,
+`%s` for character string, and `%%` for % itself.
 
 Each % construction in the first argument of printf is paired with its
 corresponding second, third, etc., argument; they must line up properly by
@@ -349,21 +325,21 @@ Fahrenheit table.
 As you might expect, there are plenty of different ways to write a program; let's try a variation on the temperature converter.
 
     main() /* Fahrenheit-Celsius table */
+    {
+        int fahr;
 
-    int fahr;
-
-    for (fahr = 0; fahr <= 300; fahr = fahr + 20)
-printf("%4d %6.1f\n", fahr, (5.0/9.0)\*(fahr-32));
+        for (fahr = 0; fahr <= 300; fahr = fahr + 20)
+            printf("%4d %6.1f\n", fahr, (5.0/9.0)*(fahr-32));
+    }
 
 This produces the same answers, but it certainly looks different. One major
 change is the elimination of most of the variables; only fahr remains, as an
 int (to show the %d conversion in printf). The lower and upper limits
 and the step size appear only as constants in the for statement, itself a new
+construction, and the expression that computes the Celsius temperature now
+appears as the third argument of printf instead of in a separate assignment statement.
 
 [comment]: <> (page 12 , 12 THE C PROGRAMMING LANGUAGE CHAPTER I )
-
-    construction, and the expression that computes the Celsius temperature now
-appears as the third argument of printf instead of in a separate assignment statement.
 
 This last change is an instance of a quite general rule in C — in any
 context where it is permissible to use the value of a variable of some type,
@@ -375,17 +351,17 @@ The for itself is a loop, a generalization of the while. If you compare
 it to the earlier while, its operation should be clear. It contains three
 parts, separated by semicolons. The first part
 
-fahr =
+    fahr = 0
 
 is done once, before the loop proper is entered. The second part is the test
 or condition that controls the loop:
 
-fahr \&lt;= 300
+    fahr <= 300
 
 This condition is evaluated; if it is true, the body of the loop (here a single
 printf) is executed. Then the re-initialization step
 
-fahr = fahr + 20
+    fahr = fahr + 20
 
 is done, and the condition re-evaluated. The loop terminates when the condition becomes false. As with the while, the body of the loop can be a
 single statement, or a group of statements enclosed in braces. The initialization and re-initialization parts can be any single expression.
@@ -407,24 +383,22 @@ they convey little information to someone who might have to read the program lat
 provides a way to avoid such magic numbers. With the #define construction, at the beginning of a program you can define a _symbolic name_ or _sym­_
 _bolic constant_ to be a particular string of characters. Thereafter, the compiler
 will replace all unquoted occurrences of the name by the corresponding
-
-[comment]: <> (page 13 , CHAPTER 1 A TUTORIAL INTRODUCTION 13 )
-
 string. The replacement for the name can actually be any text at all; it is
 not limited to numbers.
 
+[comment]: <> (page 13 , CHAPTER 1 A TUTORIAL INTRODUCTION 13 )
+
     #define LOWER 0 /* lower limit of table */
-
-    \#define UPPER 300 /* upper limit */
-
+    #define UPPER 300 /* upper limit */
     #define STEP 20 /* step size */
 
     main() /* Fahrenheit-Celsius table */
+    {
+        int fahr;
 
-    int fahr;
-
-    for (fahr = LOWER; fahr <= UPPER; fahr = fahr + STEP)
-printf("%4d %6.1f\n", fahr, (5.0/9.0)\*(fahr-3211;
+        for (fahr = LOWER; fahr <= UPPER; fahr = fahr + STEP)
+            printf("%4d %6.1f\n", fahr, (5.0/9.0)\*(fahr-32));
+    }
 
 The quantities LOWER, UPPER and STEP are constants, so they do not
 appear in declarations. Symbolic names are commonly written in upper case
@@ -447,10 +421,9 @@ called, and returns that character as its value. That is, after
     c = getchar()
 
 the variable c contains the next character of input. The characters normally
-
 come from the terminal, but that need not concern us until Chapter 7.
 
-    The function putchar (c) is the complement of getchar:
+The function putchar (c) is the complement of getchar:
 
     putchar (c)
 
@@ -465,31 +438,30 @@ available.
 [comment]: <> (page 14 , 14 THE C PROGRAMMING LANGUAGE CHAPTER I )
 
 File Copying
+------------
 
 Given getchar and putchar, you can write a surprising amount of
 useful code without knowing anything more about I/O. The simplest example is a program which copies its input to its output one character at a time.
 In outline,
 
-_get a character_
+    _get a character_
 
-    _while (character is not end guile signal)_
-
-_output the character just read_
-
-_get a new character_
+    _while (character is not end file signal)_
+        _output the character just read_
+        _get a new character_
 
 Converting this into C gives
 
     main() /* copy input to output; 1st version */
-    int c;
+    {
+        int c;
+        c = getchar();
 
-    c = getchar();
-
-    while (c != EOF) (
-
-    putchar(s);
-
-    c = getchar();
+        while (c != EOF) (
+            putchar(s);
+            c = getchar();
+        }
+    }
 
 The relational operator != means "not equal to."
 
@@ -504,7 +476,7 @@ whatever it might be. In practice, EOF will be either —1 or 0, so the program 
 
 or
 
-\#define EOF
+    #define EOF 0
 
 in order to work properly. By using the symbolic constant EOF to represent
 the value that getchar returns when end of file occurs, we are assured that
@@ -526,14 +498,11 @@ the left hand side. If the assignment of a character to c is put inside the
 test part of a while, the file copy program can be written
 
     main() /* copy input to output; 2nd version */
-
-1
-
-    int c;
-
-    while ((c = getchar()) 1= EOF)
-
-    putchar(c);
+    {
+        int c;
+        while ((c = getchar()) 1= EOF)
+            putchar(c);
+    }
 
 The program gets a character, assigns it to c, and then tests whether the
 character was the end of file signal. If it was not, the body of the while is
@@ -562,6 +531,7 @@ or not the call of getchar encountered end of file. (More on this in
 Chapter 2.)
 
 Character Counting
+------------------
 
 The next program counts characters; it is a small elaboration of the copy
 program.
@@ -569,22 +539,21 @@ program.
 [comment]: <> (page 16 , 16 THE C PROGRAMMING LANGUAGE CHAPTER I )
 
     main() /* count characters in input */
-    long nc;
-
-    nc = 0;
-
-    while (getchar() != EOF)
-
-    ++nc;
-
-    printf("%ld\n", nc);
+    {
+        long nc;
+        
+        nc = 0;
+        while (getchar() != EOF)
+            ++nc;
+        printf("%ld\n", nc);
+    }
 
 The statement
 
     ++nc;
 
 shows a new operator, ++, which means _increment by one._ You could write
-nc = nc + 1 but ++nc is more concise and often more efficient. There
+`nc = nc + 1` but ++nc is more concise and often more efficient. There
 is a corresponding operator -- to decrement by 1. The operators ++ and -can be either prefix operators (++nc) or postfix (nc++); these two forms
 have different values in expressions, as will be shown in Chapter 2, but
 ++nc and nc++ both increment nc. For the moment we will stick to
@@ -601,11 +570,14 @@ length float). We will also use a for statement instead of a while, to
 illustrate an alternative way to write the loop.
 
     main() /* count characters in input */
-    double nc;
+    {
+        double nc;
 
-    for (nc = 0; getchar() != EOF; ++nc)
-    printf("%.0f\n", nc);
-
+        for (nc = 0; getchar() != EOF; ++nc)
+            ;
+        printf("%.0f\n", nc);
+    }
+    
 printf uses %f for both float and double; %.0f suppresses printing of the non-existent fraction part.
 
 The body of the for loop here is _empty,_ because all of the work is done
@@ -624,27 +596,25 @@ is that they test at the _top_ of the loop, before proceeding with the body. If
 there is nothing to do, nothing is done, even if that means never going
 through the loop body. Programs should act intelligently when handed input
 like "no characters." The while and for statements help ensure that they
-    do reasonable things with boundary conditions.
+do reasonable things with boundary conditions.
 
 Line Counting
+-------------
 
 The next program counts _lines_ in its input. Input lines are assumed to
 be terminated by the newline character \n that has been religiously
 appended to every line written out.
 
     main() /* count lines in input */
+    {
+        int c, nl;
 
-    int c, nl;
-
-    nl = 0;
-
-    while ((c = getchar()) != EOF)
-
-    if (c ==
-
-    ++nl;
-
-    printf("%d\n", nl);
+        nl = 0;
+        while ((c = getchar()) != EOF)
+            if (c == '\n')
+                ++nl;
+        printf("%d\n", nl);
+    }
 
 The body of the while now consists of an if, which in turn controls
 the increment ++nl. The if statement tests the parenthesized condition,
@@ -657,18 +627,20 @@ the single = used for assignment. Since assignment is about twice as frequent as
 operator be half as long.
 
 Any single character can be written between single quotes, to produce a
-value equal to the numerical value of the character in the machine's character set; this is called a _character constant._ So, for example, 'A' is a character constant; in the ASCII character set its value is 65, the internal representation of the character A. Of course 'A' is to be preferred over 65: its
+value equal to the numerical value of the character in the machine's character set;
+this is called a _character constant._ So, for example, 'A' is a character constant;
+in the ASCII character set its value is 65, the internal representation of the character
+A. Of course 'A' is to be preferred over 65: its
 meaning is obvious, and it is independent of a particular character set.
 
 The escape sequences used in character strings are also legal in character
-constants, so in tests and arithmetic expressions, \n' stands for the value
-of the newline character. You should note carefully that \n' is a single
+constants, so in tests and arithmetic expressions, '\n' stands for the value
+of the newline character. You should note carefully that '\n' is a single
 character, and in expressions is equivalent to a single integer; on the other
+hand, "\n" is a character string which happens to contain only one character.
+The topic of strings versus characters is discussed further in Chapter 2.
 
 [comment]: <> (page 18 , IS THE C PROGRAMMING LANGUAGE CHAPTER )
-
-hand, " \ "is a character string which happens to contain only one charac
-ter. The topic of strings versus characters is discussed further in Chapter 2.
 
 Exercise 1-6. Write a program to count blanks, tabs, and newlines. C
 
@@ -680,43 +652,34 @@ sequence \&gt;, _backspace, —,_ which prints as \&gt;, and each backspace by t
 similar sequence 4E. This makes tabs and backspaces visible.
 
 Word Counting
+-------------
 
 The fourth in our series of useful programs counts lines, words, and
 characters, with the loose definition that a word is any sequence of characters that does not contain a blank, tab or newline. (This is a bare-bones
 version of the UNIX utility we.)
 
     #define YES 1
-
     #define NO
 
     main() /* count lines, words, chars in input */
-    int c, nl, nw, nc, inword;
+    {
+        int c, nl, nw, nc, inword;
 
-    inword = NO;
-
-    nl = nw = nc = 0;
-
-    while ((c = getchar()) I= EOF) I
-
-    ++nc;
-
-    if (c ==
-
-    ++nl;
-
-    if (c == ' II '\n'
-
-    inword = NO;
-
-    else if (inword == NO) (
-
-    inword = YES;
-
-    ++nw;
-
-1
-
-    printf("%d %d %d\n", nl, nw, nc);
+        inword = NO;
+        nl = nw = nc = 0;
+        while ((c = getchar()) I= EOF) {
+            ++nc;
+            if (c == '\n' )
+                ++nl;
+            if (c == ' ' || c == '\n' || c == '\t' )
+                inword = NO;
+            else if ( inword == NO ) {
+                inword = YES;
+                ++nw;
+            }
+        }
+        printf("%d %d %d\n", nl, nw, nc);
+    }
 
 Every time the program encounters the first character of a word, it
 counts it. The variable inword records whether the program is currently in
@@ -724,12 +687,11 @@ a word or not; initially it is "not in a word," which is assigned the value NO.
 We prefer the symbolic constants YES and NO to the literal values 1 and
 because they make the program more readable. Of course in a program as
 tiny as this, it makes little difference, but in larger programs, the increase in
-
-[comment]: <> (page 19 , CHAPTER 1 A TUTORIAL INTRODUCTION 19 )
-
 clarity is well worth the modest extra effort to write it this way originally.
 You'll also find that it's easier to make extensive changes in programs where
 numbers appear only as symbolic constants.
+
+[comment]: <> (page 19 , CHAPTER 1 A TUTORIAL INTRODUCTION 19 )
 
 The line
 
@@ -739,15 +701,15 @@ sets all three variables to zero. This is not a special case, but a consequence
 of the fact that an assignment has a value and assignments associate right to
 left. It's really as if we had written
 
-    nc = (n1 = (nw = OH;
+    nc = (n1 = (nw = O));
 
-The operator I I means OR, so the line
+The operator `||` means OR, so the line
 
-if (c == " I I c == '\n' I I c == \t')
+    if (c == ' ' || c == '\n' || c == '\t' )
 
 says "if c is a blank _or c_ is a newline _or c is_ a tab ...". (The escape
 sequence \t is a visible representation of the tab character.) There is a
-corresponding operator &amp;&amp; for AND. Expressions connected by &amp;&amp; or I I
+corresponding operator `&&` for AND. Expressions connected by `&&` or `||`
 are evaluated left to right, and it is guaranteed that evaluation will stop as
 soon as the truth or falsehood is known. Thus if c contains a blank, there is
 no need to test whether it contains a newline or tab, so these tests are _not_
@@ -757,16 +719,13 @@ complicated situations, as we will soon see.
 The example also shows the C else statement, which specifies an alternative action to be done if the condition part of an if statement is false.
 The general form is
 
-    if _(expression)_
-
-_statement-I_
-
+    if (expression)
+        statement-1
     else
-
-_statement-2_
+        statement-2
 
 One and only one of the two statements associated with an if—else is
-done. If the _expression_ is true, _statement-I_ is executed; if not, _statement-2_ is
+done. If the _expression_ is true, _statement-1_ is executed; if not, _statement-2_ is
 executed. Each _statement_ can in fact be quite complicated. In the word
 count program, the one after the else is an if that controls two statements in braces.
 
