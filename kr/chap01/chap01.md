@@ -165,7 +165,7 @@ Here is the program itself.
     step = 20; \* step size */
     fahr = lower;
 
-    while (fahr <= upper) (
+    while (fahr <= upper) {
         celsius = (5.0/9.0) * (fahr-32.0);
         printf("%4.0f %6.1f\n", fahr, celsius);
         fahr = fahr + step;
@@ -205,8 +205,8 @@ C provides several other basic data types besides int and float:
     long long integer
     double double-precision floating point
 
-The sizes of these objects are also machine-dependent; details are in Chapter
-2. There are also _arrays_, _structures_ and _unions_ of these basic types, _pointers_
+The sizes of these objects are also machine-dependent; details are in Chapter 2.
+There are also _arrays_, _structures_ and _unions_ of these basic types, _pointers_
 to them, and _functions_ that return them, all of which we will meet in due
 course.
 
@@ -457,7 +457,7 @@ Converting this into C gives
         int c;
         c = getchar();
 
-        while (c != EOF) (
+        while (c != EOF) {
             putchar(s);
             c = getchar();
         }
@@ -1200,7 +1200,7 @@ functions.
         for (i = 0; i < MAXLINE-1
             && (c=getchar()) != EOF && c != '\n'; ++i)
                 line[i] = c;
-        if (c == '\n') (
+        if (c == '\n') {
             line [i] = c;
             ++i;
         }
