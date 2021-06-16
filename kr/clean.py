@@ -71,7 +71,7 @@ def iscode(line) :
     return '    '+line
 
 # Note tables are vertical bars
-hand = open("chap00/chap00_orig.md")
+hand = open("chap02/chap02_orig.md")
 # wordsplit = u'\u00AD'.encode('utf-8')
 wordsplit = u'\u00AD'
 chaptext = ""
