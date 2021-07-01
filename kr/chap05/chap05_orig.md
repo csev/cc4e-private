@@ -1,5 +1,860 @@
 CHAPTER 5 POINTERS AND ARRAYS 105
 
+A pointer is a variable that contains the address of another variable.
+Pointers are very much used in C, partly because they are sometimes the
+only way to express a computation, and partly because they usually lead to
+more compact and efficient code than can be obtained in other ways.
+
+Pointers have been lumped with the goto statement as a marvelous
+way to create impossible-to-understand programs. This is certainly true
+when they are used carelessly, and it is easy to create pointers that point
+somewhere unexpected. With discipline, however, pointers can also be used
+to achieve clarity and simplicity. This is the aspect that we will try to illus­
+trate.
+
+**5.1 Pointers and Addresses**
+
+Since a pointer contains the address of an object, it is possible to access
+the object &quot;indirectly&quot; through the pointer. Suppose that x is a variable,
+say an int, and that px is a pointer, created in some as yet unspecified way.
+The unary operator &amp; gives the _address_ of an object, so the statement
+
+**px =** six;
+
+assigns the address of x to the variable **px; px** is now said to &quot;point to&quot; x.
+The &amp; operator can be applied only to variables and array elements; con­
+structs like &amp; (x+1 ) and &amp;3 are illegal. It is also illegal to take the address
+of a **register** variable.
+
+The unary operator \* treats its operand as the address of the ultimate
+target, and accesses that address to fetch the contents. Thus if **y** is also an
+int,
+
+**y = \*px;**
+
+assigns to **y** the contents of whatever **px** points to. So the sequence
+
+**px = &amp;x;
+ y = \*px;**
+
+assigns the same value to **y** as does
+
+89
+
+90 THE C PROGRAMMING LANGUAGE CHAPTER 5
+
+**y = x;**
+
+It is also necessary to declare the variables that participate in all of this:
+
+**int x, y;
+ int \*px;**
+
+The declaration of x and **y** is what we&#39;ve seen all along. The declaration of
+the pointer px is new.
+
+**int \*px;**
+
+is intended as a mnemonic; it says that the combination \*px is an int, that
+is, if px occurs in the context \*px, it is equivalent to a variable of type
+int. In effect, the syntax of the declaration for a variable mimics the syn­
+tax of expressions in which the variable might appear. This reasoning is
+useful in all cases involving complicated declarations. For example,
+
+**double atof(), \*dp;**
+
+says that in an expression atof ( ) and **\*dp** have values of type double.
+You should also note the implication in the declaration that a pointer is
+constrained to point to a particular kind of object.
+
+Pointers can occur in expressions. For example, if **px** points to the
+integer x, then \*px can occur in any context where x could.
+
+**y = \*px + 1**
+
+sets y to 1 more than x;
+
+**printf(&quot;%d\n&quot;, \*px)**
+
+prints the current value of x; and
+**d = sqrt ( (double) \*px)**
+
+produces in **d** the square root of x, which is coerced into a double before
+
+being passed to **sqrt.** (See Chapter 2.)
+
+In expressions like
+
+**y = \*px + 1**
+
+the unary operators \* and &amp; bind more tightly than arithmetic operators, so
+this expression takes whatever px points at, adds 1, and assigns it to **y.** We
+will return shortly to what
+
+y = \*(px + 1)
+
+might mean.
+
+Pointer references can also occur on the left side of assignments. If px
+
+points to x, then
+
+**\*px = 0**
+
+CHAPTER 5 POINTERS AND ARRAYS 91
+
+sets x to zero, and
+
+**\*px +=** 1
+
+increments it, as does
+
+**(\*px)++**
+
+The parentheses are necessary in this last example; without them, the
+expression would increment px instead of what it points to, because unary
+operators like \* and ++ are evaluated right to left.
+
+Finally, since pointers are variables, they can be manipulated as other
+variables can. If **py** is another pointer to **int,** then
+
+copies the contents of px into py, thus making py point to whatever px
+points to.
+
+**5.2 Pointers and Function Arguments**
+
+Since C passes arguments to functions by &quot;call by value,&quot; there is no
+direct way for the called function to alter a variable in the calling function.
+What do you do if you really have to change an ordinary argument? For
+example, a sorting routine might exchange two out-of-order elements with a
+function called **swap. It** is not enough to write
+
+**swap(a, b);**
+
+where the swap function is defined as
+
+**swap(x, y)**  **/\* WRONG \*/**
+
+**int x, y;**
+
+**(**
+
+**int temp;**
+
+**temp = x;**
+
+**x = y;**
+
+**y = temp;**
+
+)
+
+Because of call by value, **swap** _can&#39;t_ affect the arguments **a** and **b** in the
+routine that called it.
+
+Fortunately, there is a way to obtain the desired effect. The calling pro­
+gram passes _pointers_ to the values to be changed:
+
+**swap(&amp;a, &amp;b);**
+
+Since the operator _&amp;_ gives the address of a variable, **&amp;a** is a pointer to **a. In**
+**swap** itself, the arguments are declared to be pointers, and the actual
+operands are accessed through them.
+
+92 THE C PROGRAMMING LANGUAGE CHAPTER 5
+
+**swap(px, py) /\* interchange \*px and \*py \*/**
+
+**int \*px, \*py;**
+
+**(**
+
+**int temp;**
+
+**temp = \*px;
+ \*px =** \*py;
+**\*py = temp;**
+
+)
+
+One common use of pointer arguments is in functions that must return
+more than a single value. (You might say that swap returns two values, the
+new values of its arguments.) As an example, consider a function **getint**
+which performs free-format input conversion by breaking a stream of char­
+acters into integer values, one integer per call. **getint** has to return the
+value it found, or an end of file signal when there is no more input. These
+values have to be returned as separate objects, for no matter what value is
+used for **EOF,** that could also be the value of an input integer.
+
+One solution, which is based on the input function **scanf** that we will
+describe in Chapter 7, is to have **getint return EOF** as its function value if
+it found end of file; any other returned value signals a normal integer. The
+numeric value of the integer it found is returned through an argument,
+which must be a pointer to an integer. This organization separates end of
+file status from numeric values.
+
+The following loop fills an array with integers by calls to **getint:**
+
+**int n, v, array[SIZE];**
+
+**for (n = 0; n \&lt; SIZE &amp;&amp; getint(&amp;v) != EOF; n++)**
+**array[n] = v;**
+
+Each call sets v to the next integer found in the input. Notice that it is
+essential to write &amp;v instead of v as the argument of **getint.** Using plain
+v is likely to cause an addressing error, since **getint** believes it has been
+handed a valid pointer.
+
+**getint** itself is an obvious modification of the **atoi** we wrote earlier:
+
+CHAPTER 5 POINTERS AND ARRAYS 93
+
+**getint(pn) /\* get next integer from input \*/**
+**int \*pn;**
+
+**int c, sign;**
+
+**while ((c = getch()) == &quot; II c == &#39;\n&#39; II c ==**
+
+**/\* skip white space \*/**
+
+**sign = 1;**
+
+**if (c == &#39;+&#39; II c == &#39;-&#39;) ( /\* record sign \*/**
+
+**sign = (c==&#39;+&#39;) ? 1 : -1;**
+
+**c = getch();**
+
+**for (\*pn = 0; c \&gt;= &#39;0&#39; &amp;&amp; c \&lt;= &#39;9&#39;; c = getch())**
+
+**\*pn = 10 \* \*pn + c - &#39;0&#39;;**
+
+**\*pn \*= sign;**
+
+**if (c != EOF)**
+
+**ungetch(c);**
+
+**return(c);**
+
+Throughout _ge_ t int, \*pn is used as an ordinary int variable. We have
+also used getch and **ungetch** (described in Chapter 4) so the one extra
+character that must be read can be pushed back onto the input.
+
+**Exercise 5-1.** Write get f loat, the floating point analog of **getint.**
+What type does get f loat return as its function value? 0
+
+**5.3 Pointers and Arrays**
+
+**In** C, there is a strong relationship between pointers and arrays, strong
+enough that pointers and arrays really should be treated simultaneously.
+Any operation which can be achieved by array subscripting can also be done
+with pointers. The pointer version will in general be faster but, at least to
+the uninitiated, somewhat harder to grasp immediately.
+
+The declaration
+
+**int a[10]**
+
+defines an array **a** of size 10, that is a block of 10 consecutive objects named
+**a [0], a [1], ..., a [9].** The notation **a [i]** means the element of the
+array **i** positions from the beginning. If **pa** is a pointer to an integer,
+declared as
+
+**int \*pa**
+
+then the assignment
+
+**pa = &amp;a[0]**
+
+sets **pa** to point to the zeroth element of **a;** that is, **pa** contains the address
+
+94 THE C PROGRAMMING LANGUAGE CHAPTER 5
+
+of a [0]. Now the assignment
+x = \*pa
+
+will copy the contents of a [0] into **x.**
+
+If pa points to a particular element of an array a, then _by definition_
+pa+1 points to the next element, and in general pa—i points i elements
+before pa, and pa+i points i elements after. Thus, if pa points to a [01,
+
+\* (pa-F.1 )
+
+refers to the contents of a [1] , pa+i is the address of a [i] , and \* (pa+i)
+is the contents of a [i].
+
+These remarks are true regardless of the type of the variables in the
+array a. The definition of &quot;adding 1 to a pointer,&quot; and by extension, all
+pointer arithmetic, is that the increment is scaled by the size in storage of
+the object that is pointed to. Thus in pa+i, i is multiplied by the size of
+the objects that pa points to before being added to pa.
+
+The correspondence between indexing and pointer arithmetic is evi­
+dently very close. In fact, a reference to an array is converted by the com­
+piler to a pointer to the beginning of the array. The effect is that an array
+name _is_ a pointer expression. This has quite a few useful implications.
+Since the name of an array is a synonym for the location of the zeroth ele­
+ment, the assignment
+
+**pa = &amp;a [O]**
+
+can also be written as
+**pa = a**
+
+Rather more surprising, at least at first sight,, is the fact that a reference
+to a [ii can also be written as \* (a+i) . In evaluating a **[i], C** converts it
+to \* ( a+i ) immediately; the two forms are completely equivalent. Applying
+the operator &amp; to both parts of this equivalence, it follows that &amp;a [i] and
+a+i are also identical: a+i is the address of the i-th element beyond a. As
+the other side of this coin, if pa is a pointer, expressions may use it with a
+subscript: pa [i] is identical to \* (pa+i ) **.** In short, any array and index
+expression can be written as a pointer and offset, and vice versa, even in the
+same statement.
+
+There is one difference between an array name and a pointer that must
+be kept in mind. A pointer is a variable, so pa=a and **pa++** are sensible
+operations. But an array name is a _constant,_ not a variable: constructions
+like a=pa or **a++ or p=&amp;a** are illegal.
+
+When an array name is passed to a function, what is passed is the loca­
+tion of the beginning of the array. Within the called function, this argument
+is a variable, just like any other variable, and so an array name argument is
+truly a pointer, that is, a variable containing an address. We can use this
+
+CHAPTER 5 POINTERS AND ARRAYS 95
+
+fact to write a new version of **strlen,** which computes the length of a
+string.
+
+**strlen(s) /\* return length of string s \*/
+ char \*s;**
+
+**int n;**
+
+**for (n = 0; \*s != &#39;\0&#39;; s++)**
+
+**n++;**
+
+**return (n);**
+
+Incrementing s is perfectly legal, since it is a pointer variable; s++ has no
+effect on the character string in the function that called **strlen,** but merely
+increments str len&#39;s private copy of the address.
+
+As formal parameters in a function definition,
+
+**char s[];**
+
+and
+
+**char \*s;**
+
+are exactly equivalent; which one should be written is determined largely by
+how expressions will be written in the function. When an array name is
+passed to a function, the function can at its convenience believe that it has
+been handed either an array or a pointer, and manipulate it accordingly. It
+can even use both kinds of operations if it seems appropriate and clear.
+
+It is possible to pass part of an array to a function, by passing a pointer
+to the beginning of the subarray. For example, if **a** is an array,
+
+| and | ![](RackMultipart20210701-4-1cszrv6_html_ac7bc08f394281d0.png) |
+| --- | --- |
+
+both pass to the function **f** the address of element **a [2] ,** because **&amp;a [2]**
+and **a+2** are both pointer expressions that refer to the third element of **a.**
+Within **f,** the argument declaration can read
+
+**f(arr)**
+
+**int arr[];**
+
+or
+
+96 THE C PROGRAMMING LANGUAGE CHAPTER 5
+
+**f (arr)
+ int \*arr;**
+
+- •
+
+So as far as **f** is concerned, the fact that the argument really refers to part of
+a larger array is of no consequence.
+
+**5.4 Address Arithmetic**
+
+**If**  **p** is a pointer, then p++ increments **p** to point to the next element of
+whatever kind of object p points to, and p+=i increments p to point i ele­
+ments beyond where it currently does. These and similar constructions are
+the simplest and most common forms of pointer or address arithmetic.
+
+C is consistent and regular in its approach to address arithmetic; its
+integration of pointers, arrays and address arithmetic is one of the major
+strengths of the language. Let us illustrate some of its properties by writing
+a rudimentary storage allocator (but useful in spite of its simplicity). There
+are two routines: **alloc (n)** returns a pointer p to n consecutive character
+positions, which can be used by the caller of **alloc** for storing characters;
+**free (p)** releases the storage thus acquired so it can be later re-used. The
+routines are &quot;rudimentary&quot; because the calls to **free** must be made in the
+opposite order to the calls made on **alloc.** That is, the storage managed
+by **alloc** and **free** is a stack, or last-in, first-out list. The standard C
+library provides analogous functions which have no such restrictions, and in
+Chapter 8 we will show improved versions as well. In the meantime, how­
+ever, many applications really only need a trivial **alloc** to dispense little
+pieces of storage of unpredictable sizes at unpredictable times.
+
+The simplest implementation is to have **alloc** hand out pieces of a
+large character array which we will call **allocbuf.** This array is private to
+**alloc** and **free.** Since they deal in pointers, not array indices, no other
+routine need know the name of the array, which can be declared external
+**static, that** is, local to the source file containing **alloc** and **free,** and
+invisible outside it. In practical implementations, the array may well not
+even have a name; it might instead be obtained by asking the operating sys­
+tem for a pointer to some unnamed block of storage.
+
+The other information needed is how much of **allocbuf** has been
+used. We use a pointer to the next free element, called **allocp.** When
+**alloc** is asked for n characters, it checks to see if there is enough room
+left in **allocbuf.** If so, **alloc** returns the current value of **allocp** (i.e.,
+the beginning of the free block), then increments it by **n** to point to the
+next free area. **free (p) merely sets allocp to p** if p is inside
+**allocbuf.**
+
+CHAPTER 5 POINTERS AND ARRAYS 97
+
+**#define NULL 0 /\* pointer value for error report \*/**
+**#define ALLOCSIZE 1000 /\* size of available space \*/**
+
+**static char allocbuf[ALLOCSIZE]; /\* storage for alloc \*/**
+**static char \*allocp = allocbuf; /\* next free position \*/**
+
+**char \*alloc(n) /\* return pointer to n characters \*/**
+**int n;**
+
+**if (allocp + n \&lt;= allocbuf + ALLOCSIZE) ( /\* fits \*/**
+
+**allocp += n;**
+
+**return(allocp - n); /\* old p \*/**
+
+**) else /\* not enough room \*/
+ return (NULL);**
+
+**free(p) /\* free storage pointed to by p \*/**
+**char \*p;**
+
+**if (p \&gt;= allocbuf &amp;&amp; p \&lt; allocbuf + ALLOCSIZE)**
+**allocp = p;**
+
+Some explanations. In general a pointer can be initialized just as any
+other variable can, though normally the only meaningful values are NULL
+(discussed below) or an expression involving addresses of previously defined
+data of appropriate type. The declaration
+
+**static char \*allocp = allocbuf;**
+
+defines allocp to be a character pointer and initializes it to point to
+allocbuf, which is the next free position when the program starts. This
+could have also been written
+
+**static char \*allocp = &amp;allocbuf[0];**
+
+since the array name _is_ the address of the zeroth element; use whichever is
+
+more natural.
+
+The test
+
+**if (allocp + n \&lt;= allocbuf + ALLOCSIZE)**
+
+checks if there&#39;s enough room to satisfy a request for n characters. If there
+is, the new value of allocp would be at most one beyond the end of
+allocbuf. If the request can be satisfied, al loc returns a normal pointer
+(notice the declaration of the function itself). If not, al loc must return
+some signal that no space is left. C guarantees that no pointer that validly
+points at data will contain zero, so a return value of zero can be used to sig­
+nal an abnormal event, in this case, no space. We write Nam, instead of
+
+98 THE C PROGRAMMING LANGUAGE CHAPTER 5
+
+zero, however, to indicate more clearly that this is a special value for a
+pointer. In general, integers cannot meaningfully be assigned to pointers;
+zero is a special case.
+
+Tests like
+
+**if (allocp + n \&lt;= allocbuf + ALLOCSIZE)**
+
+and
+
+**if (p \&gt;= allocbuf &amp;&amp; p \&lt; allocbuf + ALLOCSIZE)**
+
+show several important facets of pointer arithmetic. First, pointers may be
+compared under certain circumstances. If p and q point to members of the
+same array, then relations like \&lt;, \&gt;=, etc., work properly.
+
+**p \&lt; q**
+
+is true, for example, if p points to an earlier member of the array than does
+q. The relations == and ! = also work. Any pointer can be meaningfully
+compared for equality or inequality with **NULL.** But all bets are off if you do
+arithmetic or comparisons with pointers pointing to different arrays. If
+you&#39;re lucky, you&#39;ll get obvious nonsense on all machines. If you&#39;re
+unlucky, your code will work on one machine but collapse mysteriously on
+another.
+
+Second, we have already observed that a pointer and an integer may be
+added or subtracted. The construction
+
+**p + n**
+
+means the **n-th** object beyond the one p currently points to. This is true
+regardless of the kind of object p is declared to point at; the compiler scales
+**n** according to the size of the objects p points to, which is determined by
+the declaration of **p.** For example, on the PDP-11, the scale factors are 1
+for **char,** 2 for **int** and **short,** 4 for long and **float,** and 8 for
+**double.**
+
+Pointer subtraction is also valid: if p and q point to members of the
+same array, **p—q** is the number of elements between p and q. This fact can
+be used to write yet another version of **strlen:**
+
+**strlen(s) /\* return length of string s \*/
+ char \*s;**
+
+**char \*p = s;**
+
+**while** **(\*p !=** **&#39;MP)
+ p++;**
+
+**return(p-s);**
+
+In its declaration, **p** is initialized to **s,** that is, to point to the first character.
+
+**CHAPTER 5 POINTERS AND ARRAYS**  **99**
+
+**In the while loop, each character in turn is examined until the**  **\O**  **at the**
+**end is seen. Since**  **\O**  **is zero, and since**  **while**  **tests only whether the**
+**expression is zero, it is possible to omit the explicit test, and such loops are**
+**often written as**
+
+**while (\*p)**
+
+**p++;**
+
+**Because p points to characters, p++ advances p to the next character**
+**each time, and p—s gives the number of characters advanced over, that is,**
+**the string length. Pointer arithmetic is consistent: if we had been dealing**
+**with**  **float&#39;s,**  **which occupy more storage than**  **char&#39;s,**  **and if p were a**
+**pointer to**  **float, p++**  **would advance to the next**  **float.**  **Thus we could**
+**write another version of**  **alloc**  **which maintains, let us say,**  **float&#39;s**
+**instead of**  **char&#39;s,**  **merely by changing**  **char**  **to**  **float**  **throughout**  **alloc**
+**and**  **free.**  **All the pointer manipulations automatically take into account**
+**the size of the object pointed to, so nothing else has to be altered.**
+
+**Other than the operations mentioned here (adding or subtracting a**
+**pointer and an integer; subtracting or comparing two pointers), all other**
+**pointer arithmetic is illegal. It is not permitted to add two pointers, or to**
+**multiply or divide or shift or mask them, or to add**  **float**  **or**  **double**  **to**
+**them.**
+
+**5.5 Character Pointers and Functions**
+
+**A** _ **string constant,** _ **written as**
+
+**&quot;I am a string&quot;**
+
+**is an array of characters. In the internal representation, the compiler ter­**
+**minates the array with the character \O so that programs can find the end.**
+**The length in storage is thus one more than the number of characters**
+**between the double quotes.**
+
+**Perhaps the most common occurrence of string constants is as argu­**
+**ments to functions, as in**
+
+**printf(&quot;hello, world\n&quot;);**
+
+**When a character string like this appears in a program, access to it is**
+**through a character pointer; what**  **printf**  **receives is a pointer to the char­**
+**acter array.**
+
+**Character arrays of course need not be function arguments. If**
+**message is declared as**
+
+**char \*message;**
+**then the statement**
+
+100 THE C PROGRAMMING LANGUAGE CHAPTER 5
+
+**message = &quot;now is the time&quot;;**
+
+assigns to **message** a pointer to the actual characters. This is _not_ a string
+copy; only pointers are involved. C does not provide any operators for pro­
+cessing an entire string of characters as a unit.
+
+We will illustrate more aspects of pointers and arrays by studying two
+useful functions from the standard I/O library to be discussed in Chapter 7.
+
+The first function is **strcpy (s, t),** which copies the string t to the
+string s. The arguments are written in this order by analogy to assignment,
+where one would say
+
+S =t
+
+to assign **t** to **s.** The array version is first:
+
+**strcpy(s, t) /\* copy t to s \*/
+ char s[], t[];**
+
+**int i;**
+
+**i = 0;**
+
+**while ((s[i] = t[i]) !=**
+
+For contrast, here is a version of **strcpy** with pointers.
+
+**strcpy(s, t) /\* copy t to s; pointer version 1 \*/**
+**char \*s, \*t;**
+
+**while ((\*s = \*t) != &#39;\0&#39;) {**
+
+**s++;**
+
+**t++;**
+
+}
+
+Because arguments are passed by value, **strcpy** can use s and t in any
+way it pleases. Here they are conveniently initialized pointers, which are
+marched along the arrays a character at a time, until the \0 which ter­
+minates **t** has been copied to s.
+
+In practice, **strcpy** would not be written as we showed it above A
+second possibility might be
+
+**strcpy(s, t) /\* copy t to s; pointer version 2 \*/**
+**char \*s, \*t;**
+
+**while ((\*s++ = \*t++) != &#39;\0&#39;)**
+
+CHAPTER 5 POINTERS AND ARRAYS 101
+
+This moves the increment of s and t into the test part. The value of \*t++
+is the character that t pointed to before t was incremented; the postfix ++
+doesn&#39;t change t until after this character has been fetched. In the same
+way, the character is stored into the old s position before s is incremented.
+This character is also the value that is compared against \0 to control the
+loop. The net effect is that characters are copied from t to s up to and
+including the terminating \ 0.
+
+As the final abbreviation, we again observe that a comparison against \0
+is redundant, so the function is often written as
+
+**strcpy(s, t) /\* copy t to s; pointer version 3 \*/**
+**char \*s, \*t;**
+
+**while (\*s++ = \*t++)**
+
+Although this may seem cryptic at first sight, the notational convenience is
+considerable, and the idiom should be mastered, if for no other reason than
+that you will see it frequently in C programs.
+
+The second routine is **strcmp (s, t) ,** which compares the character
+strings s and t, and returns negative, zero or positive according as s is lexi­
+cographically less than, equal to, or greater than t. The value returned is
+obtained by subtracting the characters at the first position where s and t
+disagree.
+
+**strcmp(s, t) /\* return \&lt;0 if s\&lt;t, 0 if s==t, \&gt;0 if s\&gt;t \*/**
+**char s[], t[];**
+
+**int i;**
+
+**i = 0;**
+
+**while (s[i] == t[i])**
+
+**if (s[i++] ==**
+
+**return (0)**
+
+**return(s[i] - t[i]);**
+
+The pointer version of **strcmp:**
+
+102 THE C PROGRAMMING LANGUAGE CHAPTER 5
+
+**strcmp(s, t) /\* return \&lt;0 if s\&lt;t, 0 if s==t, \&gt;0 if s\&gt;t \*/**
+**char \*s, \*t;**
+
+**for ( ; \*s == \*t; s++, t++)
+ if (\*s ==
+ return (0)**
+
+**return(\*s — \*t);**
+
+Since ++ and -- are either prefix or postfix operators, other combina­
+tions of \* and ++ and -- occur, although less frequently. For example,
+
+**\*++p**
+
+increments p _before_ fetching the character that p points to;
+
+**\*--p**
+
+decrements p first.
+
+**Exercise 5-2.** Write a pointer version of the function **strcat** which we
+showed in Chapter 2: **strcat(s, t)** copies the string t to the end of s.
+
+**Eitercise 5-3.** Write a macro for **strcpy. .**
+
+**Exercise 5-4.** Rewrite appropriate programs from earlier chapters and exer­
+cises with pointers instead of array indexing. Good possibilities include
+**getline** (Chapters **1** and **4), atoi, itoa,** and their variants (Chapters 2,
+3, and **4), reverse (Chapter** 3), and **index and getop (Chapter 4).**
+
+**5.6 Pointers are not Integers**
+
+You may notice in older C programs a rather cavalier attitude toward
+copyifig pointers. It has generally been true that on most machines a pointer
+may be assigned to an integer and back again without changing it; no scaling
+or conversion takes place, and no bits are lost. Regrettably, this has led to
+the taking of liberties with routines that return pointers which are then
+merely passed to other routines — the requisite pointer declarations are
+often left out. For example, consider the function **strsave (s),** which
+copies the string **s** into a safe place, obtained by a call on **alloc,** and
+returns a pointer to it. Properly, this should be written as
+
+CHAPTER 5 POINTERS AND ARRAYS 103
+
+**char \*strsave(s) /\* save string s somewhere \*/**
+**char \*s;**
+
+**char \*p, \*alloc();**
+
+**if ((p = alloc(strlen(s)+1)) != NULL)**
+
+**strcpy(p, s);**
+
+**return(p);**
+
+In practice, there would be a strong tendency to omit declarations:
+
+**strsave(s) /\* save string s somewhere \*/**
+
+**(**
+
+**char \*p;**
+
+**if ((p = alloc(strlen(s)+1)) != NULL)**
+
+**strcpy(p, s);**
+
+**return(p);**
+
+This will work on many machines, since the default type for functions and
+arguments is int, and int and pointer can usually be safely assigned back
+and forth. Nevertheless this kind of code is inherently risky, for it depends
+on details of implementation and machine architecture which may not hold
+for the particular compiler you use. It&#39;s wiser to be complete in all declara­
+tions. (The program _lint_ will warn of such constructions, in case they creep
+in inadvertently.)
+
+**5.7 Multi-Dimensional Arrays**
+
+C provides for rectangular multi-dimensional arrays, although in practice
+they tend to be much less used than arrays of pointers. In this section, we
+will show some of their properties.
+
+Consider the problem of date conversion, from day of the month to day
+of the year and vice versa. For example, March 1 is the 60th day of a non-
+leap year, and the 61st day of a leap year. Let us define two functions to do
+the conversions: day\_of \_year converts the month and day into the day of
+the year, and month\_day converts the day of the year into the month and
+day. Since this latter function returns two values, the month and day argu­
+ments will be pointers:
+
+**month\_day(1977, 60, &amp;m, &amp;d)**
+
+sets m to 3 and **d** to 1 (March 1st).
+
+These functions both need the same information, a table of the number
+of days in each month (&quot;thirty days hath September ...&quot;). Since the
+number of days per month differs for leap years and non-leap years, it&#39;s
+
+104 THE C PROGRAMMING LANGUAGE CHAPTER 5
+
+easier to separate them into two rows of a two-dimensional array than try to
+keep track of what happens to February during computation. The array and
+the functions for performing the transformations are as follows:
+
+| **static int day\_tab[2][13]** | **=(** |
+ |
+ |
+ |
+| --- | --- | --- | --- | --- |
+| **(0, 31, 28, 31, 30,** | **31,** | **30,** | **31, 31, 30, 31, 30,** | **31),** |
+| **(0, 31, 29, 31, 30,** | **31,** | **30,** | **31, 31, 30, 31, 30,** | **31)** |
+| ); |
+ |
+ |
+ |
+ |
+| **day\_of\_year(year, month,** | **day)** | **/\*** | **set day of year \*/** |
+ |
+| **int year, month, day;** |
+ | **/\*** | **from month &amp; day \*/** |
+ |
+
+**int i, leap;**
+
+**leap = year%4 == 0 &amp;&amp; year%100 != 0 II year%400 == 0;**
+
+**for (i = 1; i \&lt; month; i++)**
+
+**day += day\_tab[leap][i];**
+
+**return (day);**
+
+**month\_day(year, yearday, pmonth, pday) /\* set month, day \*/**
+**int year, yearday, \*pmonth, \*pday; /\* from day of year \*/**
+
+**int i, leap;**
+
+**leap = year%4 == 0 &amp;&amp; year%100 != 0 II year%400 == 0;**
+
+**for (i = 1; yearday \&gt; day\_tab[leap][i]; i++)**
+
+**yearday -= day\_tab[leap][i];**
+
+**\*pmonth =**
+
+**\*pday = yearday;**
+
+The array **day\_tab** has to be external to both **day\_of\_year** and
+**month\_day,** so they can both use it.
+
+**day\_tab** is the first two-dimensional array we have dealt with. In C,
+by definition a two-dimensional array is really a one-dimensional array, each
+of whose elements is an array. Hence subscripts are written as
+
+**day\_tab[i]** [j]
+ rather than
+
+**day\_tab[i, j]**
+
+as in most languages. Other than this, a two-dimensional array can be
+treated in much the same way as in other languages. Elements are stored by
+rows, that is, the rightmost subscript varies fastest as elements are accessed
+in storage order.
+
+CHAPTER 5 POINTERS AND ARRAYS 105
+
 An array is initialized by a list of initializers in braces; each row of a
 two-dimensional array is initialized by a corresponding sub-list. We started
 the array day\_tab with a column of zero so that month numbers can run
@@ -139,7 +994,9 @@ lines in the order in which they appear in the array of pointers.
 
 **}**
 
-![](RackMultipart20210617-4-6okeb8_html_d11d95a47e869751.png)
+![](RackMultipart20210701-4-1cszrv6_html_37d52289e98675a1.gif)
+
+![](RackMultipart20210701-4-1cszrv6_html_d11d95a47e869751.png)
 
 **return (nlines);**
 
@@ -158,14 +1015,12 @@ lines in the order in which they appear in the array of pointers.
 
 **int i;**
 
-**for (i = 0; i \&lt; nlines; i++)**
-
-**printf(&quot;%s\n&quot;, lineptr[i]);**
+**for (i = 0; i \&lt; nlines; i++)
+ printf(&quot;%s\n&quot;, lineptr[i]);**
 
 )
 
 **The main new thing is the declaration for**  **lineptr:**
-
 **char \*lineptr [LINES];**
 
 **says that**  **lineptr**  **is an array of**  **LINES**  **elements, each element of which is**
@@ -202,9 +1057,8 @@ confidence that it will still work.
 **char \*v[]; /\* into increasing order \*/**
 **int n;**
 
-**int gap, i, j;**
-
-**char \*temp;**
+**int gap, i, j;
+ char \*temp;**
 
 **for (gap = n/2; gap \&gt; 0; gap /= 2)**
 
@@ -262,11 +1116,9 @@ The syntax is quite similar to previous initializations:
 **char \*month\_name(n) /\* return name of n-th month \*/**
 **int n;**
 
-**static char \*namell =(**
-
-**&quot;illegal month&quot;,**
-
-**&quot;January&quot;,**
+**static char \*namell =(
+ &quot;illegal month&quot;,
+ &quot;January&quot;,**
 
 **&quot;February&quot;,**
 
@@ -280,13 +1132,10 @@ The syntax is quite similar to previous initializations:
 
 **&quot;August&quot;,**
 
-**&quot;September&quot;,**
-
-**&quot;October&quot;,**
-
-**&quot;November&quot;,**
-
-**&quot;December&quot;**
+**&quot;September&quot;,
+ &quot;October&quot;,
+ &quot;November&quot;,
+ &quot;December&quot;**
 
 ) ;
 
@@ -308,9 +1157,8 @@ Newcomers to C are sometimes confused about the difference between a
 two-dimensional array and an array of pointers, such as **name** in the exam­
 ple above. Given the declarations
 
-**int a [1 0] [1 0] ;**
-
-**int \*b** **[1 0] ;**
+**int a [1 0] [1 0] ;
+ int \*b **** [1 0] ;**
 
 the usage of **a** and **b** may be similar, in that **a [5] [5]** and **b [5] [5]** are
 both legal references to a single **int.** But **a** is a true array: all 100 storage
@@ -348,9 +1196,7 @@ gram echo, which simply echoes its command-line arguments on a single
 line, separated by blanks. That is, if the command
 
 **echo hello, world**
-
 is given, the output is
-
 **hello, world**
 
 CHAPTER 5 POINTERS AND ARRAYS 111
@@ -449,19 +1295,14 @@ with a minus sign introduces an optional flag or parameter. If we choose **—**
 numbering, then the command
 
 **find -x -n the**
-
 with the input
 
 now is the time
-
-for all good men
-
-to come to the aid
-
-of their party.
+ for all good men
+ to come to the aid
+ of their party.
 
 should produce the output
-
 2: for all good men
 
 Optional arguments should be permitted in any order, and the rest of
@@ -723,17 +1564,14 @@ numcmp, which compares two strings on a leading numeric value:
 
 **v1 = atof(s1);**
 
-**v2 = atof(s2);**
-
-**if (v1 \&lt; v2)**
+**v2 = atof(s2);
+ if (v1 \&lt; v2)**
 
 **return(-1);**
 
-**else if (v1 \&gt; v2)**
-
-**return(1);**
-
-**else**
+**else if (v1 \&gt; v2)
+ return(1);
+ else**
 
 **return(0);**
 
@@ -746,11 +1584,9 @@ chapter.
 
 **char \*temp;**
 
-**temp = \*px;**
-
-**\*px = \*py;**
-
-**\*py = temp;**
+**temp = \*px;
+ \*px = \*py;
+ \*py = temp;**
 
 There are a variety of other options that can be added to the sorting pro­
 gram; some make challenging exercises.
@@ -771,4 +1607,3 @@ junction with **—**** f. 0**
 fields within lines, each field according to an independent set of options.
 (The index for this book was sorted with **—**** df **** for the index category and —n**
 **for the page numbers.)**
-
