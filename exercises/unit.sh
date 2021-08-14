@@ -19,3 +19,16 @@ gcc -ansi ex_01_20.c
 gcc -ansi ex_01_21.c
 gcc -ansi ex_01_22.c
 gcc -ansi ex_01_23.c
+
+
+# Chapter 02
+gcc -ansi ex_02_01.c
+gcc -ansi ex_02_02.c
+gcc -ansi ex_02_03.c
+gcc -ansi ex_02_04.c
+# gcc -ansi ex_02_05.c
+# gcc -ansi ex_02_06.c
+gcc -ansi ex_02_07.c
+gcc -ansi ex_02_08.c
+gcc -ansi ex_02_09.c
+gcc -ansi ex_02_10.c
