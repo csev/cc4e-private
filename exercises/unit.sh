@@ -39,3 +39,30 @@ gcc -ansi ex_03_03.c
 # gcc -ansi ex_03_04.c
 gcc -ansi ex_03_05.c
 # gcc -ansi ex_03_06.c
+
+# Chapter 04
+gcc -ansi ex_04_01.c
+gcc -ansi ex_04_02.c
+# gcc -ansi ex_04_03.c
+gcc -ansi ex_04_04.c
+gcc -ansi ex_04_05.c
+gcc -ansi ex_04_06.c
+gcc -ansi ex_04_07.c
+gcc -ansi ex_04_08.c
+gcc -ansi ex_04_09.c
+
+#Chapter 05
+gcc -ansi ex_05_01.c
+gcc -ansi ex_05_02.c
+gcc -ansi ex_05_03.c
+gcc -ansi ex_05_04.c
+gcc -ansi ex_05_05.c
+gcc -ansi ex_05_06.c
+gcc -ansi ex_05_07.c
+gcc -ansi ex_05_08.c
+gcc -ansi ex_05_09.c
+gcc -ansi ex_05_10.c
+gcc -ansi ex_05_11.c
+gcc -ansi ex_05_12.c
+gcc -ansi ex_05_13.c
+gcc -ansi ex_05_14.c
