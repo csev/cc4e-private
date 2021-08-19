@@ -54,11 +54,11 @@ gcc -ansi ex_04_09.c
 #Chapter 05
 gcc -ansi ex_05_01.c
 gcc -ansi ex_05_02.c
-gcc -ansi ex_05_03.c
+# gcc -ansi ex_05_03.c
 gcc -ansi ex_05_04.c
 gcc -ansi ex_05_05.c
 gcc -ansi ex_05_06.c
-gcc -ansi ex_05_07.c
+# gcc -ansi ex_05_07.c
 gcc -ansi ex_05_08.c
 gcc -ansi ex_05_09.c
 gcc -ansi ex_05_10.c
