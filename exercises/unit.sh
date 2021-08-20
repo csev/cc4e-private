@@ -66,3 +66,13 @@ gcc -ansi ex_05_11.c
 gcc -ansi ex_05_12.c
 gcc -ansi ex_05_13.c
 gcc -ansi ex_05_14.c
+
+# Chapter 06
+# gcc -ansi ex_06_01.c
+# gcc -ansi ex_06_02.c
+# gcc -ansi ex_06_03.c
+gcc -ansi ex_06_04.c
+gcc -ansi ex_06_05.c
+gcc -ansi ex_06_06.c
+# gcc -ansi ex_06_07.c
+gcc -ansi ex_06_08.c
