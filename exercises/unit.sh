@@ -76,3 +76,15 @@ gcc -ansi ex_06_05.c
 gcc -ansi ex_06_06.c
 # gcc -ansi ex_06_07.c
 gcc -ansi ex_06_08.c
+
+# Chapter 07
+gcc -ansi ex_07_01.case -o ex_07_01.exe
+ex_07_01.exe
+gcc -ansi ex_07_02.c -o ex_07_02.exe
+ex_07_02.exe
+gcc -ansi ex_07_03.c -o ex_07_03.exe
+ex_07_03.exe in_07_03_1.txt in_07_03_2.txt
+gcc -ansi ex_07_04.c -o ex_07_04.exe
+ex_07_04.exe in_07_04.txt
+gcc -ansi ex_07_05.c -o ex_07_05.exe
+ex_07_05.exe in_07_05.txt
