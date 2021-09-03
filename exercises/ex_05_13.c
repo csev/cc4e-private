@@ -2,8 +2,9 @@
 Exercise 5-13. Add the -d ("dictionary order") option, which makes comparisons
 only on letters, numbers and blanks. Make sure it works in conjunction with -f.
  */
- #include<stdio.h>
- #include<ctype.h>
+#include<stdio.h>
+#include<ctype.h>
+#include<string.h>
 
  #define NUMERIC 1   /* numeric sort */
  #define DECR    2   /* sort in decreasing order */

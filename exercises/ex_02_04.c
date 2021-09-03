@@ -48,16 +48,16 @@ no characters from s2.
 
      for(i=0;s1[i]!='\0'&& (check_next_char);)
      {
-         // iterate through s2 while trying to find matching character from s1
+         /* iterate through s2 while trying to find matching character from s1 */
          for(j=0;s2[j]!='\0'&& (s1[i]!=s2[j]);++j)
-             ; // continue
+             ; /* continue */
 
          if(s2[j]=='\0') {
              check_next_char=1;
-             i++; // go for the next char in s1
+             i++; /* go for the next char in s1 */
          }
          else
-             check_next_char=0; // match found
+             check_next_char=0; /* match found */
      }
 
      if(s1[i]=='\0')

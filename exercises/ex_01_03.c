@@ -7,9 +7,9 @@ int main(void) {
 
     double fahr;
     double celsius;
-    int    lower =   0;  // lower limit of temperature table
-    int    upper = 300;  // upper limit
-    int    step  =  20;  // step size
+    int    lower =   0;  /* lower limit of temperature table */
+    int    upper = 300;  /* upper limit */
+    int    step  =  20;  /* step size */
 
     printf("Fahrenheit\tCelsius\n");
     fahr = (double)lower;

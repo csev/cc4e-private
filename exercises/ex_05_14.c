@@ -5,6 +5,7 @@ for this book was sorted with -df for the index category and -n for the page num
  */
  #include<stdio.h>
  #include<ctype.h>
+#include<stdlib.h>
 
  #define NUMERIC  1  /* numeric sort */
  #define DECR    2   /* sort in decreasing order */
@@ -298,7 +299,7 @@ for this book was sorted with -df for the index category and -n for the page num
  {
      int c,i;
 
-     for(i=0;i<lim-1 && (c=getchar())!=EOF c!='\n';++i)
+     for(i=0;i<lim-1 && (c=getchar())!=EOF && c!='\n';++i)
          s[i] = c;
      if(c == '\n')
      {

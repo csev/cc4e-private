@@ -15,7 +15,7 @@ that is, convert an integer into a string with a recursive routine.
      int n;
      char s[MAXLEN];
 
-     n = 1723;
+     n = 424242;
 
      itoa(n,s);
 
@@ -43,24 +43,7 @@ that is, convert an integer into a string with a recursive routine.
 
  }
 
+/*
  Explanation
  The main part of this program is the itoa routine, which takes an integer n and string s and is called recursively.
-
- void itoa(int n,char s[])
- {
-     static int i;
-
-     if(n/10)
-         itoa(n/10,s);
-     else
-     {
-         i = 0;
-         if( n < 0)
-             s[i++]='-';
-     }
-
-     s[i++] = abs(n) % 10 + '0';
-
-     s[i] = '\0';
-
- }
+ */

@@ -52,7 +52,7 @@ getch and ungetch helpful.
  }
 
  struct nlist *lookup(char *);
- //char *strdup(char *);
+ /* char *strdup(char *); */
 
  /* install: put (name, defn) in hashtab */
  struct nlist *install(char *name, char *defn)
