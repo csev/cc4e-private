@@ -1,5 +1,6 @@
 ~*
 *.swp
 *.pyc
+*.exe
 .DS_Store
 

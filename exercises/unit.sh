@@ -100,7 +100,7 @@ ex_04_09.exe
 gcc -ansi ex_05_01.c -o ex_05_01.exe
 ex_05_01.exe
 gcc -ansi ex_05_02.c -o ex_05_02.exe
-ex_05_02.exe
+ex_05_02.exe < inp/ex_02_02.txt
 # gcc -ansi ex_05_03.c -o ex_05_03.exe
 #ex_05_03.exe
 gcc -ansi ex_05_04.c -o ex_05_04.exe
