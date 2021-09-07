@@ -1,3 +1,7 @@
+
+# Clean up the output area
+rm tmp/*.txt
+
 # Chapter 01
 gcc -ansi ex_01_03.c -o ex_01_03.exe
 ex_01_03.exe
@@ -100,7 +104,8 @@ ex_04_09.exe
 gcc -ansi ex_05_01.c -o ex_05_01.exe
 ex_05_01.exe
 gcc -ansi ex_05_02.c -o ex_05_02.exe
-ex_05_02.exe < inp/ex_02_02.txt
+ex_05_02.exe < inp/ex_05_02.txt > tmp/ex_05_02.txt
+diff out/ex_05_02.txt tmp/ex_05_02.txt
 # gcc -ansi ex_05_03.c -o ex_05_03.exe
 #ex_05_03.exe
 gcc -ansi ex_05_04.c -o ex_05_04.exe
