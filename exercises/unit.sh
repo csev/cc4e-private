@@ -145,7 +145,7 @@ gcc -ansi ex_06_08.c -o ex_06_08.exe
 ex_06_08.exe
 
 # Chapter 07
-gcc -ansi ex_07_01.case -o ex_07_01.exe
+gcc -ansi ex_07_01.c -o ex_07_01.exe
 ex_07_01.exe
 gcc -ansi ex_07_02.c -o ex_07_02.exe
 ex_07_02.exe
@@ -155,3 +155,13 @@ gcc -ansi ex_07_04.c -o ex_07_04.exe
 ex_07_04.exe in_07_04.txt
 gcc -ansi ex_07_05.c -o ex_07_05.exe
 ex_07_05.exe in_07_05.txt
+
+# Chapter 08
+gcc -ansi ex_08_01.c -o ex_08_01.exe
+# gcc -ansi ex_08_02.c -o ex_08_02.exe
+gcc -ansi ex_08_03.c -o ex_08_03.exe
+gcc -ansi ex_08_04.c -o ex_08_04.exe
+gcc -ansi ex_08_05.c -o ex_08_05.exe
+gcc -ansi ex_08_06.c -o ex_08_06.exe
+# gcc -ansi ex_08_07.c -o ex_08_07.exe
+# gcc -ansi ex_08_08.c -o ex_08_08.exe
