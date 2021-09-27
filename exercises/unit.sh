@@ -10,51 +10,65 @@ ex_01_04.exe
 gcc -ansi ex_01_05.c -o ex_01_05.exe
 ex_01_05.exe
 gcc -ansi ex_01_06.c -o ex_01_06.exe
-ex_01_06.exe
+ex_01_06.exe < inp/ex_01_06.txt > tmp/ex_01_06.txt
+diff out/ex_01_06.txt tmp/ex_01_06.txt
 gcc -ansi ex_01_07.c -o ex_01_07.exe
-ex_01_07.exe
-# gcc -ansi ex_01_08.c -o ex_01_08.exe
-# ex_01_08.exe
+ex_01_07.exe < inp/ex_01_07.txt > tmp/ex_01_07.txt
+diff out/ex_01_07.txt tmp/ex_01_07.txt
+gcc -ansi ex_01_08.c -o ex_01_08.exe
+ex_01_08.exe < inp/ex_01_08.txt > tmp/ex_01_08.txt
+diff out/ex_01_08.txt tmp/ex_01_08.txt
 gcc -ansi ex_01_09.c -o ex_01_09.exe
-ex_01_09.exe
+ex_01_09.exe < inp/ex_01_09.txt > tmp/ex_01_09.txt
+diff out/ex_01_09.txt tmp/ex_01_09.txt
 gcc -ansi ex_01_10.c -o ex_01_10.exe
-ex_01_10.exe
-# gcc -ansi ex_01_11.c -o ex_01_11.exe
-# ex_01_11.exe
+ex_01_10.exe < inp/ex_01_10.txt > tmp/ex_01_10.txt
+diff out/ex_01_10.txt tmp/ex_01_10.txt
 gcc -ansi ex_01_12.c -o ex_01_12.exe
-ex_01_12.exe
-# gcc -ansi ex_01_13.c -o ex_01_13.exe
-# ex_01_13.exe
+ex_01_12.exe < inp/ex_01_12.txt > tmp/ex_01_12.txt
+diff out/ex_01_12.txt tmp/ex_01_12.txt
+gcc -ansi ex_01_13.c -o ex_01_13.exe
+ex_01_13.exe
 gcc -ansi ex_01_14.c -o ex_01_14.exe
-ex_01_14.exe
+ex_01_14.exe < inp/ex_01_14.txt > tmp/ex_01_14.txt
+diff out/ex_01_14.txt tmp/ex_01_14.txt
 gcc -ansi ex_01_15.c -o ex_01_15.exe
-ex_01_15.exe
+ex_01_15.exe < inp/ex_01_15.txt > tmp/ex_01_15.txt
+diff out/ex_01_15.txt tmp/ex_01_15.txt
 gcc -ansi ex_01_16.c -o ex_01_16.exe
-ex_01_16.exe
+ex_01_16.exe < inp/ex_01_16.txt > tmp/ex_01_16.txt
+diff out/ex_01_16.txt tmp/ex_01_16.txt
 gcc -ansi ex_01_17.c -o ex_01_17.exe
-ex_01_17.exe
+ex_01_17.exe < inp/ex_01_17.txt > tmp/ex_01_17.txt
+diff out/ex_01_17.txt tmp/ex_01_17.txt
 gcc -ansi ex_01_19.c -o ex_01_19.exe
-ex_01_19.exe
+ex_01_19.exe < inp/ex_01_19.txt > tmp/ex_01_19.txt
+diff out/ex_01_19.txt tmp/ex_01_19.txt
 gcc -ansi ex_01_20.c -o ex_01_20.exe
-ex_01_20.exe
+ex_01_20.exe < inp/ex_01_20.txt > tmp/ex_01_20.txt
+diff out/ex_01_20.txt tmp/ex_01_20.txt
 gcc -ansi ex_01_21.c -o ex_01_21.exe
-ex_01_21.exe
+ex_01_21.exe < inp/ex_01_21.txt > tmp/ex_01_21.txt
+diff out/ex_01_21.txt tmp/ex_01_21.txt
 gcc -ansi ex_01_22.c -o ex_01_22.exe
-ex_01_22.exe
+ex_01_22.exe < inp/ex_01_22.txt > tmp/ex_01_22.txt
+diff out/ex_01_22.txt tmp/ex_01_22.txt
 gcc -ansi ex_01_23.c -o ex_01_23.exe
-ex_01_23.exe
+ex_01_23.exe < inp/ex_01_23.txt > tmp/ex_01_23.txt
+diff out/ex_01_23.txt tmp/ex_01_23.txt
 
 # Chapter 02
 gcc -ansi ex_02_01.c -o ex_02_01.exe
 ex_02_01.exe
 gcc -ansi ex_02_02.c -o ex_02_02.exe
-ex_02_02.exe
+ex_02_02.exe < inp/ex_02_02.txt > tmp/ex_02_02.txt
+diff out/ex_02_02.txt tmp/ex_02_02.txt
 gcc -ansi ex_02_03.c -o ex_02_03.exe
-ex_02_03.exe
+ex_02_03.exe < inp/ex_02_03.txt > tmp/ex_02_03.txt
+diff out/ex_02_03.txt tmp/ex_02_03.txt
 gcc -ansi ex_02_04.c -o ex_02_04.exe
-ex_02_04.exe
-# gcc -ansi ex_02_05.c -o ex_02_05.exe
-# ex_02_05.exe
+ex_02_04.exe < inp/ex_02_04.txt > tmp/ex_02_04.txt
+diff out/ex_02_04.txt tmp/ex_02_04.txt
 # gcc -ansi ex_02_06.c -o ex_02_06.exe
 # ex_02_06.exe
 gcc -ansi ex_02_07.c -o ex_02_07.exe
@@ -64,17 +78,19 @@ ex_02_08.exe
 gcc -ansi ex_02_09.c -o ex_02_09.exe
 ex_02_09.exe
 gcc -ansi ex_02_10.c -o ex_02_10.exe
-ex_02_10.exe
+ex_02_10.exe < inp/ex_02_10.txt > tmp/ex_02_10.txt
+diff out/ex_02_10.txt tmp/ex_02_10.txt
 
 # Chapter 03
 gcc -ansi ex_03_01.c -o ex_03_01.exe
-ex_03_01.exe
+ex_03_01.exe < inp/ex_03_01.txt > tmp/ex_03_01.txt
+diff out/ex_03_01.txt tmp/ex_03_01.txt
 gcc -ansi ex_03_02.c -o ex_03_02.exe
 ex_03_02.exe
 gcc -ansi ex_03_03.c -o ex_03_03.exe
 ex_03_03.exe
-# gcc -ansi ex_03_04.c -o ex_03_04.exe
-# ex_03_04.exe
+gcc -ansi ex_03_04.c -o ex_03_04.exe
+ex_03_04.exe
 gcc -ansi ex_03_05.c -o ex_03_05.exe
 ex_03_05.exe
 # gcc -ansi ex_03_06.c -o ex_03_06.exe
@@ -96,7 +112,8 @@ ex_04_06.exe
 gcc -ansi ex_04_07.c -o ex_04_07.exe
 ex_04_07.exe
 gcc -ansi ex_04_08.c -o ex_04_08.exe
-ex_04_08.exe
+ex_04_08.exe < inp/ex_04_08.txt > tmp/ex_04_08.txt
+diff out/ex_04_08.txt tmp/ex_04_08.txt
 gcc -ansi ex_04_09.c -o ex_04_09.exe
 ex_04_09.exe
 

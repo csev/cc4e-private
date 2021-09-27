@@ -13,11 +13,13 @@ character in s1 which matches any character in the string s2.
      char s1[MAXLINE],s2[MAXLINE];
 
      putchar('s');
-     putchar('1 : ');
+     putchar('1');
+     putchar(':');
      mgetline(s1,MAXLINE);
 
      putchar('s');
-     putchar('2 : ');
+     putchar('2');
+     putchar(':');
      mgetline(s2,MAXLINE);
 
      squeeze(s1,s2);

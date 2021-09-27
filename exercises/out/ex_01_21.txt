@@ -1,0 +1,26 @@
+Let us begin with a quick
+introduction to C. Our aim is to
+show the essential elements of the
+language in real programs, but
+without getting bogged down in
+details, formal rules, and
+exceptions. At this point, we are
+not trying to be complete or even
+precise (save that the examples
+are meant to be correct). We want
+to get you as quickly as possible
+to the point where you can write
+useful programs, and to do that we
+have to concentrate on the basics:
+variables and constants,
+arithmetic, control flow,
+functions, and the rudiments of
+input and output. We are quite
+intentionally leaving out of this
+chapter features of C which are of
+vital importance for writing
+bigger programs. These include
+pointers, structures, most of C's
+rich set of operators, several
+control flow statements, and
+myriad details.

@@ -1,0 +1,3 @@
+CHAPTER 1:  A TUTORIAL  INTRODUCTION
+Page  5
+Let us begin with a quick introduction to C.
