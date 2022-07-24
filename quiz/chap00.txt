@@ -1,0 +1,87 @@
+::Q1::How do you print a string to "standard output" in C?
+{
+=Call the printf function
+~Use the print statement
+~Call the print function
+~Use the print statement
+}
+
+::Q2::What is 20 degrees Farenheight converted to Celsius by a program in Chapter 1?
+{
+=-6.7
+~41
+~20
+~148.9
+}
+
+::Q3::What is the purpose of the "\n" in a C string?
+{
+=Indicate the end of a line of text
+~Convert the function input to an integer
+~Jump to the next number in an input list
+~It is a syntax error and should not be used
+}
+
+::Q4::Which of the following languages was *not* an inspiration for C.
+{
+=JavaScript
+~PL/I
+~FORTRAN
+~Algol
+}
+
+::Q5::How many significant digits can be stored in a 32-bit float value in C?
+{
+=7
+~14
+~More than 100
+~32
+}
+
+::Q6::What is the largest postive integer that can be stored in 
+a signed 16-bit integer on a PDP-11?
+{
+=32767
+~404
+~65535
+~100000
+}
+
+::Q7::What is the largest postive integer that can be stored in 
+an unsigned 16-bit integer on a PDP-11?
+{
+=65535
+~32767
+~404
+~100000
+}
+
+::Q8::What kind of variable does the "%s" print when using the printf function?
+{
+=Character array
+~Character list
+~Set of strings
+~Single precision exponent
+}
+
+::Q9::What does the "2" in the "%7.2f" format string control?
+{
+=The number of digits after the decimal point
+~The overall width of the field printed
+~It causes the second value to print from the float array
+~It suppresses printing for values less than 7.2
+}
+
+::Q10::In a C "for" statement, there are three statements separated by semicolons.
+What is the purpose of the second (middle) statement in the for loop?
+{
+=It is a conditional statement that decides to run the loop or stop running the loop
+~It sets one or more initial values before the loop starts
+~It runs at the end of each iteration of the loop
+~It contains the list of items that the loop will iterate through
+}
+
+
+
+
+
