@@ -14,7 +14,7 @@
 ~148.9
 }
 
-::Q3::What is the purpose of the "\n" in a C string?
+::Q3::What is the purpose of the the two character sequence backslash followed by 'n' in a C string?
 {
 =Indicate the end of a line of text
 ~Convert the function input to an integer
@@ -81,6 +81,49 @@ What is the purpose of the second (middle) statement in the for loop?
 ~It contains the list of items that the loop will iterate through
 }
 
+::Q11::In C - where does whitespace matter?
+{
+=Within string constants
+~At the end of a code block
+~At the beginning of an if statement
+~All lines with a block must line up
+}
+
+::Q12::In C, what does the "++" operator do?
+{
+=It increments a variable
+~It concatenates two copies of a string to another string
+~It converts null values to zero
+~It computes the remainder from a subtraction operation
+}
+
+::Q13::What is the return type of the "getchar()" function in C?
+{
+=int
+~char
+~char[10]
+~long
+}
+
+::Q14::In C, what woudld we call it when there are two semicolons, one right after another?
+{
+=A null statement
+~A syntax error
+~An empty array intializer
+~A self-referential dictionary entry
+}
+
+::Q15:: (T/F) The C language can resize an array after it has been allocated
+{F}
+
+::Q16::Which of the following Python operators is the same as the 
+'&&' operator in C.
+{
+=and
+~%
+~+
+~is
+}
 
 
 
