@@ -125,6 +125,59 @@ What is the purpose of the second (middle) statement in the for loop?
 ~is
 }
 
+::Q17::What is the resulting type of the expression 10/3.0 in C?
+{
+=float
+~int
+~long
+~Illegal - you cannot combine int and float variables
+}
 
+::Q18::What syntax in C is equivalent to the elif keyword in Python?
+{
+=else if
+~elseif
+~elif
+~eifs
+}
 
+::Q18::What is the numeric value of the ASCII upper case 'A'?
+{
+=65
+~66
+~41
+~300
+}
+
+::Q19::What is the numeric value of the asterisk character '*'?
+{
+=42
+~41
+~43
+~44
+}
+
+::Q20::Which of the foloowing Python data types is most like a C character array?
+{
+=bytearray
+~str
+~list
+~dict
+}
+
+::Q21::Whay does the official documentation for the C function gets() tell you
+to 'Never use this function - ever'?
+{
+=Buffer overflow attack
+~Performace
+~The lack of automatic conversion from unicode
+~The inability to push a single character back into the input buffer
+}
+
+::Q22::What is the C syntax to start a comment?
+{
+=/*
+~//
+~?--
+}
 
