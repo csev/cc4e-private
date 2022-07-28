@@ -1,0 +1,120 @@
+::Q1::Which of the following is true for C's integer types?
+{
+=int, short, and long can be the same size
+~long must be at least twice as long as short
+~int must be at least 8 bits iin length
+}
+
+::Q2::What is the cause of the "Year 2038" problem?
+{
+=How well the number of seconds since January 1, 1970 fits into a C int variable
+~Too many databases stored the year portion of a date as a two character field
+~Leap year calculations would exceed the space available in an int
+~The rules for leap year calculations change in 2037
+}
+
+::Q3::What prefix is used to put a hexadecimal constant into your C code?
+{
+=0x
+~hex:
+~0h
+~9h
+}
+
+::Q4::Which of the following is not a valid character in a hex constant?
+{
+=g
+~e
+~f
+~d
+~a
+}
+
+::Q5::What this the result of the computation '99/100' in C?
+{
+=integer 0
+~integer 9900
+~float 0.0
+~float 0.99
+~float 0.99999 (repeating)
+}
+
+::Q7::What does the expression (13*1.5) evaluate to in C?
+{
+=19.5
+~19
+~13
+~14.5
+}
+
+::Q8::If the result of the logical expression (12>10) is assignmed to an integer variable in C,
+what is the value that is assigned?
+{
+=0
+~1
+~-1
+~2
+}
+
+::Q9::Which of the following expressions evaluate to 'true' when used in an if or while condition in C?
+{
+=42
+~0
+~9-1-8
+~'true'
+~None of the above
+}
+
+::Q10::[html]What is the value in 'j' after this code executes:
+<pre>
+int i,j;
+i = 42;
+j = i++;
+</pre>
+{
+=42
+~43
+~41
+~40
+~Null
+}
+
+::Q11::[html]What is the value in 'j' after this code executes:
+<pre>
+int i,j;
+i = 40;
+j = 1;
+i += j++;
+</pre>
+{
+=42
+~43
+~41
+~40
+~Null
+}
+
+::Q12:: What is the purpose of a semicolon (;) in C?
+{
+=Statement terminator
+~Statement separator
+~It that you should take a pause while reading source code aloud
+~to clarify a series
+~to indicate two closely related sentences
+}
+
+::Q13::Since ANSI C does not have a predevined value for 'true', which
+of these is the most "correct" way to define a true value in ANSI C code?
+{
+=#define TRUE (0\=\=0)
+~#define TRUE (1)
+~#define TRUE 0
+~#define TRUE (43-1)
+}
+
+
+
+
+
+
+

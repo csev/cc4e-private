@@ -14,7 +14,7 @@
 ~148.9
 }
 
-::Q3::What is the purpose of the the two character sequence backslash followed by 'n' in a C string?
+::Q3::What is the purpose of the the '\\n' in a C string?
 {
 =Indicate the end of a line of text
 ~Convert the function input to an integer
