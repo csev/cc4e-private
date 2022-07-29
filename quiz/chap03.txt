@@ -4,7 +4,7 @@
 {
 =Because you need a branch table
 ~Because you have more than two 'else if' statements in an if
-~Because it impresses other programmers withyour C skillz
+~Because it impresses other programmers with your C skillz
 }
 
 ::Q3::Which of these statements makes sure that code in one 'case' clause
@@ -26,7 +26,7 @@ does not 'drop down' into the next 'case' clause?
 ~for ... in
 }
 
-::Q5::What is a commpon use of the comma operator in C Programming?
+::Q5::What is a common use of the comma operator in C Programming?
 {
 =To initialize two variables in a for loop
 ~To create a block of statements in if-the-else without using curly braces
@@ -49,7 +49,7 @@ does not 'drop down' into the next 'case' clause?
 =Middle tested loops
 ~Top tested loops
 ~Bottom tested loops
-~Circular hoop style loops
+~Hoola loops
 }
 
 ::Q8::Of course you should never use a 'goto' in a C program.  In those few places
