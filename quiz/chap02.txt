@@ -106,10 +106,10 @@ i += j++;
 ::Q13::Since ANSI C does not have a predevined value for 'true', which
 of these is the most "correct" way to define a true value in ANSI C code?
 {
-=#define TRUE (0\=\=0)
-~#define TRUE (1)
-~#define TRUE 0
-~#define TRUE (43-1)
+=\#define TRUE (0\=\=0)
+~\\#define TRUE (1)
+~\#define TRUE 0
+~\#define TRUE (43-1)
 }
 
 
