@@ -165,7 +165,7 @@ What is the purpose of the second (middle) statement in the for loop?
 ~dict
 }
 
-::Q21::Whay does the official documentation for the C function gets() tell you
+::Q21::What does the official documentation for the C function gets() tell you
 to 'Never use this function - ever'?
 {
 =Buffer overflow attack
