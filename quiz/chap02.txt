@@ -99,8 +99,8 @@ i += ++j;
 =Statement terminator
 ~Statement separator
 ~It that you should take a pause while reading source code aloud
-~to clarify a series
-~to indicate two closely related sentences
+~To clarify a series
+~To indicate two closely related sentences
 }
 
 ::Q13::Since ANSI C does not have a predevined value for 'true', which
