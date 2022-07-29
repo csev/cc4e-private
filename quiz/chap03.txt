@@ -1,0 +1,64 @@
+::Q1::(T/F) In C, 'elseif' is a reserved word. { F }
+
+::Q2::Which of the following is a reason to use a switch statement?
+{
+=Because you need a branch table
+~Because you have more than two 'else if' statements in an if
+~Because it impresses other programmers withyour C skillz
+}
+
+::Q3::Which of these statements makes sure that code in one 'case' clause
+does not 'drop down' into the next 'case' clause?
+{
+=break
+~continue
+~while
+~endcase
+~\}
+}
+
+::Q4::Which of these loops is used the least in C programming?
+{
+=do-while
+~while-do
+~for
+~foreach
+~for ... in
+}
+
+::Q5::What is a commpon use of the comma operator in C Programming?
+{
+=To initialize two variables in a for loop
+~To create a block of statements in if-the-else without using curly braces
+~To use in place of a semicolon when there are several short C statements in a row
+~To indicate that one should pause pause while reading code aloud
+~To support the 'Oxford comma' style of code in logical expressions
+}
+
+::Q6::Which of the following loops will always run at least one time?
+{
+=do-while
+~while-do
+~for
+~foreach
+~for ... in
+}
+
+::Q7::Which of the following loop styles does the `break` statement allow?
+{
+=Middle tested loops
+~Top tested loops
+~Bottom tested loops
+~Circular hoop style loops
+}
+
+::Q8::Of course you should never use a 'goto' in a C program.  In those few places
+where a 'goto' might seem like a good idea, what structures do modern languages provide
+so that you never, ever, ever have to use a 'goto' in those languages?
+{
+=The try/except construct
+~Determinant loops
+~Recursive functions
+~Automatic garbage collection
+}
+
