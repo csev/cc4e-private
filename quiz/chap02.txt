@@ -2,7 +2,7 @@
 {
 =int, short, and long can be the same size
 ~long must be at least twice as long as short
-~int must be at least 8 bits iin length
+~int must be at least 8 bits in length
 }
 
 ::Q2::What is the cause of the "Year 2038" problem?
@@ -62,7 +62,7 @@ what is the value that is assigned?
 ~0
 ~9-1-8
 ~'true'
-~None of the above
+~None of the rest
 }
 
 ::Q10::[html]What is the value in 'j' after this code executes:
@@ -79,12 +79,12 @@ j = i++;
 ~Null
 }
 
-::Q11::[html]What is the value in 'j' after this code executes:
+::Q11::[html]What is the value in 'i' after this code executes:
 <pre>
 int i,j;
 i = 40;
 j = 1;
-i += j++;
+i += ++j;
 </pre>
 {
 =42
