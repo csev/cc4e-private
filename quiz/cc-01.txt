@@ -1,6 +1,6 @@
 ::Q1::What was the main shortcoming of the "B" language?  (a precursor to C)
 {
-=It was not goot at handling bytes (b-bit characters)
+=It was not good at handling bytes (b-bit characters)
 ~It did not use indentation as syntax
 ~It did not support the FORTRAN FORMAT statement
 ~It did not have first class functions
