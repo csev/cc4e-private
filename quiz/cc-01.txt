@@ -69,9 +69,9 @@ Where do C developers find Input/Output capabilities when writing C?
 Language?
 {
 =5%
-=25%
-=50%
-=100%
+~25%
+~50%
+~100%
 }
 
 ::Q10::Which of these came first?
