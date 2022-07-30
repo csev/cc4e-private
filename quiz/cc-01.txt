@@ -1,0 +1,131 @@
+::Q1::What was the main shortcoming of the "B" language?  (a precursor to C)
+{
+=It was not goot at handling bytes (b-bit characters)
+~It did not use indentation as syntax
+~It did not support the FORTRAN FORMAT statement
+~It did not have first class functions
+}
+
+::Q2::When was the C language "under construction" as it was
+co-evolving with the creation of UNIX?
+{
+=1975
+~1965
+~1985
+~1980
+}
+
+::Q3::What was a key goal in the design of the C language?
+{
+=Reduce the need to write assembly language in UNIX
+~Implement all the core structures of Python (list, dict, tuple)
+~The need to precisely describe the headers in the TSP/IO protocols
+~Replicating the FORTRAN PRINT and computer GOTO language elements
+}
+
+::Q4::The C *language* has no provisions for Input/Output in the language.
+Where do C developers find Input/Output capabilities when writing C?
+{
+=In standard libraries
+~In FORTRAN
+~In the pre-processor
+~On a USB stick
+}
+
+::Q5::Which organization created the first official C standard?
+{
+=ANSI
+~ISO
+~Posix
+~IETF
+}
+
+::Q6::Which of the following was pre-1978?
+{
+=FORTRAN was created
+~Linux was created
+~Minix was created
+~C++ was created
+}
+
+::Q7::Before UNIX, what was the most popular portable operating system?
+{
+=None of these
+~Lunix
+~Minix
+~MTS (Michigan Terminal System)
+~ARPANET
+}
+
+::Q8::What computer inspired the rewrite of UNIX and creation of C?
+{
+=DEC PDP 11/20
+~DEC VAX
+~DEC PDP 1
+~Interdata 7/32
+}
+
+::Q9::In 1978, about what percentage of UNIX was written in Assembly
+Language?
+{
+=5%
+=25%
+=50%
+=100%
+}
+
+::Q10::Which of these came first?
+{
+=Minix
+~Linux
+~Debian
+~Windows 95
+}
+
+::Q11::What operating system powers most of the AWS
+(Amazon Web Servces) server resources?
+{
+=Linux
+~UNIX
+~Minix
+~Windows
+}
+
+::Q10::Which of these came first?
+{
+=Multics
+~Minix
+~Unix
+~Liunx
+}
+
+::Q11::Which university produced and distributed a very popular
+UNIX distribution in the 1970's?
+{
+=University of Berkeley
+~Stanford Univerity
+~MIT
+~Harvard
+}
+
+::Q11::What went wrong in the late 1980's that took UNIX out of 
+the running to be the universal operating system?  This action
+led to the creation of a series of UNIX-like operating systems that now
+dominate the market.
+{
+=The owners of UNIX tried to make money with it by using
+restrictive licensing
+~UNIX's lack of support for FORTRAN was a major barrier to adoption
+~UNIX was never able to fully support the emerging TCP/IP
+stack needed for ARPANET, NSFNet, and the modern Internet
+~C Pointers were just too complex for the average programmer to understand.
+}
+
+::Q12::What company created UNIX and C?
+{
+=AT&T
+~IBM
+~Sun Microsystems
+~Microsoft
+}
+
