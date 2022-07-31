@@ -1,3 +1,58 @@
+::PQ1::
+Which of the following is a bad C variable name?
+{
+= 23spam
+~ _spam
+~ Spam
+~ SPAM23
+}
+
+::PQ2::[html]
+Assume the variable x has been initialized to an integer value (e.g., x = 3). What does the following statement do?
+<pre>
+x = x + 2;
+</pre>
+{
+= Retrieve the current value for x, add two to it and put the sum back into x
+~ Exit the program
+~ This would fail as it is a syntax error
+~ Create a function called "x" and put the value 2 in the function
+}
+
+::PQ3:: [html]
+Which of the following elements of a mathematical expression in C is evaluated first?
+{
+= Parentheses ( )
+~ Multiplication *
+~ Addition +
+~ Subtraction -
+}
+
+::PQ4::[html]
+What is the value of the following expression
+<pre>
+42 % 10
+</pre>
+{
+= 2
+~ 10
+~ 0.42
+~ 4210
+}
+
+::PQ5::[html]
+What will be the value of x after the following C statement executes:
+<pre>
+x = 1 + 2 * 3 - 5 / 6;
+</pre>
+{
+= 7
+~ 7.0
+~ 0.5
+~ 2
+}
+
+
 ::Q1::Which of the following is true for C's integer types?
 {
 =int, short, and long can be the same size
