@@ -91,6 +91,15 @@ Language?
 ~Windows
 }
 
+::Q13::What year was the percentage of women taking Computer Science degrees the highest
+according to the NPR article titled, "When Women Stopped Coding"?
+{
+~1973
+~1978
+~1983
+~1988
+}
+
 ::Q10::Which of these came first?
 {
 =Multics
