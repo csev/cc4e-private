@@ -96,7 +96,7 @@ according to the NPR article titled, "When Women Stopped Coding"?
 {
 ~1973
 ~1978
-~1983
+=1983
 ~1988
 }
 
