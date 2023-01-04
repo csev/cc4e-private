@@ -1,0 +1,74 @@
+::Q1::Which of the following is *not* a feature of the C Language?
+{
+=Garbage collection
+~Iteration
+~Conditional execution
+~Functions
+}
+
+::Q2::What function is used in C to provide very simple dynamic memory allocation?
+{
+=malloc / free
+~get / put
+~post / load
+~new / str
+}
+
+::Q3::What percentage of the UNIX operating system (at the time of the writing of the
+text book - 1978) was written in C?
+{
+=90 percent
+~20 percent
+~50 percent
+~80 percent
+}
+
+::Q4::What early computer was being used for C development in 1978?
+Where do C developers find Input/Output capabilities when writing C?
+{
+=PDP/11
+~CDC 6500
+~Burroughs B-3900
+~HP 21-MX
+~Cray-1
+}
+
+::Q5::What is the order in which the following languages were developed from first to last?
+{
+=BCPL / B / C
+~B / C / BCPL
+~A / B / C
+~B / C / B / X
+}
+
+::Q6::Which is larger, a word or byte?
+{
+=word
+~byte
+~neither, they are the same size
+}
+
+::Q7::Which type in C is ued to store 8-bit values?
+{
+=char
+~byte
+~int
+~long
+~double
+}
+
+::Q8::The C Compiler takes C source code as input.  What does the C compiler produce?
+{
+=Machine language
+~B Source code
+~Optimized JavaScript
+~Properly indented C code
+}
+
+::Q9::Before Brian Kernighan wrote the "C Programming Book", what was he writing?
+{
+=A series of tutorial documents on topics like B and C
+~Billing programs in COBOL
+~Web servers to support geo-location
+}
+
