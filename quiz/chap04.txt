@@ -1,0 +1,138 @@
+::Q1::Which of the following storage classes is not used in modern C programs?
+{
+=register
+~automatic
+~extern
+~static
+}
+
+::Q2::Which methods in the Python list() obect provide stack-like functionality?
+{
+=append / pop
+~push / pop
+~enqueue / dequeue
+~enqueue / pop
+}
+
+::Q3::Which of the following storage types are allocated in the stack frame
+when a function is entered?
+{
+=automatic
+~extern
+~static
+~common
+}
+
+::Q4::What is the Celsus equivalent of 68F?
+{
+=20
+~22
+~68
+~40
+~273
+}
+
+::Q5::Which of the following web site names is inspired by the situation when
+a recursive function mistakenly calls itself an infinite number of times?
+{
+=Stack Overflow
+~Medium
+~linkedIn
+~Twitter
+~W3 Schools
+}
+
+::Q6::Why can a function change the contents of an array of characters even though
+the array is passed into the function "by value".
+{
+=Because the location of the array data is passed into the function
+~Because the function can access the methods in the array object
+~Because C copies the array contents back to the main program when the function returns
+~Because the virtual memory map in Intel x86 processors allows two addresses to map to the same memory location.
+}
+
+::Q6::What is the best definition of "recursion"?
+{
+=See recursion
+~Looping and callbacks
+~First class functions
+~Refactoring best practice
+}
+
+::Q7::What is the output of the C pre-processor?
+{
+=C Source Code
+~Assembly language
+~Machine code
+~Pre-optimization intermediate code
+}
+
+::Q8::Which of the following commands are handled by the C pre-processor?
+{
+=\#ifdef
+~break
+~continue
+~\#while
+~elif :
+}
+
+::Q9::In modern C, what does it mean when the type of a function is 'void'?
+{
+=The function does not return a value
+~The function return value must be explicitly converted to an int
+~The function returns an address and not a value
+~The function body is empty and will be defined after the program starts
+}
+
+::Q10::In the 1978 C dialect, what is the default return type for a function?
+{
+=int
+~void
+~null
+~str
+~list
+}
+
+::Q11::What is the scope of a extern variable?
+{
+~The block in which it is defined
+~The function in which it is defined
+~The file in which it is defined
+=The application in which it is defined.
+}
+
+::Q12::What is the scope of an automatic variable?
+{
+=The block in which it is defined
+~The function in which it is defined
+~The file in which it is defined
+~The application in which it is defined.
+}
+
+::Q13::What is the scope of a function parameter variable?
+{
+~The block in which it is defined
+=The function in which it is defined
+~The file in which it is defined
+~The application in which it is defined.
+}
+
+::Q14::What is the scope of a static variable?
+{
+~The block in which it is defined
+~The function in which it is defined
+=The file in which it is defined
+~The application in which it is defined.
+}
+
+::Q15::What is the best data structure to use when implementing a reverse polish
+calculator.
+{
+=Stack
+~Hash table
+~Linked List
+~FIFO Queue
+}
+
+
+
