@@ -48,7 +48,7 @@ Where do C developers find Input/Output capabilities when writing C?
 ~neither, they are the same size
 }
 
-::Q7::Which type in C is ued to store 8-bit values?
+::Q7::Which type in C is used to store 8-bit values?
 {
 =char
 ~byte
