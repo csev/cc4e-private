@@ -62,3 +62,19 @@ so that you never, ever, ever have to use a 'goto' in those languages?
 ~Automatic garbage collection
 }
 
+::Q9::What does the semicolon mean in a Python program
+{
+=A statement separator
+~A statement terminator
+~The beginning of an indented block
+~The end of an indented block
+}
+
+::Q10::What FORTTAN construct is roughly equivalent to the C switch statement?
+{
+=Computed GOTO
+~SWITCH
+~STITCH-GOTO
+~GOTO[TABLE]
+}
+
