@@ -38,7 +38,7 @@
 ~32
 }
 
-::Q6::What is the largest postive integer that can be stored in 
+::Q6::What is the largest positive integer that can be stored in
 a signed 16-bit integer on a PDP-11?
 {
 =32767
@@ -47,7 +47,7 @@ a signed 16-bit integer on a PDP-11?
 ~100000
 }
 
-::Q7::What is the largest postive integer that can be stored in 
+::Q7::What is the largest positive integer that can be stored in
 an unsigned 16-bit integer on a PDP-11?
 {
 =65535
@@ -105,18 +105,18 @@ What is the purpose of the second (middle) statement in the for loop?
 ~long
 }
 
-::Q14::In C, what woudld we call it when there are two semicolons, one right after another?
+::Q14::In C, what would we call it when there are two semicolons, one right after another?
 {
 =A null statement
 ~A syntax error
-~An empty array intializer
+~An empty array initializer
 ~A self-referential dictionary entry
 }
 
 ::Q15:: (T/F) The C language can resize an array after it has been allocated
 {F}
 
-::Q16::Which of the following Python operators is the same as the 
+::Q16::Which of the following Python operators is the same as the
 '&&' operator in C.
 {
 =and
@@ -157,7 +157,7 @@ What is the purpose of the second (middle) statement in the for loop?
 ~44
 }
 
-::Q20::Which of the foloowing Python data types is most like a C character array?
+::Q20::Which of the following Python data types is most like a C character array?
 {
 =bytearray
 ~str
@@ -169,7 +169,7 @@ What is the purpose of the second (middle) statement in the for loop?
 to 'Never use this function - ever'?
 {
 =Buffer overflow attack
-~Performace
+~Performance
 ~The lack of automatic conversion from unicode
 ~The inability to push a single character back into the input buffer
 }

@@ -6,7 +6,7 @@
 ~static
 }
 
-::Q2::Which methods in the Python list() obect provide stack-like functionality?
+::Q2::Which methods in the Python list() object provide stack-like functionality?
 {
 =append / pop
 ~push / pop
@@ -23,7 +23,7 @@ when a function is entered?
 ~common
 }
 
-::Q4::What is the Celsus equivalent of 68F?
+::Q4::What is the Celsius equivalent of 68F?
 {
 =20
 ~22

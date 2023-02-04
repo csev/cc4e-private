@@ -102,7 +102,7 @@ x = 1 + 2 * 3 - 5 / 6;
 ~14.5
 }
 
-::Q8::If the result of the logical expression (12>10) is assignmed to an integer variable in C,
+::Q8::If the result of the logical expression (12>10) is assigned to an integer variable in C,
 what is the value that is assigned?
 {
 =0
@@ -117,7 +117,6 @@ what is the value that is assigned?
 ~0
 ~9-1-8
 ~'true'
-~None of the rest
 }
 
 ::Q10::[html]What is the value in 'j' after this code executes:
@@ -158,7 +157,7 @@ i += ++j;
 ~To indicate two closely related sentences
 }
 
-::Q13::Since ANSI C does not have a predevined value for 'true', which
+::Q13::Since ANSI C does not have a predefined value for 'true', which
 of these is the most "correct" way to define a true value in ANSI C code?
 {
 =\#define TRUE (0\=\=0)

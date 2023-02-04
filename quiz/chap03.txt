@@ -70,7 +70,7 @@ so that you never, ever, ever have to use a 'goto' in those languages?
 ~The end of an indented block
 }
 
-::Q10::What FORTTAN construct is roughly equivalent to the C switch statement?
+::Q10::What FORTRAN construct is roughly equivalent to the C switch statement?
 {
 =Computed GOTO
 ~SWITCH
