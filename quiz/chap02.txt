@@ -157,13 +157,12 @@ i += ++j;
 ~To indicate two closely related sentences
 }
 
-::Q13::Since ANSI C does not have a predefined value for 'true', which
-of these is the most "correct" way to define a true value in ANSI C code?
+::Q13::What does the function atoi do?
 {
-=\#define TRUE (0\=\=0)
-~\\#define TRUE (1)
-~\#define TRUE 0
-~\#define TRUE (43-1)
+~converts a string of letters into its digit equivalent
+=converts a string of digits into its numeric equivalent
+~gives an exception
+~converts a string of hexadecimal digits into its equivalent integer value
 }
 
 
