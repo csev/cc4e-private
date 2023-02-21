@@ -1,0 +1,202 @@
+::Q1::What is the C operator that takes the address of a variable?
+{
+=&
+~*
+~\-\>
+~.
+}
+
+::Q2::What is the C operator that takes an address of a value and retrieves
+the value pointed to by the address?
+{
+=&
+~*
+~\-\>
+~.
+}
+
+::Q3::What is the C library function that is famous for exposing a C application
+to buffer overflow?
+{
+=gets
+~fgets
+~printf
+~main
+}
+
+::Q4::What is the printf conversion code in modern C to print out a pointer in
+hexidecimal format like '0x16f5b31ec'?
+{
+=%p
+~%d
+~%x
+~%f
+}
+
+::Q5::What function in Python is roughly equivalent to finding the address of a
+a variable.
+{
+=id()
+~dir()
+~deref()
+~type()
+~loc()
+}
+
+::Q6::What is CPython?
+{
+=The Python implementation written in C
+~Python 3 - (i.e. Python2 was BPython)
+~Compact Python
+~A marketing message (i.e. "See Python")
+}
+
+::Q7::When you add two to an integer pointer (assuming integers are 32-bits),
+what happens to the actual address stored in the integer pointer?
+{
+=It is increased by 8
+~It is increased by 2
+~It is increased by 4
+~It is increased by 16
+}
+
+::Q8::What new type was added to C shortly after 1978 that allowed
+functions like alloc() to return a generic address that can be cast to
+point to any type.
+{
+=void *
+~generic *
+~pointer *
+~char *
+}
+
+::Q9::Which of these languages supports call by reference for simple variables
+like float or int?
+{
+=Pascal
+~Python
+~JavaScript
+~Java
+}
+
+::Q10::When calling functions, FORTRAN uses call by reference. {T}
+
+::Q11::According to the Wikipedia article on Buffer Overflow, what is the best way
+to copy data from one copy to another?
+{
+=strlcpy
+~strncpy
+~strcpy
+~Copy constructor
+}
+
+::Q12::According to the Wikipedia article on Stack Buffer Overflow, what is the
+technique used to detect when a stack variable has been over-referenced in an
+attempt to overwrite a return value on the stack?
+{
+=Canary value
+~Stack blockade
+~__stack_chk_guard
+~Worm check
+}
+
+::Q12::According to the Wikipedia article, what is one of the ways that
+the devastating "Morris worm" spread throughout so many servers on the Internet?
+{
+=Buffer overflow in the UNIX finger service
+~Buffer overflow in Microsoft SQL Server
+~SQL injection in Microsoft SQL Server
+~Cross-Site-Scripting in the UNIX finger service
+}
+
+::Q13::When the Morris Worm infected about 10% of the servers connected to the Internet
+in 1988, what organization was created to track and notify expert users and system administrators
+about various security threats on the Internet.
+{
+=CERT
+~DARPA
+~NIST
+~Coursera
+}
+
+::Q14::[html]In the following C code:
+<pre>
+int *ip;
+ip = (int *) alloc(sizeof(int)*4);
+</pre>
+What is sizeof?
+{
+=An operator
+~A function
+~A macro
+~An object
+}
+
+::Q15::Which of the following languages does Dr. Chuck think has the most elegant
+implementation of call by reference?
+{
+=PHP
+~Python
+~Pascal
+~JavaScript
+}
+
+::Q16::When you define an array of characters with 10 elements and reference the
+name of the array without a subscript, what is its value?
+{
+=A pointer to the address of the first character in the array
+~The length of the array (10)
+~The length of a single element of the array (1)
+~The location of the string terminating character '\\0'
+}
+
+::Q17::[html]If you had the following array:
+<pre>
+int ia[100];
+</pre>
+Which of the following is equivalent to a[5]?
+{
+=*(a+5)
+~*(a+20)
+~*(a+4)
+~*(a+8)
+}
+
+::Q18::In the 1978 edition of the the K&R C textbook, what is the type of the
+value returned by the alloc() function?
+{
+=char *
+~void *
+~pointer *
+~char &
+}
+
+::Q19::In the 1983 edition of the the K&R C textbook, what is the type of the
+value returned by the malloc() function?
+{
+~char *
+=void *
+~pointer *
+~char &
+}
+
+::Q20::[html]What does the following lines of code accomplish?
+<pre>
+char *s, *t;
+\{
+  while (*s++ = *t++) ;
+\}
+</pre>
+{
+=Copy the characters from t to s until an end-of-string indicator is reached
+~Make it so that the s pointer points to the data in t
+~Compares the length of the string s to the length of string t
+~It has a bug because it does not copy the end-of-string indicator
+}
+
+::Q21::If you where programming in C in 1978, a 32-bit integer was large enough to hold most
+pointer values {T}
+
+::Q22::If you are programming in C after 2020, a 32-bit integer will be large enough to hold most
+pointer values {F}
+
