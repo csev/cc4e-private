@@ -11,6 +11,19 @@ struct list {
   struct lnode *tail;
 };
 
+void list_add(lst, value)
+    struct list *lst;
+    int value;
+{
+      struct lnode *new = (struct lnode *) malloc(sizeof(struct lnode));
+      new->value = value;
+      if ( lst->tail != NULL ) lst->tail->next = new;
+      new->next = NULL;
+      lst->tail = new;
+      if ( lst->head == NULL ) lst->head = new;
+}
+
+
 struct lnode * list_find(lst, value)
     struct list *lst;
     int value;
@@ -44,18 +57,6 @@ int list_remove(lst, value)
         prev = cur;
     }
     return 0;
-}
-
-void list_add(lst, value)
-    struct list *lst;
-    int value;
-{
-      struct lnode *new = (struct lnode *) malloc(sizeof(struct lnode));
-      new->value = value;
-      if ( lst->tail != NULL ) lst->tail->next = new;
-      new->next = NULL;
-      lst->tail = new;
-      if ( lst->head == NULL ) lst->head = new;
 }
 
 void list_dump(lst)
