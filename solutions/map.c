@@ -18,15 +18,15 @@ struct Map {
   int reverse;
 
   // Methods
+  void (*put)(struct Map* self, char *key, int value);
+  int (*get)(struct Map* self, char *key, int def);
+  int (*size)(struct Map* self);
+  void (*dump)(struct Map* self);
   struct mnode* (*first)(struct Map* self);
   struct mnode* (*last)(struct Map* self);
   struct mnode* (*next)(struct Map* self);
-  struct Map* (*dump)(struct Map* self);
-  int (*get)(struct Map* self, char *key, int def);
-  int (*size)(struct Map* self);
-  struct Map* (*put)(struct Map* self, char *key, int value);
-  struct Map* (*vsort)(struct Map* self);
-  struct Map* (*ksort)(struct Map* self);
+  void (*vsort)(struct Map* self);
+  void (*ksort)(struct Map* self);
 };
 
 struct mnode* Map_first(struct Map* self)
@@ -55,14 +55,13 @@ struct mnode* Map_next(struct Map* self)
     return self->current;
 }
 
-struct Map* Map_dump(struct Map* self)
+void Map_dump(struct Map* self)
 {
     struct mnode *cur;
     printf("Object Map@%p count=%d\n", self, self->count);
     for(cur = self->head; cur != NULL ; cur = cur->next ) {
          printf("  %s=%d\n", cur->key, cur->value);
     }
-    return self;
 }
 
 struct mnode* Map_find(struct Map* self, char *key)
@@ -89,18 +88,18 @@ int Map_size(struct Map* self)
 }
 
 // x[key] = value;
-struct Map* Map_put(struct Map* self, char *key, int value) {
+void Map_put(struct Map* self, char *key, int value) {
     
     struct mnode *old, *new;
     char *new_key, *new_value;
 
-    if ( key == NULL ) return self;
+    if ( key == NULL ) return;
 
     // First look up
     old = Map_find(self, key);
     if ( old != NULL ) {
         old->value = value;
-        return self;
+        return;
     }
 
     // Not found - time to insert
@@ -118,8 +117,6 @@ struct Map* Map_put(struct Map* self, char *key, int value) {
     new->value = value;
 
     self->count++;
-
-    return self; // To allow chaining
 }
 
 /* Swap the current node with current->next */
@@ -155,12 +152,12 @@ void Map_swap(struct Map* self, struct mnode* cur)
 }
 
 // Bubble sort by key - Order N**2
-struct Map* Map_ksort(struct Map* self) {
+void Map_ksort(struct Map* self) {
 
     struct mnode *prev, *cur, *next, *rest;
     int i, swapped;
 
-    if ( self->head == NULL ) return self;
+    if ( self->head == NULL ) return;
 
     for (i=0; i<=self->count; i++) {
         swapped = 0;
@@ -174,18 +171,17 @@ struct Map* Map_ksort(struct Map* self) {
             swapped = 1;
         }
         // Stop early if nothing was swapped
-        if ( swapped == 0 ) return self;
+        if ( swapped == 0 ) return;
     }
-    return self;
 }
 
 // Bubble sort by key - Order N**2
-struct Map* Map_vsort(struct Map* self) {
+void Map_vsort(struct Map* self) {
 
     struct mnode *cur;
     int i;
 
-    if ( self->head == NULL ) return self;
+    if ( self->head == NULL ) return;
 
     for (i=0; i<=self->count; i++) {
         for(cur = self->head; cur != NULL ; cur = cur->next ) {
@@ -197,7 +193,6 @@ struct Map* Map_vsort(struct Map* self) {
             Map_swap(self, cur);
         }
     }
-    return self;
 }
 
 /* Constructor */
@@ -210,13 +205,13 @@ struct Map * Map_new() {
     p->count = 0;
     p->reverse = 0;
 
+    p->put = &Map_put;
+    p->get = &Map_get;
+    p->size = &Map_size;
     p->dump = &Map_dump;
     p->first = &Map_first;
     p->last = &Map_last;
     p->next = &Map_next;
-    p->get = &Map_get;
-    p->size = &Map_size;
-    p->put = &Map_put;
     p->vsort = &Map_vsort;
     p->ksort = &Map_vsort;
     return p;
@@ -244,7 +239,8 @@ int main(void)
     printf("Testing Map class\n");
     map->put(map, "z", 8);
     map->put(map, "z", 1);
-    map->put(map, "y", 2)->put(map, "b", 3);
+    map->put(map, "y", 2);
+    map->put(map, "b", 3);
     map->put(map, "a", 4);
     map->dump(map);
 
@@ -266,7 +262,8 @@ int main(void)
     map->dump(map);
 
     printf("\nSorted by value\n");
-    map->vsort(map)->dump(map);
+    map->vsort(map);
+    map->dump(map);
 
     cur = map->first(map);
     printf("The smallest value is %s=%d\n", cur->key, cur->value);
