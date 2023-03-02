@@ -2,18 +2,27 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct mnode {
+/*
+ * This is our map entry for Map<String,Integer>
+ *
+ * The key is a string / character array which is allocated using malloc()
+ * when a new entry is created.
+ */
+struct MapEntry {
     char *key;
     int value;
-    struct mnode *prev;
-    struct mnode *next;
+    struct MapEntry *prev;
+    struct MapEntry *next;
 };
 
+/*
+ * This is our Map class - Template
+ */
 struct Map {
   // Methods
-  struct mnode *head;
-  struct mnode *tail;
-  struct mnode *current;
+  struct MapEntry *head;
+  struct MapEntry *tail;
+  struct MapEntry *current;
   int count;
   int reverse;
 
@@ -22,28 +31,49 @@ struct Map {
   int (*get)(struct Map* self, char *key, int def);
   int (*size)(struct Map* self);
   void (*dump)(struct Map* self);
-  struct mnode* (*first)(struct Map* self);
-  struct mnode* (*last)(struct Map* self);
-  struct mnode* (*next)(struct Map* self);
-  void (*vsort)(struct Map* self);
+  struct MapEntry* (*first)(struct Map* self);
+  struct MapEntry* (*last)(struct Map* self);
+  struct MapEntry* (*next)(struct Map* self);
+  void (*asort)(struct Map* self);
   void (*ksort)(struct Map* self);
 };
 
-struct mnode* Map_first(struct Map* self)
+/**
+ * Map_first - Start an iterator at the head of the Map and return the first item
+ *
+ * self - Ths pointer to the instance of this class.
+ *
+ * returns NULL when there are no entries in the Map
+ */
+struct MapEntry* Map_first(struct Map* self)
 {
     self->current = self->head;
     self->reverse = 0;
     return self->current;
 }
 
-struct mnode* Map_last(struct Map* self)
+/**
+ * Map_last - Start an iterator at the tail of the Map and return the last item
+ *
+ * self - Ths pointer to the instance of this class.
+ *
+ * returns NULL when there are no entries in the Map
+ */
+struct MapEntry* Map_last(struct Map* self)
 {
     self->current = self->tail;
     self->reverse = 1;
     return self->current;
 }
 
-struct mnode* Map_next(struct Map* self)
+/**
+ * Map_next - Advance the iterator forwards or backwords and return the next item
+ *
+ * self - Ths pointer to the instance of this class.
+ *
+ * returns NULL when there are no more entries in the Map
+ */
+struct MapEntry* Map_next(struct Map* self)
 {
     if ( self->current == NULL) return NULL;
     if ( self->reverse == 0 ) {
@@ -55,18 +85,32 @@ struct mnode* Map_next(struct Map* self)
     return self->current;
 }
 
+/**
+ * Map_dump - In effect a toString() except we print the contents of the Map to stdout
+ *
+ * self - Ths pointer to the instance of this class.
+ */
+
 void Map_dump(struct Map* self)
 {
-    struct mnode *cur;
+    struct MapEntry *cur;
     printf("Object Map@%p count=%d\n", self, self->count);
     for(cur = self->head; cur != NULL ; cur = cur->next ) {
          printf("  %s=%d\n", cur->key, cur->value);
     }
 }
 
-struct mnode* Map_find(struct Map* self, char *key)
+/**
+ * Map_find - Locate and return the entry with the matching key or NULL if there is no entry
+ *
+ * self - Ths pointer to the instance of this class.
+ * key - A character pointer to the key value
+ *
+ * Returns a MapEntry or NULL.
+ */
+struct MapEntry* Map_find(struct Map* self, char *key)
 {
-    struct mnode *cur;
+    struct MapEntry *cur;
     if ( key == NULL ) return NULL;
     for(cur = self->head; cur != NULL ; cur = cur->next ) {
         if(strcmp(key, cur->key) == 0 ) return cur;
@@ -74,23 +118,56 @@ struct mnode* Map_find(struct Map* self, char *key)
     return NULL;
 }
 
-// x.get(key) - Returns NULL if not found
+/**
+ * Map_get - Locate and return the value for the corresponding key or a default value
+ *
+ * self - Ths pointer to the instance of this class.
+ * key - A character pointer to the key value
+ * def - A default value to return if the key is not in the Map
+ *
+ * Returns an integer
+ *
+ * This method takes inspiration from the Python code:
+ *
+ *   value = map.get("key", def)
+ */
 int Map_get(struct Map* self, char *key, int def)
 {
-    struct mnode *retval = Map_find(self, key);
+    struct MapEntry *retval = Map_find(self, key);
     if ( retval == NULL ) return def;
     return retval->value;
 }
 
+/**
+ * Map_size - Return the number of entries in the Map as an integer
+ *
+ * self - Ths pointer to the instance of this class.
+ *
+ * This medhod is like the Python len() function, but we name it
+ * size() to pay homage to Java.
+ */
 int Map_size(struct Map* self)
 {
     return self->count;
 }
 
-// x[key] = value;
+/**
+ * Map_put - Add or update an entry in the Map
+ *
+ * self - Ths pointer to the instance of this class.
+ * key - A character pointer to the key value
+ * value - The value to be stored with the associated key
+ *
+ * If the key is not in the Map, an entry is added.  If there
+ * is already an entry in the Map for the key, the value is update.
+ *
+ * This method takes inspiration from the Python code:
+ *
+ *   map["key"] = value
+ */
 void Map_put(struct Map* self, char *key, int value) {
-    
-    struct mnode *old, *new;
+
+    struct MapEntry *old, *new;
     char *new_key, *new_value;
 
     if ( key == NULL ) return;
@@ -119,19 +196,28 @@ void Map_put(struct Map* self, char *key, int value) {
     self->count++;
 }
 
-/* Swap the current node with current->next */
-void Map_swap(struct Map* self, struct mnode* cur)
+/**
+ * Map_swap - Swap the current MapEntry with the its successor in the Map
+ *
+ * self - Ths pointer to the instance of this class.
+ * cur - A MapEntry in the Map
+ *
+ * This code must deal with cur being the first item in the Map
+ * is the last item in the Map.
+ */
+void Map_swap(struct Map* self, struct MapEntry* cur)
 {
 
-    struct mnode *prev, *next, *rest;
+    struct MapEntry *prev, *next, *rest;
 
-    if ( cur->next == NULL ) return;
+    /* Guardian pattern */
+    if ( cur == NULL || cur->next == NULL ) return;
 
-    // Grab these before we start changing things
+    /* Grab these before we start changing things */
     next = cur->next;
     prev = cur->prev;
     rest = cur->next->next;
-                              
+
     if ( prev != NULL ) {
         prev->next = next;
     } else {
@@ -151,10 +237,27 @@ void Map_swap(struct Map* self, struct mnode* cur)
     }
 }
 
-// Bubble sort by key - Order N**2
+/**
+ * Map_ksort - Sort the list so that the keys are low to high
+ *
+ * self - Ths pointer to the instance of this class.
+ *
+ * This code uses a lame, N-squared rock sort for simplicity.
+ * The outer loop is a conunted loop that runs size() times.
+ * The inner loop goes through the map comparing successive
+ * elements and when a pair of elements is in the wrong order they
+ * are swapped.  The inner loop in effect insures that the largest
+ * value tumbles down to the bottom of the Map.  And if this inner
+ * loop is done size() times we are assured that the Map is sorted.
+ * Is one tiny optimization, if we get through the inner loop with
+ * no swaps, we can exit the outer loop.
+ *
+ * The inspiration for the name of this routine comes from the PHP
+ * ksort() function.
+ */
 void Map_ksort(struct Map* self) {
 
-    struct mnode *prev, *cur, *next, *rest;
+    struct MapEntry *prev, *cur, *next, *rest;
     int i, swapped;
 
     if ( self->head == NULL ) return;
@@ -175,10 +278,27 @@ void Map_ksort(struct Map* self) {
     }
 }
 
-// Bubble sort by key - Order N**2
-void Map_vsort(struct Map* self) {
+/**
+ * Map_asort - Sort the list so that the values are low to high
+ *
+ * self - Ths pointer to the instance of this class.
+ *
+ * This code uses a lame, N-squared rock sort for simplicity.
+ * The outer loop is a conunted loop that runs size() times.
+ * The inner loop goes through the map comparing successive
+ * elements and when a pair of elements is in the wrong order they
+ * are swapped.  The inner loop in effect insures that the largest
+ * value tumbles down to the bottom of the Map.  And if this inner
+ * loop is done size() times we are assured that the Map is sorted.
+ a Is one tiny optimization, if we get through the inner loop with
+ * no swaps, we can exit the outer loop.
+ *
+ * The inspiration for the name of this routine comes from the (poorly
+ * named) PHP * asort() function.
+ */
+void Map_asort(struct Map* self) {
 
-    struct mnode *cur;
+    struct MapEntry *cur;
     int i;
 
     if ( self->head == NULL ) return;
@@ -188,14 +308,18 @@ void Map_vsort(struct Map* self) {
             if ( cur->next == NULL ) continue;  // Last item in the list
             // In order already
             if ( cur->value <= cur->next->value ) continue;
- 
+
             // printf("Flipping %d %d\n", cur->value, cur->next->value);
             Map_swap(self, cur);
         }
     }
 }
 
-/* Constructor */
+/**
+ * Constructor for the Map Class
+ *
+ * Initialized both the attributes and methods
+ */
 struct Map * Map_new() {
     struct Map *p = malloc(sizeof(*p));
 
@@ -212,14 +336,19 @@ struct Map * Map_new() {
     p->first = &Map_first;
     p->last = &Map_last;
     p->next = &Map_next;
-    p->vsort = &Map_vsort;
-    p->ksort = &Map_vsort;
+    p->asort = &Map_asort;
+    p->ksort = &Map_ksort;
     return p;
 }
 
-/* Destructor */
+/**
+ * Destructor for the Map Class
+ *
+ * Loops through and frees all the keys and entries in the map.
+ * The values are integers and so there is no need to free them.
+ */
 void Map_del(struct Map* self) {
-    struct mnode *cur, *next;
+    struct MapEntry *cur, *next;
     cur = self->head;
     while(cur) {
         free(cur->key);
@@ -231,9 +360,13 @@ void Map_del(struct Map* self) {
     free((void *)self);
 }
 
+/**
+ * The main program to test and exercise the Map 
+ * and MapEntry classes.
+ */
 int main(void)
 {
-    struct mnode *cur;
+    struct MapEntry *cur;
     struct Map * map = Map_new();
 
     printf("Testing Map class\n");
@@ -262,7 +395,7 @@ int main(void)
     map->dump(map);
 
     printf("\nSorted by value\n");
-    map->vsort(map);
+    map->asort(map);
     map->dump(map);
 
     cur = map->first(map);
