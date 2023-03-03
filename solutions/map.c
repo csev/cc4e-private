@@ -192,7 +192,7 @@ void Map_put(struct Map* self, char *key, int value) {
  *
  * This method takes inspiration from the Python code:
  *
- *   value = map.get("key", def)
+ *   value = map.get("key", 42)
  */
 int Map_get(struct Map* self, char *key, int def)
 {
