@@ -16,27 +16,64 @@ struct MapEntry {
 };
 
 /*
- * This is our Map class - Template
+ * A MapIter contains the current item and whether this is a forward or
+ * reverse iterator.
+ */
+struct MapIter {
+   struct MapEntry *current;
+   int reverse;
+
+   struct MapEntry* (*next)(struct MapIter* self);
+   void (*del)(struct MapIter* self);
+};
+
+/*
+ * This is our Map class
  */
 struct Map {
-  /* Attributes */
-  struct MapEntry *head;
-  struct MapEntry *tail;
-  struct MapEntry *current;
-  int count;
-  int reverse;
+   /* Attributes */
+   struct MapEntry *head;
+   struct MapEntry *tail;
+   int count;
 
-  /* Methods */
-  void (*put)(struct Map* self, char *key, int value);
-  int (*get)(struct Map* self, char *key, int def);
-  int (*size)(struct Map* self);
-  void (*dump)(struct Map* self);
-  struct MapEntry* (*first)(struct Map* self);
-  struct MapEntry* (*last)(struct Map* self);
-  struct MapEntry* (*next)(struct Map* self);
-  void (*asort)(struct Map* self);
-  void (*ksort)(struct Map* self);
+   /* Methods */
+   void (*put)(struct Map* self, char *key, int value);
+   int (*get)(struct Map* self, char *key, int def);
+   int (*size)(struct Map* self);
+   void (*dump)(struct Map* self);
+   struct MapIter* (*first)(struct Map* self);
+   struct MapIter* (*last)(struct Map* self);
+   void (*asort)(struct Map* self);
+   void (*ksort)(struct Map* self);
+   struct MapEntry* (*index)(struct Map* self, int position);
+   void (*del)(struct Map* self);
 };
+
+/**
+ * Destructor for the Map Class
+ *
+ * Loops through and frees all the keys and entries in the map.
+ * The values are integers and so there is no need to free them.
+ */
+void Map_del(struct Map* self) {
+    struct MapEntry *cur, *next;
+    cur = self->head;
+    while(cur) {
+        free(cur->key);
+        /* value is just part of the struct */
+        next = cur->next;
+        free(cur);
+        cur = next;
+    }
+    free((void *)self);
+}
+
+/**
+ * Destructor for the MapIter Class
+ */
+void MapIter_del(struct MapIter* self) {
+    free((void *)self);
+}
 
 /**
  * Map_dump - In effect a toString() except we print the contents of the Map to stdout
@@ -64,9 +101,28 @@ void Map_dump(struct Map* self)
 struct MapEntry* Map_find(struct Map* self, char *key)
 {
     struct MapEntry *cur;
-    if ( key == NULL ) return NULL;
+    if ( self == NULL || key == NULL ) return NULL;
     for(cur = self->head; cur != NULL ; cur = cur->next ) {
         if(strcmp(key, cur->key) == 0 ) return cur;
+    }
+    return NULL;
+}
+
+/**
+ * Map_index - Locate and return the entry at the specified in the list
+ *
+ * self - The pointer to the instance of this class.
+ * position - A zero-based position in the list
+ *
+ * Returns a MapEntry or NULL.
+ */
+struct MapEntry* Map_index(struct Map* self, int position)
+{
+    int i;
+    struct MapEntry *cur;
+    if ( self == NULL ) return NULL;
+    for(cur = self->head, i=0; cur != NULL ; cur = cur->next, i++ ) {
+        if ( i >= position ) return cur;
     }
     return NULL;
 }
@@ -159,41 +215,14 @@ int Map_size(struct Map* self)
 }
 
 /**
- * Map_first - Start an iterator at the head of the Map and return the first item
- *
- * self - The pointer to the instance of this class.
- *
- * returns NULL when there are no entries in the Map
- */
-struct MapEntry* Map_first(struct Map* self)
-{
-    self->current = self->head;
-    self->reverse = 0;
-    return self->current;
-}
-
-/**
- * Map_last - Start an iterator at the tail of the Map and return the last item
- *
- * self - The pointer to the instance of this class.
- *
- * returns NULL when there are no entries in the Map
- */
-struct MapEntry* Map_last(struct Map* self)
-{
-    self->current = self->tail;
-    self->reverse = 1;
-    return self->current;
-}
-
-/**
- * Map_next - Advance the iterator forwards or backwords and return the next item
+ * MapIter_next - Advance the iterator forwards or backwards
+ * and return the next item
  *
  * self - The pointer to the instance of this class.
  *
  * returns NULL when there are no more entries in the Map
  */
-struct MapEntry* Map_next(struct Map* self)
+struct MapEntry* MapIter_next(struct MapIter* self)
 {
     if ( self->current == NULL) return NULL;
     if ( self->reverse == 0 ) {
@@ -203,6 +232,40 @@ struct MapEntry* Map_next(struct Map* self)
     }
 
     return self->current;
+}
+
+/**
+ * Map_first - Start an iterator at the head of the Map and return the first item
+ *
+ * self - The pointer to the instance of this class.
+ *
+ * returns NULL when there are no entries in the Map
+ */
+struct MapIter* Map_first(struct Map* self)
+{
+    struct MapIter *iter = malloc(sizeof(*iter));
+    iter->current = self->head;
+    iter->reverse = 0;
+    iter->next = &MapIter_next;
+    iter->del = &MapIter_del;
+    return iter;
+}
+
+/**
+ * Map_last - Start an iterator at the tail of the Map and return the last item
+ *
+ * self - The pointer to the instance of this class.
+ *
+ * returns NULL when there are no entries in the Map
+ */
+struct MapIter* Map_last(struct Map* self)
+{
+    struct MapIter *iter = malloc(sizeof(*iter));
+    iter->current = self->tail;
+    iter->reverse = 1;
+    iter->next = &MapIter_next;
+    iter->del = &MapIter_del;
+    return iter;
 }
 
 /**
@@ -334,9 +397,7 @@ struct Map * Map_new() {
 
     p->head = NULL;
     p->tail = NULL;
-    p->current = NULL;
     p->count = 0;
-    p->reverse = 0;
 
     p->put = &Map_put;
     p->get = &Map_get;
@@ -344,30 +405,13 @@ struct Map * Map_new() {
     p->dump = &Map_dump;
     p->first = &Map_first;
     p->last = &Map_last;
-    p->next = &Map_next;
     p->asort = &Map_asort;
     p->ksort = &Map_ksort;
+    p->index = &Map_index;
+    p->del = &Map_del;
     return p;
 }
 
-/**
- * Destructor for the Map Class
- *
- * Loops through and frees all the keys and entries in the map.
- * The values are integers and so there is no need to free them.
- */
-void Map_del(struct Map* self) {
-    struct MapEntry *cur, *next;
-    cur = self->head;
-    while(cur) {
-        free(cur->key);
-        /* value is just part of the struct */
-        next = cur->next;
-        free(cur);
-        cur = next;
-    }
-    free((void *)self);
-}
 
 /**
  * The main program to test and exercise the Map 
@@ -375,8 +419,9 @@ void Map_del(struct Map* self) {
  */
 int main(void)
 {
-    struct MapEntry *cur;
     struct Map * map = Map_new();
+    struct MapEntry *cur;
+    struct MapIter *iter;
 
     printf("Testing Map class\n");
     map->put(map, "z", 8);
@@ -390,14 +435,18 @@ int main(void)
     printf("x=%d\n", map->get(map, "x", 42));
 
     printf("\nIterate forwards\n");
-    for(cur = map->first(map); cur != NULL; cur = map->next(map) ) {
+    iter = map->first(map);
+    while((cur = iter->next(iter)) != NULL ) {
         printf(" %s=%d\n", cur->key, cur->value);
     }
+    iter->del(iter);
 
     printf("\nIterate backwards\n");
-    for(cur = map->last(map); cur != NULL; cur = map->next(map) ) {
+    iter = map->last(map);
+    while((cur = iter->next(iter)) != NULL ) {
         printf(" %s=%d\n", cur->key, cur->value);
     }
+    iter->del(iter);
 
     map->ksort(map);
     printf("\nSorted by key\n");
@@ -407,13 +456,14 @@ int main(void)
     map->asort(map);
     map->dump(map);
 
-    cur = map->first(map);
+    cur = map->index(map, 0);
     printf("The smallest value is %s=%d\n", cur->key, cur->value);
 
-    cur = map->last(map);
+    int pos = map->size(map) - 1;
+    cur = map->index(map, pos);
     printf("The largest value is %s=%d\n", cur->key, cur->value);
 
-    Map_del(map);
+    map->del(map);
 }
 
 // rm -f a.out ; gcc map.c; a.out ; rm -f a.out
