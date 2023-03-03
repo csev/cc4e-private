@@ -19,14 +19,14 @@ struct MapEntry {
  * This is our Map class - Template
  */
 struct Map {
-  // Methods
+  /* Attributes */
   struct MapEntry *head;
   struct MapEntry *tail;
   struct MapEntry *current;
   int count;
   int reverse;
 
-  // Methods
+  /* Methods */
   void (*put)(struct Map* self, char *key, int value);
   int (*get)(struct Map* self, char *key, int def);
   int (*size)(struct Map* self);
@@ -39,56 +39,9 @@ struct Map {
 };
 
 /**
- * Map_first - Start an iterator at the head of the Map and return the first item
- *
- * self - Ths pointer to the instance of this class.
- *
- * returns NULL when there are no entries in the Map
- */
-struct MapEntry* Map_first(struct Map* self)
-{
-    self->current = self->head;
-    self->reverse = 0;
-    return self->current;
-}
-
-/**
- * Map_last - Start an iterator at the tail of the Map and return the last item
- *
- * self - Ths pointer to the instance of this class.
- *
- * returns NULL when there are no entries in the Map
- */
-struct MapEntry* Map_last(struct Map* self)
-{
-    self->current = self->tail;
-    self->reverse = 1;
-    return self->current;
-}
-
-/**
- * Map_next - Advance the iterator forwards or backwords and return the next item
- *
- * self - Ths pointer to the instance of this class.
- *
- * returns NULL when there are no more entries in the Map
- */
-struct MapEntry* Map_next(struct Map* self)
-{
-    if ( self->current == NULL) return NULL;
-    if ( self->reverse == 0 ) {
-        self->current = self->current->next;
-    } else {
-        self->current = self->current->prev;
-    }
-
-    return self->current;
-}
-
-/**
  * Map_dump - In effect a toString() except we print the contents of the Map to stdout
  *
- * self - Ths pointer to the instance of this class.
+ * self - The pointer to the instance of this class.
  */
 
 void Map_dump(struct Map* self)
@@ -103,7 +56,7 @@ void Map_dump(struct Map* self)
 /**
  * Map_find - Locate and return the entry with the matching key or NULL if there is no entry
  *
- * self - Ths pointer to the instance of this class.
+ * self - The pointer to the instance of this class.
  * key - A character pointer to the key value
  *
  * Returns a MapEntry or NULL.
@@ -119,47 +72,19 @@ struct MapEntry* Map_find(struct Map* self, char *key)
 }
 
 /**
- * Map_get - Locate and return the value for the corresponding key or a default value
- *
- * self - Ths pointer to the instance of this class.
- * key - A character pointer to the key value
- * def - A default value to return if the key is not in the Map
- *
- * Returns an integer
- *
- * This method takes inspiration from the Python code:
- *
- *   value = map.get("key", def)
- */
-int Map_get(struct Map* self, char *key, int def)
-{
-    struct MapEntry *retval = Map_find(self, key);
-    if ( retval == NULL ) return def;
-    return retval->value;
-}
-
-/**
- * Map_size - Return the number of entries in the Map as an integer
- *
- * self - Ths pointer to the instance of this class.
- *
- * This medhod is like the Python len() function, but we name it
- * size() to pay homage to Java.
- */
-int Map_size(struct Map* self)
-{
-    return self->count;
-}
-
-/**
  * Map_put - Add or update an entry in the Map
  *
- * self - Ths pointer to the instance of this class.
+ * self - The pointer to the instance of this class.
  * key - A character pointer to the key value
  * value - The value to be stored with the associated key
  *
  * If the key is not in the Map, an entry is added.  If there
- * is already an entry in the Map for the key, the value is update.
+ * is already an entry in the Map for the key, the value
+ * is updated.
+ *
+ * Sample call:
+ *
+ *    map->put(map, "x", 42);
  *
  * This method takes inspiration from the Python code:
  *
@@ -172,14 +97,14 @@ void Map_put(struct Map* self, char *key, int value) {
 
     if ( key == NULL ) return;
 
-    // First look up
+    /* First look up */
     old = Map_find(self, key);
     if ( old != NULL ) {
         old->value = value;
         return;
     }
 
-    // Not found - time to insert
+    /* Not found - time to insert */
     new = malloc(sizeof(*new));
     new->next = NULL;
     if ( self->head == NULL ) self->head = new;
@@ -197,9 +122,93 @@ void Map_put(struct Map* self, char *key, int value) {
 }
 
 /**
+ * Map_get - Locate and return the value for the corresponding key or a default value
+ *
+ * self - The pointer to the instance of this class.
+ * key - A character pointer to the key value
+ * def - A default value to return if the key is not in the Map
+ *
+ * Returns an integer
+ *
+ * Sample call:
+ * 
+ * int ret = map->get(map, "z", 42);
+ *
+ * This method takes inspiration from the Python code:
+ *
+ *   value = map.get("key", def)
+ */
+int Map_get(struct Map* self, char *key, int def)
+{
+    struct MapEntry *retval = Map_find(self, key);
+    if ( retval == NULL ) return def;
+    return retval->value;
+}
+
+/**
+ * Map_size - Return the number of entries in the Map as an integer
+ *
+ * self - The pointer to the instance of this class.
+ *
+ * This medhod is like the Python len() function, but we name it
+ * size() to pay homage to Java.
+ */
+int Map_size(struct Map* self)
+{
+    return self->count;
+}
+
+/**
+ * Map_first - Start an iterator at the head of the Map and return the first item
+ *
+ * self - The pointer to the instance of this class.
+ *
+ * returns NULL when there are no entries in the Map
+ */
+struct MapEntry* Map_first(struct Map* self)
+{
+    self->current = self->head;
+    self->reverse = 0;
+    return self->current;
+}
+
+/**
+ * Map_last - Start an iterator at the tail of the Map and return the last item
+ *
+ * self - The pointer to the instance of this class.
+ *
+ * returns NULL when there are no entries in the Map
+ */
+struct MapEntry* Map_last(struct Map* self)
+{
+    self->current = self->tail;
+    self->reverse = 1;
+    return self->current;
+}
+
+/**
+ * Map_next - Advance the iterator forwards or backwords and return the next item
+ *
+ * self - The pointer to the instance of this class.
+ *
+ * returns NULL when there are no more entries in the Map
+ */
+struct MapEntry* Map_next(struct Map* self)
+{
+    if ( self->current == NULL) return NULL;
+    if ( self->reverse == 0 ) {
+        self->current = self->current->next;
+    } else {
+        self->current = self->current->prev;
+    }
+
+    return self->current;
+}
+
+/**
  * Map_swap - Swap the current MapEntry with the its successor in the Map
  *
- * self - Ths pointer to the instance of this class.
+ * self - The pointer to the instance of this class.
  * cur - A MapEntry in the Map
  *
  * This code must deal with cur being the first item in the Map
@@ -240,7 +249,7 @@ void Map_swap(struct Map* self, struct MapEntry* cur)
 /**
  * Map_ksort - Sort the list so that the keys are low to high
  *
- * self - Ths pointer to the instance of this class.
+ * self - The pointer to the instance of this class.
  *
  * This code uses a lame, N-squared rock sort for simplicity.
  * The outer loop is a conunted loop that runs size() times.
@@ -281,7 +290,7 @@ void Map_ksort(struct Map* self) {
 /**
  * Map_asort - Sort the list so that the values are low to high
  *
- * self - Ths pointer to the instance of this class.
+ * self - The pointer to the instance of this class.
  *
  * This code uses a lame, N-squared rock sort for simplicity.
  * The outer loop is a conunted loop that runs size() times.
