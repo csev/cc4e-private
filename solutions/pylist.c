@@ -10,21 +10,19 @@ struct lnode {
 struct pylist {
   struct lnode *head;
   struct lnode *tail;
-  struct lnode *current;
   int count;
 };
 
-/* Constructor */
+/* Constructor - lst = list() */
 struct pylist * pylist_new() {
     struct pylist *p = malloc(sizeof(*p));
     p->head = NULL;
     p->tail = NULL;
-    p->current = NULL;
     p->count = 0;
     return p;
 }
 
-/* Destructor */
+/* Destructor - del(lst) */
 void pylist_del(struct pylist* self) {
     struct lnode *cur, *next;
     cur = self->head;
@@ -37,36 +35,28 @@ void pylist_del(struct pylist* self) {
     free((void *)self);
 }
 
-struct lnode* pylist_start(struct pylist* self)
+/* print(lst) */
+void pylist_print(struct pylist* self)
 {
-    self->current = self->head;
-    return self->current;
-}
-
-struct lnode* pylist_next(struct pylist* self)
-{
-    if ( self->current == NULL) return NULL;
-    self->current = self->current->next;
-    return self->current;
-}
-
-
-void pylist_dump(struct pylist* self)
-{
+    int first = 1;
     struct lnode *cur;
-    printf("Object pylist@%p count=%d\n", self, self->count);
+    printf("[");
     for(cur = self->head; cur != NULL ; cur = cur->next ) {
-         printf("  %s\n", cur->text);
+         if ( ! first ) printf(", ");
+         printf("'%s'", cur->text);
+         first = 0;
     }
+    printf("]\n");
 }
 
+/* len(lst) */
 int pylist_len(const struct pylist* self)
 {
     return self->count;
 }
 
-// x.append("Hello world")
-struct pylist * pylist_append(struct pylist* self, char *str) {
+/* lst.append("Hello world") */
+void pylist_append(struct pylist* self, char *str) {
     
     struct lnode *new = malloc(sizeof(*new));
     new->next = NULL;
@@ -79,10 +69,9 @@ struct pylist * pylist_append(struct pylist* self, char *str) {
     new->text = text;
 
     self->count++;
-
-    return self; // To allow chaining
 }
 
+/* lst.index("Hello world") - if not found -1 */
 int pylist_index(struct pylist* self, char *str)
 {
     struct lnode *cur;
@@ -93,4 +82,21 @@ int pylist_index(struct pylist* self, char *str)
     }
     return -1;
 }
+
+int main(void)
+{
+    struct pylist * lst = pylist_new();
+    pylist_append(lst, "Hello world");
+    pylist_print(lst);
+    pylist_append(lst, "Catch phrase");
+    pylist_print(lst);
+    pylist_append(lst, "Brian");
+    pylist_print(lst);
+    printf("Length = %d\n", pylist_len(lst));
+    printf("Brian? %d\n", pylist_index(lst, "Brian"));
+    printf("Bob? %d\n", pylist_index(lst, "Bob"));
+    pylist_del(lst);
+}
+
+// rm -f a.out ; gcc pylist.c; a.out ; rm -f a.out
 

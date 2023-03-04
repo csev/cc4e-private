@@ -70,7 +70,6 @@ void pystr_assign(struct pystr* self, char *str) {
 
 int main(void)
 {
-    printf("Testing pystr class\n");
     struct pystr * x = pystr_new();
     pystr_dump(x);
 
