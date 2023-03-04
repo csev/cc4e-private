@@ -440,7 +440,6 @@ int main(void)
     struct MapEntry *cur;
     struct MapIter *iter;
 
-    printf("Testing Map class\n");
     map->put(map, "z", 8);
     map->put(map, "z", 1);
     map->put(map, "y", 2);

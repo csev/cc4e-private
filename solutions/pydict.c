@@ -12,7 +12,6 @@ struct dnode {
 struct pydict {
   struct dnode *head;
   struct dnode *tail;
-  struct dnode *current;
   int count;
 };
 
@@ -21,7 +20,6 @@ struct pydict * pydict_new() {
     struct pydict *p = malloc(sizeof(*p));
     p->head = NULL;
     p->tail = NULL;
-    p->current = NULL;
     p->count = 0;
     return p;
 }
@@ -40,27 +38,20 @@ void pydict_del(struct pydict* self) {
     free((void *)self);
 }
 
-struct dnode* pydict_start(struct pydict* self)
+/* print(lst) */
+/* {'z': 'W', 'y': 'B', 'c': 'C', 'a': 'D'} */
+void pydict_print(struct pydict* self)
 {
-    self->current = self->head;
-    return self->current;
-}
-
-struct dnode* pydict_next(struct pydict* self)
-{
-    if ( self->current == NULL) return NULL;
-    self->current = self->current->next;
-    return self->current;
-}
-
-
-void pydict_dump(struct pydict* self)
-{
+    int first = 1;
     struct dnode *cur;
-    printf("Object pydict@%p count=%d\n", self, self->count);
+    printf("{");
     for(cur = self->head; cur != NULL ; cur = cur->next ) {
-         printf("  %s\n", cur->value);
+         if ( ! first ) printf(", ");
+         printf("'%s': ", cur->key);
+         printf("'%s'", cur->value);
+         first = 0;
     }
+    printf("}\n");
 }
 
 struct dnode* pydict_find(struct pydict* self, char *key)
@@ -88,7 +79,7 @@ int pydict_len(const struct pydict* self)
 
 // x[key] = value;
 struct pydict* pydict_put(struct pydict* self, char *key, char *value) {
-    
+
     struct dnode *old, *new;
     char *new_key, *new_value;
 
@@ -158,7 +149,7 @@ struct pydict* pydict_vsort(struct pydict* self) {
             next = cur->next;        // Will always exist
             prev = cur->prev;        // May be null if at the front
             rest = cur->next->next;  // May be null if next is at the end
-                              
+
             if ( prev != NULL ) {
                 prev->next = next;
             } else {
@@ -181,4 +172,83 @@ struct pydict* pydict_vsort(struct pydict* self) {
     }
     return self;
 }
+
+// Bubble sort by key - Order N**2
+struct pydict* pydict_ksort(struct pydict* self) {
+
+    struct dnode *prev, *cur, *next, *rest;
+    int i;
+
+    if ( self->head == NULL ) return self;
+
+    for (i=0; i<=self->count; i++) {
+        for(cur = self->head; cur != NULL ; cur = cur->next ) {
+            if ( cur->next == NULL ) continue;  // Last item in the list
+            // In order already
+            if ( strcmp(cur->key, cur->next->key) <= 0 ) continue;
+
+            // Lets swap
+            // printf("Flipping %s %s\n", cur->value, cur->next->value);
+
+            // Save the cur values
+            next = cur->next;        // Will always exist
+            prev = cur->prev;        // May be null if at the front
+            rest = cur->next->next;  // May be null if next is at the end
+
+            if ( prev != NULL ) {
+                prev->next = next;
+            } else {
+                self->head = next;
+            }
+
+            cur->next = rest;
+            cur->prev = next;
+
+            next->next = cur;
+            next->prev = prev;
+
+            if ( rest != NULL ) {
+                rest->prev = cur;
+            } else {
+                self->tail = cur;
+            }
+
+        }
+    }
+    return self;
+}
+
+int main(void)
+{
+    struct pydict * dct = pydict_new();
+    pydict_put(dct, "z", "Catch phrase");
+    pydict_print(dct);
+    pydict_put(dct, "z", "W value in z");
+    pydict_print(dct);
+    pydict_put(dct, "y", "B value in y");
+    pydict_put(dct, "c", "C value in c");
+    pydict_put(dct, "a", "D value in a");
+    pydict_print(dct);
+
+    printf("z=%s\n", pydict_get(dct, "z"));
+    printf("x=%s\n", pydict_get(dct, "x"));
+
+    pydict_ksort(dct);
+    printf("\nSorted by key\n");
+    pydict_print(dct);
+
+    pydict_vsort(dct);
+    printf("\nSorted by value\n");
+    pydict_print(dct);
+
+    printf("\nDump\n");
+    for(struct dnode * cur = dct->head; cur != NULL ; cur = cur->next ) {
+        printf("%s=%s\n", cur->key, cur->value);
+    }
+
+    pydict_del(dct);
+}
+
+// rm -f a.out ; gcc pydict.c; a.out ; rm -f a.out
+
 
