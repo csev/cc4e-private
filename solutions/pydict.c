@@ -5,7 +5,6 @@
 struct dnode {
     char *key;
     char *value;
-    struct dnode *prev;
     struct dnode *next;
 };
 
@@ -100,7 +99,6 @@ struct pydict* pydict_put(struct pydict* self, char *key, char *value) {
     new->next = NULL;
     if ( self->head == NULL ) self->head = new;
     if ( self->tail != NULL ) self->tail->next = new;
-    new->prev = self->tail;
     self->tail = new;
 
     new_value = malloc(strlen(value)+1);
