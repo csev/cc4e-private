@@ -4,11 +4,11 @@
 struct pystr
 {
     int length;
+    int alloc; /* the length of *data */
     char *data;
-    int alloc;
 };
 
-/* Constructor */
+/* Constructor - x = str() */
 struct pystr * pystr_new() {
     struct pystr *p = malloc(sizeof(*p));
     p->length = 0;
@@ -18,9 +18,9 @@ struct pystr * pystr_new() {
     return p;
 }
 
-/* Destructor */
+/* Destructor - del(x) */
 void pystr_del(const struct pystr* self) {
-  free((void *)self->data);
+  free((void *)self->data); /* free string first */
   free((void *)self);
 }
 
@@ -40,33 +40,50 @@ char *pystr_str(const struct pystr* self)
     return self->data;
 }
 
-// x = x + 'h';
-struct pystr * pystr_append(struct pystr* self, char ch) {
-    // If we don't have space for 1 character plus termination, allocate 10 more
+/* x = x + 'h'; */
+void pystr_append(struct pystr* self, char ch) {
+    /* If we don't have space for 1 character plus
+       termination, allocate 10 more */
+
     if ( self->length >= (self->alloc - 2) ) {
         self->alloc = self->alloc + 10;
         self->data = (char *) realloc(self->data, self->alloc);
     }
 
-    // Add our character to the end and terminate
+    /* Add our character to the end and terminate */
     self->data[self->length] = ch;
     self->length = self->length + 1;    
     self->data[self->length] = '\0';
-
-    return self; // To allow chaining
 }
 
-// x = x + "hello";
-struct pystr * pystr_appends(struct pystr* self, char *str) {
+/* x = x + "hello"; */
+void pystr_appends(struct pystr* self, char *str) {
     for(char* s = str; *s; s++) pystr_append(self, *s);
-    return self;
 }
 
-// x = "hello";
-struct pystr * pystr_assign(struct pystr* self, char *str) {
+/* x = "hello"; */
+void pystr_assign(struct pystr* self, char *str) {
     self->length = 0;
     self->data[0] = '\0';
     pystr_appends(self, str);
-    return self;
 }
 
+int main(void)
+{
+    printf("Testing pystr class\n");
+    struct pystr * x = pystr_new();
+    pystr_dump(x);
+
+    pystr_append(x, 'H');
+    pystr_dump(x);
+
+    pystr_appends(x, "ello world");
+    pystr_dump(x);
+
+    pystr_assign(x, "A completely new string");
+    printf("String = %s\n", pystr_str(x));
+    printf("Length = %d\n", pystr_len(x));
+    pystr_del(x);
+}
+
+// rm -f a.out ; gcc pystr.c; a.out ; rm -f a.out
