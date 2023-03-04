@@ -117,90 +117,6 @@ struct pydict* pydict_put(struct pydict* self, char *key, char *value) {
     return self; // To allow chaining
 }
 
-int pydict_index(struct pydict* self, char *str)
-{
-    struct dnode *cur;
-    int i;
-    if ( str == NULL ) return -1;
-    for(i=0, cur = self->head; cur != NULL ; i++, cur = cur->next ) {
-         if ( strcmp(str, cur->value) == 0 ) return i;
-    }
-    return -1;
-}
-
-void private_pydict_swap(struct pydict* self, struct dnode *cur){
-
-    struct dnode *prev, *next, *rest;
-
-    // Save the cur values
-    next = cur->next;        // Will always exist
-    prev = cur->prev;        // May be null if at the front
-    rest = cur->next->next;  // May be null if next is at the end
-
-    if ( prev != NULL ) {
-        prev->next = next;
-    } else {
-        self->head = next;
-    }
-
-    cur->next = rest;
-    cur->prev = next;
-
-    next->next = cur;
-    next->prev = prev;
-
-    if ( rest != NULL ) {
-        rest->prev = cur;
-    } else {
-        self->tail = cur;
-    }
-
-}
-
-// Bubble sort by key - Order N**2
-struct pydict* pydict_ksort(struct pydict* self) {
-
-    struct dnode *cur;
-    int i;
-
-    if ( self->head == NULL ) return self;
-
-    for (i=0; i<=self->count; i++) {
-        for(cur = self->head; cur != NULL ; cur = cur->next ) {
-            if ( cur->next == NULL ) continue;  // Last item in the list
-            // In order already
-            if ( strcmp(cur->key, cur->next->key) <= 0 ) continue;
-
-            // Lets swap
-            // printf("Flipping %s %s\n", cur->value, cur->next->value);
-            private_pydict_swap(self, cur);
-        }
-    }
-    return self;
-}
-
-// Bubble sort by value - Order N**2
-struct pydict* pydict_vsort(struct pydict* self) {
-
-    struct dnode *prev, *cur, *next, *rest;
-    int i;
-
-    if ( self->head == NULL ) return self;
-
-    for (i=0; i<=self->count; i++) {
-        for(cur = self->head; cur != NULL ; cur = cur->next ) {
-            if ( cur->next == NULL ) continue;  // Last item in the list
-            // In order already
-            if ( strcmp(cur->value, cur->next->value) <= 0 ) continue;
-
-            // printf("Flipping %s %s\n", cur->value, cur->next->value);
-            private_pydict_swap(self, cur);
-        }
-    }
-    return self;
-}
-
-
 int main(void)
 {
     struct pydict * dct = pydict_new();
@@ -215,14 +131,6 @@ int main(void)
 
     printf("z=%s\n", pydict_get(dct, "z"));
     printf("x=%s\n", pydict_get(dct, "x"));
-
-    pydict_ksort(dct);
-    printf("\nSorted by key\n");
-    pydict_print(dct);
-
-    pydict_vsort(dct);
-    printf("\nSorted by value\n");
-    pydict_print(dct);
 
     printf("\nDump\n");
     for(struct dnode * cur = dct->head; cur != NULL ; cur = cur->next ) {
