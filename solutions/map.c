@@ -215,12 +215,16 @@ int Map_size(struct Map* self)
 }
 
 /**
- * MapIter_next - Advance the iterator forwards or backwards
- * and return the next item
+ * MapIter_next - Advance the iterator forwards
+ * or backwards and return the next item
  *
  * self - The pointer to the instance of this class.
  *
- * returns NULL when there are no more entries in the Map
+ * returns NULL when there are no more entries
+ *
+ * This is inspired by the following Python code:
+ *
+ *   item = next(iterator, False)
  */
 struct MapEntry* MapIter_next(struct MapIter* self)
 {
@@ -235,11 +239,18 @@ struct MapEntry* MapIter_next(struct MapIter* self)
 }
 
 /**
- * Map_first - Start an iterator at the head of the Map and return the first item
+ * Map_first - Create an iterator from the head of
+ * the Map and return the first item
  *
  * self - The pointer to the instance of this class.
  *
  * returns NULL when there are no entries in the Map
+ *
+ * This is inspired by the following Python code
+ * that creates an iterator from a dictionary:
+ *
+ *     x = {'a': 1, 'b': 2, 'c': 3}
+ *     it = iter(x)
  */
 struct MapIter* Map_first(struct Map* self)
 {
@@ -252,11 +263,17 @@ struct MapIter* Map_first(struct Map* self)
 }
 
 /**
- * Map_last - Start an iterator at the tail of the Map and return the last item
+ * Map_last - Start an iterator at the tail of the
+ * Map and mark the iterator as "going backwards"
  *
  * self - The pointer to the instance of this class.
  *
  * returns NULL when there are no entries in the Map
+ *
+ * This is inspired by the following Python code:
+ *
+ *     x = {'a': 1, 'b': 2, 'c': 3}
+ *     it = iter(reversed(x))
  */
 struct MapIter* Map_last(struct Map* self)
 {
@@ -436,14 +453,18 @@ int main(void)
 
     printf("\nIterate forwards\n");
     iter = map->first(map);
-    while((cur = iter->next(iter)) != NULL ) {
+    while(1) {
+        cur = iter->next(iter);
+        if ( cur == NULL ) break;
         printf(" %s=%d\n", cur->key, cur->value);
     }
     iter->del(iter);
 
     printf("\nIterate backwards\n");
     iter = map->last(map);
-    while((cur = iter->next(iter)) != NULL ) {
+    while(1) {
+        cur = iter->next(iter);
+        if ( cur == NULL ) break;
         printf(" %s=%d\n", cur->key, cur->value);
     }
     iter->del(iter);
