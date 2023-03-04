@@ -14,7 +14,7 @@ struct pydict {
   int count;
 };
 
-/* Constructor */
+/* Constructor - dct = dict() */
 struct pydict * pydict_new() {
     struct pydict *p = malloc(sizeof(*p));
     p->head = NULL;
@@ -23,7 +23,7 @@ struct pydict * pydict_new() {
     return p;
 }
 
-/* Destructor */
+/* Destructor - del(dct) */
 void pydict_del(struct pydict* self) {
     struct dnode *cur, *next;
     cur = self->head;
@@ -53,6 +53,12 @@ void pydict_print(struct pydict* self)
     printf("}\n");
 }
 
+int pydict_len(const struct pydict* self)
+{
+    return self->count;
+}
+
+/* find a node - used in get and put */
 struct dnode* pydict_find(struct pydict* self, char *key)
 {
     struct dnode *cur;
@@ -63,7 +69,7 @@ struct dnode* pydict_find(struct pydict* self, char *key)
     return NULL;
 }
 
-// x.get(key) - Returns NULL if not found
+/* x.get(key) - Returns NULL if not found */
 char* pydict_get(struct pydict* self, char *key)
 {
     struct dnode *retval = pydict_find(self, key);
@@ -71,18 +77,13 @@ char* pydict_get(struct pydict* self, char *key)
     return retval->value;
 }
 
-int pydict_len(const struct pydict* self)
-{
-    return self->count;
-}
-
-// x[key] = value;
-struct pydict* pydict_put(struct pydict* self, char *key, char *value) {
+/* x[key] = value; Insert or replace the value associated with a key */
+void pydict_put(struct pydict* self, char *key, char *value) {
 
     struct dnode *old, *new;
     char *new_key, *new_value;
 
-    if ( key == NULL || value == NULL ) return self;
+    if ( key == NULL || value == NULL ) return;
 
     // First look up
     old = pydict_find(self, key);
@@ -91,7 +92,7 @@ struct pydict* pydict_put(struct pydict* self, char *key, char *value) {
         new_value = malloc(strlen(value)+1);
         strcpy(new_value, value);
         old->value = new_value;
-        return self;
+        return;
     }
 
     // Not found - time to insert
@@ -109,10 +110,7 @@ struct pydict* pydict_put(struct pydict* self, char *key, char *value) {
     strcpy(new_key, key);
     new->key = new_key;
 
-
     self->count++;
-
-    return self; // To allow chaining
 }
 
 int main(void)
@@ -120,12 +118,13 @@ int main(void)
     struct pydict * dct = pydict_new();
     pydict_put(dct, "z", "Catch phrase");
     pydict_print(dct);
-    pydict_put(dct, "z", "W value in z");
+    pydict_put(dct, "z", "W");
     pydict_print(dct);
-    pydict_put(dct, "y", "B value in y");
-    pydict_put(dct, "c", "C value in c");
-    pydict_put(dct, "a", "D value in a");
+    pydict_put(dct, "y", "B");
+    pydict_put(dct, "c", "C");
+    pydict_put(dct, "a", "D");
     pydict_print(dct);
+    printf("Length =%d\n",pydict_len(dct));
 
     printf("z=%s\n", pydict_get(dct, "z"));
     printf("x=%s\n", pydict_get(dct, "x"));
