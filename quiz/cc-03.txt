@@ -1,0 +1,137 @@
+::Q1::Looking at the Object Oriented Patterns aross various languages,
+which of the languages does not use the "new" operator to create an
+instance from a class?
+{
+=Python
+~Java
+~JavaScript
+~PHP
+~C++
+}
+
+::Q2::Most OO Patterns use the period or dot (.) operator to access an
+attribute within an instance.  Which language does not support use the dot
+operator to access an attribute within an instance
+{
+~Python
+~Java
+~JavaScript
+=PHP
+~C++
+}
+
+::Q3::Which OO language was initially implemented using a pre-processing pass?
+{
+~Python
+~Java
+~JavaScript
+~PHP
+=C++
+}
+
+::Q4::What is the country where the Simula language was developed?
+{
+~Finland
+~Switzerland
+~The Netherlands
+~Denmark
+=Norway
+}
+
+
+::Q5::What is the country where the creator of C++ was pursuing a Ph.D. when 
+he laid down the concepts that would become C++;
+{
+=Finland
+~Switzerland
+~The Netherlands
+~Denmark
+~Norway
+}
+
+::Q6::What is the country is where Linux was initially implemented?
+{
+=Finland
+~Switzerland
+~The Netherlands
+~Denmark
+~Norway
+}
+
+::Q7::In Python what does "self" generally represent?
+{
+=The instance
+~The class
+~The entry point of the mian program
+~The string representation of an object
+}
+
+::Q8::In Java, what is the concept that is equivalent to the "self"
+concept in Python.
+{
+=this
+~self-ish
+~new
+~__init__
+}
+
+::Q9::Which of the languages in the lecture away from being a hybrid
+OO approach and towards a more "pure" OO apprach?
+{
+=JavaScript
+~Java
+~perl
+~C-Sharp
+}
+
+::Q10::What is the C library routine that can be used to make a
+an area of dynamically allocated memory larger?
+{
+=realloc()
+~malloc()
+~calloc()
+~extend()
+~exalloc()
+}
+
+::Q11::[html] What is wrong with this code segment?
+<pre>
+    free(thing);
+    (thing->value)++;
+</pre>
+{
+=After data is freed, it should no longer be considered valid
+~Using parenthesis and then increment is only allowed for register variables
+~This will only work on little-endian systems because of allocation layout
+~There is no free() function, it should be wild(thing)
+}
+
+
+::Q1::[html]These questions come from the Guido van Rossum blog post titled, 
+"Support for User-defined Classes", written by Guido van Rossum.
+<p>
+Which language provided most of the inspiration for user classes in Python?
+{
+=C++
+~Simula
+~Pascal
+~perl
+}
+
+::Q2::Where did the initial implementation of classes in Python store attribute values?
+{
+=The instance dictionary
+~As pickled strings
+~As bit fields in a long integer
+~In cookies as created by the Python "cookie cutter"
+}
+
+::Q3::Where did the initial implementation of classes in Python store method pointers?
+{
+=The class dictionary
+~As pickled strings
+~As bit fields in a long integer
+~In cookies as created by the Python "cookie cutter"
+}
+
+
