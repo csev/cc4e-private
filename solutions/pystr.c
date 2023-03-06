@@ -20,14 +20,14 @@ struct pystr * pystr_new() {
 
 /* Destructor - del(x) */
 void pystr_del(const struct pystr* self) {
-  free((void *)self->data); /* free string first */
-  free((void *)self);
+    free((void *)self->data); /* free string first */
+    free((void *)self);
 }
 
 void pystr_dump(const struct pystr* self)
 {
-    printf("Object pystr@%p length=%d alloc=%d data=%p data=%s\n",
-            self, self->length, self->alloc, self->data, self->data);
+    printf("Pystr length=%d alloc=%d data=%s\n",
+            self->length, self->alloc, self->data);
 }
 
 int pystr_len(const struct pystr* self)
@@ -58,7 +58,8 @@ void pystr_append(struct pystr* self, char ch) {
 
 /* x = x + "hello"; */
 void pystr_appends(struct pystr* self, char *str) {
-    for(char* s = str; *s; s++) pystr_append(self, *s);
+    char * s;
+    for(s = str; *s; s++) pystr_append(self, *s);
 }
 
 /* x = "hello"; */
