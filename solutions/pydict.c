@@ -37,7 +37,7 @@ void pydict_del(struct pydict* self) {
     free((void *)self);
 }
 
-/* print(lst) */
+/* print(dct) */
 /* {'z': 'W', 'y': 'B', 'c': 'C', 'a': 'D'} */
 void pydict_print(struct pydict* self)
 {
@@ -85,7 +85,7 @@ void pydict_put(struct pydict* self, char *key, char *value) {
 
     if ( key == NULL || value == NULL ) return;
 
-    // First look up
+    /* First look up */
     old = pydict_find(self, key);
     if ( old != NULL ) {
         free(old->value);
@@ -95,7 +95,7 @@ void pydict_put(struct pydict* self, char *key, char *value) {
         return;
     }
 
-    // Not found - time to insert
+    /* Not found - time to insert */
     new = malloc(sizeof(*new));
     new->next = NULL;
     if ( self->head == NULL ) self->head = new;
@@ -115,6 +115,7 @@ void pydict_put(struct pydict* self, char *key, char *value) {
 
 int main(void)
 {
+    struct dnode * cur;
     struct pydict * dct = pydict_new();
     pydict_put(dct, "z", "Catch phrase");
     pydict_print(dct);
@@ -130,7 +131,7 @@ int main(void)
     printf("x=%s\n", pydict_get(dct, "x"));
 
     printf("\nDump\n");
-    for(struct dnode * cur = dct->head; cur != NULL ; cur = cur->next ) {
+    for(cur = dct->head; cur != NULL ; cur = cur->next ) {
         printf("%s=%s\n", cur->key, cur->value);
     }
 
