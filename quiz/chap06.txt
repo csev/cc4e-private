@@ -139,5 +139,15 @@ K\&R textbook?
 ~An AVL tree
 }
 
+::Q16::What computer science concept is difficult to explain in general
+and ignored in Dr. Chuck's Python book, but demonstrated simply and
+beautifully in Section 6.5.2 in the K&R textbook?
+{
+=Recursion
+~Turing computability
+~NP-Completeness
+~Floating point formats
+}
+
 
 
