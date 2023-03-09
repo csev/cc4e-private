@@ -1,4 +1,4 @@
-::Q1::What is the C operator that takes the address of a variable?
+::Q1::What is the C operator that gives you the address of a variable?
 {
 =&
 ~*
@@ -6,11 +6,11 @@
 ~.
 }
 
-::Q2::What is the C operator that takes an address of a value and retrieves
+::Q2::What is the C operator that takes an address of a variable and retrieves
 the value pointed to by the address?
 {
-=&
-~*
+~&
+=*
 ~\-\>
 ~.
 }
