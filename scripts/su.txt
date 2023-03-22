@@ -1,3 +1,6 @@
 
 
 
+
+su -s "/bin/bash" www-data
+
