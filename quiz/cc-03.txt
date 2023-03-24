@@ -42,10 +42,10 @@ operator to access an attribute within an instance
 ::Q5::What is the country where the creator of C++ was pursuing a Ph.D. when 
 he laid down the concepts that would become C++;
 {
-=Finland
+~Finland
 ~Switzerland
 ~The Netherlands
-~Denmark
+=Denmark
 ~Norway
 }
 
