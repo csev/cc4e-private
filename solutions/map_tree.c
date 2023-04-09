@@ -13,17 +13,15 @@ struct MapEntry {
     int value;  /* public */
     struct MapEntry *__prev;
     struct MapEntry *__next;
-    struct MapEntry *__less;
-    struct MapEntry *__more;
+    struct MapEntry *__left;
+    struct MapEntry *__right;
 };
 
 /*
- * A MapIter contains the current item and whether this is a forward or
- * reverse iterator.
+ * A MapIter contains the current item.
  */
 struct MapIter {
    struct MapEntry *__current;
-   int __reverse;
 
    struct MapEntry* (*next)(struct MapIter* self);
    void (*del)(struct MapIter* self);
@@ -44,7 +42,7 @@ struct Map {
    int (*get)(struct Map* self, char *key, int def);
    int (*size)(struct Map* self);
    void (*dump)(struct Map* self);
-   struct MapIter* (*first)(struct Map* self);
+   struct MapIter* (*iter)(struct Map* self);
    void (*del)(struct Map* self);
 };
 
@@ -90,7 +88,7 @@ void __Map_dump(struct Map* self)
 }
 
 /**
- * map->find - Locate and return the entry with the matching key or NULL if there is no entry
+ * map->find - Locate and return the entry with the matching key or the immediate predecessor key or NULL
  *
  * self - The pointer to the instance of this class.
  * key - A character pointer to the key value
@@ -99,12 +97,20 @@ void __Map_dump(struct Map* self)
  */
 struct MapEntry* __Map_find(struct Map* self, char *key)
 {
-    struct MapEntry *cur;
-    if ( self == NULL || key == NULL ) return NULL;
-    for(cur = self->__head; cur != NULL ; cur = cur->__next ) {
-        if(strcmp(key, cur->key) == 0 ) return cur;
+    struct MapEntry *cur, *prev;
+    int cmp;
+    if ( self == NULL || key == NULL || self->__root == NULL ) return NULL;
+    cur = self->__root;
+    prev = NULL;
+    while(cur != NULL ) {
+        prev = cur;
+        cmp = strcmp(key, cur->key);
+        if(cmp == 0 ) return cur;
+        else if(cmp < 0 ) cur = cur->__left;
+        else cur = cur->__right;
+
     }
-    return NULL;
+    return prev;
 }
 
 /**
@@ -135,12 +141,12 @@ void __Map_put(struct Map* self, char *key, int value) {
 
     /* First look up */
     old = __Map_find(self, key);
-    if ( old != NULL ) {
+    if ( old != NULL && strcmp(key, old->key) == 0 ) {
         old->value = value;
         return;
     }
 
-    /* Not found - time to insert */
+    /* Not found - time to insert into the linked list */
     new = malloc(sizeof(*new));
     new->__next = NULL;
     if ( self->__head == NULL ) self->__head = new;
@@ -153,8 +159,25 @@ void __Map_put(struct Map* self, char *key, int value) {
     new->key = new_key;
 
     new->value = value;
-
     self->__count++;
+
+    /* Now time to insert into the tree */
+    new->__left = NULL;
+    new->__right = NULL;
+    if ( old == NULL ) {
+        self->__root = new;
+        return;
+    }
+
+    /* Insert to the left or right of the previous node and it better be null! */
+    int cmp = strcmp(key, old->key);
+    if ( cmp < 0 ) {
+        if ( old->__left != NULL ) printf("WTF!!!\n");
+        old->__left = new;
+    } else {
+        if ( old->__right != NULL ) printf("WTF!!!\n");
+        old->__right = new;
+    }
 }
 
 /**
@@ -176,9 +199,11 @@ void __Map_put(struct Map* self, char *key, int value) {
  */
 int __Map_get(struct Map* self, char *key, int def)
 {
+    int cmp;
     struct MapEntry *retval = __Map_find(self, key);
     if ( retval == NULL ) return def;
-    return retval->value;
+    if ( strcmp(key, retval->key) == 0 ) return retval->value;
+    return def;
 }
 
 /**
@@ -208,19 +233,15 @@ int __Map_size(struct Map* self)
  */
 struct MapEntry* __MapIter_next(struct MapIter* self)
 {
+    struct MapEntry* retval;
     if ( self->__current == NULL) return NULL;
-    if ( self->__reverse == 0 ) {
-        self->__current = self->__current->__next;
-    } else {
-        self->__current = self->__current->__prev;
-    }
-
-    return self->__current;
+    retval = self->__current;
+    self->__current = self->__current->__next;
+    return retval;
 }
 
 /**
- * map->first - Create an iterator from the head of
- * the Map and return the first item
+ * map->iter - Create an iterator from the head of the Map 
  *
  * self - The pointer to the instance of this class.
  *
@@ -232,78 +253,13 @@ struct MapEntry* __MapIter_next(struct MapIter* self)
  *     x = {'a': 1, 'b': 2, 'c': 3}
  *     it = iter(x)
  */
-struct MapIter* __Map_first(struct Map* self)
+struct MapIter* __Map_iter(struct Map* self)
 {
     struct MapIter *iter = malloc(sizeof(*iter));
     iter->__current = self->__head;
-    iter->__reverse = 0;
     iter->next = &__MapIter_next;
     iter->del = &__MapIter_del;
     return iter;
-}
-
-/**
- * map->last - Start an iterator at the tail of the
- * Map and mark the iterator as "going backwards"
- *
- * self - The pointer to the instance of this class.
- *
- * returns NULL when there are no entries in the Map
- *
- * This is inspired by the following Python code:
- *
- *     x = {'a': 1, 'b': 2, 'c': 3}
- *     it = iter(reversed(x))
- */
-struct MapIter* __Map_last(struct Map* self)
-{
-    struct MapIter *iter = malloc(sizeof(*iter));
-    iter->__current = self->__tail;
-    iter->__reverse = 1;
-    iter->next = &__MapIter_next;
-    iter->del = &__MapIter_del;
-    return iter;
-}
-
-/**
- * __Map_swap - Swap the current MapEntry with the its successor in the Map
- *
- * self - The pointer to the instance of this class.
- * cur - A MapEntry in the Map
- *
- * This code must deal with cur being the first item in the Map
- * is the last item in the Map.
- */
-void __Map_swap(struct Map* self, struct MapEntry* cur)
-{
-
-    struct MapEntry *prev, *next, *rest;
-
-    /* Guardian pattern */
-    if ( cur == NULL || cur->__next == NULL ) return;
-
-    /* Grab these before we start changing things */
-    next = cur->__next;
-    prev = cur->__prev;
-    rest = cur->__next->__next;
-
-    if ( prev != NULL ) {
-        prev->__next = next;
-    } else {
-        self->__head = next;
-    }
-
-    cur->__next = rest;
-    cur->__prev = next;
-
-    next->__next = cur;
-    next->__prev = prev;
-
-    if ( rest != NULL ) {
-        rest->__prev = cur;
-    } else {
-        self->__tail = cur;
-    }
 }
 
 /**
@@ -323,7 +279,7 @@ struct Map * Map_new() {
     p->get = &__Map_get;
     p->size = &__Map_size;
     p->dump = &__Map_dump;
-    p->first = &__Map_first;
+    p->iter = &__Map_iter;
     p->del = &__Map_del;
     return p;
 }
@@ -348,8 +304,8 @@ int main(void)
     printf("z=%d\n", map->get(map, "z", 42));
     printf("x=%d\n", map->get(map, "x", 42));
 
-    printf("\nIterate backwards\n");
-    iter = map->first(map);
+    printf("\nIterate\n");
+    iter = map->iter(map);
     while(1) {
         cur = iter->next(iter);
         if ( cur == NULL ) break;

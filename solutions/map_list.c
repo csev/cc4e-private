@@ -41,7 +41,7 @@ struct Map {
    int (*get)(struct Map* self, char *key, int def);
    int (*size)(struct Map* self);
    void (*dump)(struct Map* self);
-   struct MapIter* (*first)(struct Map* self);
+   struct MapIter* (*iter)(struct Map* self);
    struct MapIter* (*last)(struct Map* self);
    void (*asort)(struct Map* self);
    void (*ksort)(struct Map* self);
@@ -228,19 +228,20 @@ int __Map_size(struct Map* self)
  */
 struct MapEntry* __MapIter_next(struct MapIter* self)
 {
-    if ( self->__current == NULL) return NULL;
+    struct MapEntry * retval = self->__current;
+
+    if ( retval == NULL) return NULL;
     if ( self->__reverse == 0 ) {
         self->__current = self->__current->__next;
     } else {
         self->__current = self->__current->__prev;
     }
 
-    return self->__current;
+    return retval;
 }
 
 /**
- * map->first - Create an iterator from the head of
- * the Map and return the first item
+ * map->iter - Create an iterator from the head of the Map
  *
  * self - The pointer to the instance of this class.
  *
@@ -252,7 +253,7 @@ struct MapEntry* __MapIter_next(struct MapIter* self)
  *     x = {'a': 1, 'b': 2, 'c': 3}
  *     it = iter(x)
  */
-struct MapIter* __Map_first(struct Map* self)
+struct MapIter* __Map_iter(struct Map* self)
 {
     struct MapIter *iter = malloc(sizeof(*iter));
     iter->__current = self->__head;
@@ -420,7 +421,7 @@ struct Map * Map_new() {
     p->get = &__Map_get;
     p->size = &__Map_size;
     p->dump = &__Map_dump;
-    p->first = &__Map_first;
+    p->iter = &__Map_iter;
     p->last = &__Map_last;
     p->asort = &__Map_asort;
     p->ksort = &__Map_ksort;
@@ -450,7 +451,7 @@ int main(void)
     printf("x=%d\n", map->get(map, "x", 42));
 
     printf("\nIterate forwards\n");
-    iter = map->first(map);
+    iter = map->iter(map);
     while(1) {
         cur = iter->next(iter);
         if ( cur == NULL ) break;

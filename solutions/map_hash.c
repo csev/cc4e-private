@@ -16,8 +16,7 @@ struct MapEntry {
 };
 
 /*
- * A MapIter contains the current item and whether this is a forward or
- * reverse iterator.
+ * A MapIter contains the current item
  */
 struct MapIter {
     int __bucket;
@@ -43,7 +42,7 @@ struct Map {
     int (*get)(struct Map* self, char *key, int def);
     int (*size)(struct Map* self);
     void (*dump)(struct Map* self);
-    struct MapIter* (*first)(struct Map* self);
+    struct MapIter* (*iter)(struct Map* self);
     void (*del)(struct Map* self);
 };
 
@@ -232,9 +231,14 @@ int __Map_size(struct Map* self)
  */
 struct MapEntry* __MapIter_next(struct MapIter* self)
 {
+    struct MapEntry* retval;
+
+    // self->__current is the next item, so we grab it
+    // to return it and *then* advance the pointer
     if ( self->__current != NULL ) {
+        retval = self->__current;
         self->__current = self->__current->__next;
-        if ( self->__current != NULL ) return self->__current;
+        if ( retval != NULL ) return retval;
     }
 
     // We might be at the end of a chain so advance the bucket until 
@@ -244,12 +248,13 @@ struct MapEntry* __MapIter_next(struct MapIter* self)
         self->__bucket++;
         self->__current = self->__map->__heads[self->__bucket];
     }
-    return self->__current;
+    retval = self->__current;
+    self->__current = self->__current->__next;
+    return retval;
 }
 
 /**
- * map->first - Create an iterator from the head of
- * the Map and return the first item
+ * map->iter - Create an iterator from the head of the Map 
  *
  * self - The pointer to the instance of this class.
  *
@@ -261,7 +266,7 @@ struct MapEntry* __MapIter_next(struct MapIter* self)
  *     x = {'a': 1, 'b': 2, 'c': 3}
  *     it = iter(x)
  */
-struct MapIter* __Map_first(struct Map* map)
+struct MapIter* __Map_iter(struct Map* map)
 {
     struct MapIter *iter = malloc(sizeof(*iter));
     iter->__map = map;
@@ -292,7 +297,7 @@ struct Map * Map_new() {
     p->get = &__Map_get;
     p->size = &__Map_size;
     p->dump = &__Map_dump;
-    p->first = &__Map_first;
+    p->iter = &__Map_iter;
     p->del = &__Map_del;
     return p;
 }
@@ -318,7 +323,7 @@ int main(void)
     printf("x=%d\n", map->get(map, "x", 42));
 
     printf("\nIterate forwards\n");
-    iter = map->first(map);
+    iter = map->iter(map);
     while(1) {
         cur = iter->next(iter);
         if ( cur == NULL ) break;
