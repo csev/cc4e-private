@@ -485,5 +485,5 @@ int main(void)
     map->del(map);
 }
 
-// rm -f a.out ; gcc map.c; a.out ; rm -f a.out
+// rm -f a.out ; gcc map_list.c; a.out ; rm -f a.out
 

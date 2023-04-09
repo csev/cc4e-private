@@ -20,33 +20,31 @@ struct MapEntry {
  * reverse iterator.
  */
 struct MapIter {
-   struct MapEntry *__current;
-   int __reverse;
+    int __bucket;
+    struct Map *__map;
+    struct MapEntry *__current;
 
-   struct MapEntry* (*next)(struct MapIter* self);
-   void (*del)(struct MapIter* self);
+    struct MapEntry* (*next)(struct MapIter* self);
+    void (*del)(struct MapIter* self);
 };
 
 /*
  * This is our Map class
  */
 struct Map {
-   /* Attributes */
-   struct MapEntry *__head;
-   struct MapEntry *__tail;
-   int __count;
+    /* Attributes */
+    int __buckets;
+    struct MapEntry *__heads[8];
+    struct MapEntry *__tails[8];
+    int __count;
 
-   /* Methods */
-   void (*put)(struct Map* self, char *key, int value);
-   int (*get)(struct Map* self, char *key, int def);
-   int (*size)(struct Map* self);
-   void (*dump)(struct Map* self);
-   struct MapIter* (*first)(struct Map* self);
-   struct MapIter* (*last)(struct Map* self);
-   void (*asort)(struct Map* self);
-   void (*ksort)(struct Map* self);
-   struct MapEntry* (*index)(struct Map* self, int position);
-   void (*del)(struct Map* self);
+    /* Methods */
+    void (*put)(struct Map* self, char *key, int value);
+    int (*get)(struct Map* self, char *key, int def);
+    int (*size)(struct Map* self);
+    void (*dump)(struct Map* self);
+    struct MapIter* (*first)(struct Map* self);
+    void (*del)(struct Map* self);
 };
 
 /**
@@ -55,15 +53,20 @@ struct Map {
  * Loops through and frees all the keys and entries in the map.
  * The values are integers and so there is no need to free them.
  */
-void __Map_del(struct Map* self) {
+void __Map_del(struct Map* self)
+{
+    int i;
     struct MapEntry *cur, *next;
-    cur = self->__head;
-    while(cur) {
-        free(cur->key);
-        /* value is just part of the struct */
-        next = cur->__next;
-        free(cur);
-        cur = next;
+
+    for(i=0; i<self->__buckets; i++) {
+        cur = self->__heads[i];
+        while(cur) {
+            free(cur->key);
+            /* value is just part of the struct */
+            next = cur->__next;
+            free(cur);
+            cur = next;
+        }
     }
     free((void *)self);
 }
@@ -75,6 +78,17 @@ void __MapIter_del(struct MapIter* self) {
     free((void *)self);
 }
 
+/** getHash - Compute a hash from a string */
+int getHash(char *str)
+{
+    int hash = 42;
+    if ( str == NULL ) return 0;
+    for( ; *str ; str++) {
+        hash = ( hash << 3 ) ^ *str;
+    }
+    return hash;
+}
+
 /**
  * map->dump - In effect a toString() except we print the contents of the Map to stdout
  *
@@ -83,10 +97,13 @@ void __MapIter_del(struct MapIter* self) {
 
 void __Map_dump(struct Map* self)
 {
+    int i;
     struct MapEntry *cur;
-    printf("Object Map@%p count=%d\n", self, self->__count);
-    for(cur = self->__head; cur != NULL ; cur = cur->__next ) {
-         printf("  %s=%d\n", cur->key, cur->value);
+    printf("Object HashMap@%p count=%d buckets=%d\n", self, self->__count, self->__buckets);
+    for(i = 0; i < self->__buckets; i++ ) {
+        for(cur = self->__heads[i]; cur != NULL ; cur = cur->__next ) {
+            printf(" %s=%d [%d]\n", cur->key, cur->value, i);
+        }
     }
 }
 
@@ -95,34 +112,16 @@ void __Map_dump(struct Map* self)
  *
  * self - The pointer to the instance of this class.
  * key - A character pointer to the key value
+ * bucket - The hash bucket
  *
  * Returns a MapEntry or NULL.
  */
-struct MapEntry* __Map_find(struct Map* self, char *key)
+struct MapEntry* __Map_find(struct Map* self, char *key, int bucket)
 {
     struct MapEntry *cur;
     if ( self == NULL || key == NULL ) return NULL;
-    for(cur = self->__head; cur != NULL ; cur = cur->__next ) {
+    for(cur = self->__heads[bucket]; cur != NULL ; cur = cur->__next ) {
         if(strcmp(key, cur->key) == 0 ) return cur;
-    }
-    return NULL;
-}
-
-/**
- * map->index - Locate and return the entry at the specified in the list
- *
- * self - The pointer to the instance of this class.
- * position - A zero-based position in the list
- *
- * Returns a MapEntry or NULL.
- */
-struct MapEntry* __Map_index(struct Map* self, int position)
-{
-    int i;
-    struct MapEntry *cur;
-    if ( self == NULL ) return NULL;
-    for(cur = self->__head, i=0; cur != NULL ; cur = cur->__next, i++ ) {
-        if ( i >= position ) return cur;
     }
     return NULL;
 }
@@ -148,13 +147,16 @@ struct MapEntry* __Map_index(struct Map* self, int position)
  */
 void __Map_put(struct Map* self, char *key, int value) {
 
+    int bucket;
     struct MapEntry *old, *new;
     char *new_key, *new_value;
+
+    bucket = getHash(key) % self->__buckets;
 
     if ( key == NULL ) return;
 
     /* First look up */
-    old = __Map_find(self, key);
+    old = __Map_find(self, key, bucket);
     if ( old != NULL ) {
         old->value = value;
         return;
@@ -163,10 +165,11 @@ void __Map_put(struct Map* self, char *key, int value) {
     /* Not found - time to insert */
     new = malloc(sizeof(*new));
     new->__next = NULL;
-    if ( self->__head == NULL ) self->__head = new;
-    if ( self->__tail != NULL ) self->__tail->__next = new;
-    new->__prev = self->__tail;
-    self->__tail = new;
+
+    if ( self->__heads[bucket] == NULL ) self->__heads[bucket] = new;
+    if ( self->__tails[bucket] != NULL ) self->__tails[bucket]->__next = new;
+    new->__prev = self->__tails[bucket];
+    self->__tails[bucket] = new;
 
     new_key = malloc(strlen(key)+1);
     strcpy(new_key, key);
@@ -196,7 +199,8 @@ void __Map_put(struct Map* self, char *key, int value) {
  */
 int __Map_get(struct Map* self, char *key, int def)
 {
-    struct MapEntry *retval = __Map_find(self, key);
+    int bucket = getHash(key) % self->__buckets;
+    struct MapEntry *retval = __Map_find(self, key, bucket);
     if ( retval == NULL ) return def;
     return retval->value;
 }
@@ -228,13 +232,18 @@ int __Map_size(struct Map* self)
  */
 struct MapEntry* __MapIter_next(struct MapIter* self)
 {
-    if ( self->__current == NULL) return NULL;
-    if ( self->__reverse == 0 ) {
+    if ( self->__current != NULL ) {
         self->__current = self->__current->__next;
-    } else {
-        self->__current = self->__current->__prev;
+        if ( self->__current != NULL ) return self->__current;
     }
 
+    // We might be at the end of a chain so advance the bucket until 
+    // we find a non-empty bucket
+    while ( self->__current == NULL) {
+        if ( self->__bucket >= self->__map->__buckets ) return NULL;
+        self->__bucket++;
+        self->__current = self->__map->__heads[self->__bucket];
+    }
     return self->__current;
 }
 
@@ -252,156 +261,15 @@ struct MapEntry* __MapIter_next(struct MapIter* self)
  *     x = {'a': 1, 'b': 2, 'c': 3}
  *     it = iter(x)
  */
-struct MapIter* __Map_first(struct Map* self)
+struct MapIter* __Map_first(struct Map* map)
 {
     struct MapIter *iter = malloc(sizeof(*iter));
-    iter->__current = self->__head;
-    iter->__reverse = 0;
+    iter->__map = map;
+    iter->__bucket = 0;
+    iter->__current = map->__heads[iter->__bucket];
     iter->next = &__MapIter_next;
     iter->del = &__MapIter_del;
     return iter;
-}
-
-/**
- * map->last - Start an iterator at the tail of the
- * Map and mark the iterator as "going backwards"
- *
- * self - The pointer to the instance of this class.
- *
- * returns NULL when there are no entries in the Map
- *
- * This is inspired by the following Python code:
- *
- *     x = {'a': 1, 'b': 2, 'c': 3}
- *     it = iter(reversed(x))
- */
-struct MapIter* __Map_last(struct Map* self)
-{
-    struct MapIter *iter = malloc(sizeof(*iter));
-    iter->__current = self->__tail;
-    iter->__reverse = 1;
-    iter->next = &__MapIter_next;
-    iter->del = &__MapIter_del;
-    return iter;
-}
-
-/**
- * __Map_swap - Swap the current MapEntry with the its successor in the Map
- *
- * self - The pointer to the instance of this class.
- * cur - A MapEntry in the Map
- *
- * This code must deal with cur being the first item in the Map
- * is the last item in the Map.
- */
-void __Map_swap(struct Map* self, struct MapEntry* cur)
-{
-
-    struct MapEntry *prev, *next, *rest;
-
-    /* Guardian pattern */
-    if ( cur == NULL || cur->__next == NULL ) return;
-
-    /* Grab these before we start changing things */
-    next = cur->__next;
-    prev = cur->__prev;
-    rest = cur->__next->__next;
-
-    if ( prev != NULL ) {
-        prev->__next = next;
-    } else {
-        self->__head = next;
-    }
-
-    cur->__next = rest;
-    cur->__prev = next;
-
-    next->__next = cur;
-    next->__prev = prev;
-
-    if ( rest != NULL ) {
-        rest->__prev = cur;
-    } else {
-        self->__tail = cur;
-    }
-}
-
-/**
- * map->ksort - Sort the list so that the keys are low to high
- *
- * self - The pointer to the instance of this class.
- *
- * This code uses a lame, N-squared rock sort for simplicity.
- * The outer loop is a conunted loop that runs size() times.
- * The inner loop goes through the map comparing successive
- * elements and when a pair of elements is in the wrong order they
- * are swapped.  The inner loop in effect insures that the largest
- * value tumbles down to the bottom of the Map.  And if this inner
- * loop is done size() times we are assured that the Map is sorted.
- * Is one tiny optimization, if we get through the inner loop with
- * no swaps, we can exit the outer loop.
- *
- * The inspiration for the name of this routine comes from the PHP
- * ksort() function.
- */
-void __Map_ksort(struct Map* self) {
-
-    struct MapEntry *prev, *cur, *next, *rest;
-    int i, swapped;
-
-    if ( self->__head == NULL ) return;
-
-    for (i=0; i<=self->__count; i++) {
-        swapped = 0;
-        for(cur = self->__head; cur != NULL ; cur = cur->__next ) {
-            if ( cur->__next == NULL ) continue;  // Last item in the list
-            // In order already
-            if ( strcmp(cur->key, cur->__next->key) <= 0 ) continue;
-
-            // printf("Flipping %s %s\n", cur->key, cur->next->key);
-            __Map_swap(self, cur);
-            swapped = 1;
-        }
-        // Stop early if nothing was swapped
-        if ( swapped == 0 ) return;
-    }
-}
-
-/**
- * map->asort - Sort the list so that the values are low to high
- *
- * self - The pointer to the instance of this class.
- *
- * This code uses a lame, N-squared rock sort for simplicity.
- * The outer loop is a conunted loop that runs size() times.
- * The inner loop goes through the map comparing successive
- * elements and when a pair of elements is in the wrong order they
- * are swapped.  The inner loop in effect insures that the largest
- * value tumbles down to the bottom of the Map.  And if this inner
- * loop is done size() times we are assured that the Map is sorted.
- a Is one tiny optimization, if we get through the inner loop with
- * no swaps, we can exit the outer loop.
- *
- * The inspiration for the name of this routine comes from the (poorly
- * named) PHP * asort() function.
- */
-void __Map_asort(struct Map* self) {
-
-    struct MapEntry *cur;
-    int i;
-
-    if ( self->__head == NULL ) return;
-
-    for (i=0; i<=self->__count; i++) {
-        for(cur = self->__head; cur != NULL ; cur = cur->__next ) {
-            if ( cur->__next == NULL ) continue;  // Last item in the list
-            // In order already
-            if ( cur->value <= cur->__next->value ) continue;
-
-            // printf("Flipping %d %d\n", cur->value, cur->__next->value);
-            __Map_swap(self, cur);
-        }
-    }
 }
 
 /**
@@ -412,8 +280,12 @@ void __Map_asort(struct Map* self) {
 struct Map * Map_new() {
     struct Map *p = malloc(sizeof(*p));
 
-    p->__head = NULL;
-    p->__tail = NULL;
+    p->__buckets = 8;
+    for(int i=0; i < p->__buckets; i++ ) {
+        p->__heads[i] = NULL;
+        p->__tails[i] = NULL;
+    }
+
     p->__count = 0;
 
     p->put = &__Map_put;
@@ -421,10 +293,6 @@ struct Map * Map_new() {
     p->size = &__Map_size;
     p->dump = &__Map_dump;
     p->first = &__Map_first;
-    p->last = &__Map_last;
-    p->asort = &__Map_asort;
-    p->ksort = &__Map_ksort;
-    p->index = &__Map_index;
     p->del = &__Map_del;
     return p;
 }
@@ -458,32 +326,8 @@ int main(void)
     }
     iter->del(iter);
 
-    printf("\nIterate backwards\n");
-    iter = map->last(map);
-    while(1) {
-        cur = iter->next(iter);
-        if ( cur == NULL ) break;
-        printf(" %s=%d\n", cur->key, cur->value);
-    }
-    iter->del(iter);
-
-    map->ksort(map);
-    printf("\nSorted by key\n");
-    map->dump(map);
-
-    printf("\nSorted by value\n");
-    map->asort(map);
-    map->dump(map);
-
-    cur = map->index(map, 0);
-    printf("The smallest value is %s=%d\n", cur->key, cur->value);
-
-    int pos = map->size(map) - 1;
-    cur = map->index(map, pos);
-    printf("The largest value is %s=%d\n", cur->key, cur->value);
-
     map->del(map);
 }
 
-// rm -f a.out ; gcc map.c; a.out ; rm -f a.out
+// rm -f a.out ; gcc map_hash.c; a.out ; rm -f a.out
 
