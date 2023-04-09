@@ -9,10 +9,10 @@
  * when a new entry is created.
  */
 struct MapEntry {
-    char *key;
-    int value;
-    struct MapEntry *prev;
-    struct MapEntry *next;
+    char *key;  /* public */
+    int value;  /* public */
+    struct MapEntry *__prev;
+    struct MapEntry *__next;
 };
 
 /*
@@ -20,8 +20,8 @@ struct MapEntry {
  * reverse iterator.
  */
 struct MapIter {
-   struct MapEntry *current;
-   int reverse;
+   struct MapEntry *__current;
+   int __reverse;
 
    struct MapEntry* (*next)(struct MapIter* self);
    void (*del)(struct MapIter* self);
@@ -32,9 +32,9 @@ struct MapIter {
  */
 struct Map {
    /* Attributes */
-   struct MapEntry *head;
-   struct MapEntry *tail;
-   int count;
+   struct MapEntry *__head;
+   struct MapEntry *__tail;
+   int __count;
 
    /* Methods */
    void (*put)(struct Map* self, char *key, int value);
@@ -57,11 +57,11 @@ struct Map {
  */
 void Map_del(struct Map* self) {
     struct MapEntry *cur, *next;
-    cur = self->head;
+    cur = self->__head;
     while(cur) {
         free(cur->key);
         /* value is just part of the struct */
-        next = cur->next;
+        next = cur->__next;
         free(cur);
         cur = next;
     }
@@ -84,8 +84,8 @@ void MapIter_del(struct MapIter* self) {
 void Map_dump(struct Map* self)
 {
     struct MapEntry *cur;
-    printf("Object Map@%p count=%d\n", self, self->count);
-    for(cur = self->head; cur != NULL ; cur = cur->next ) {
+    printf("Object Map@%p count=%d\n", self, self->__count);
+    for(cur = self->__head; cur != NULL ; cur = cur->__next ) {
          printf("  %s=%d\n", cur->key, cur->value);
     }
 }
@@ -102,7 +102,7 @@ struct MapEntry* Map_find(struct Map* self, char *key)
 {
     struct MapEntry *cur;
     if ( self == NULL || key == NULL ) return NULL;
-    for(cur = self->head; cur != NULL ; cur = cur->next ) {
+    for(cur = self->__head; cur != NULL ; cur = cur->__next ) {
         if(strcmp(key, cur->key) == 0 ) return cur;
     }
     return NULL;
@@ -121,7 +121,7 @@ struct MapEntry* Map_index(struct Map* self, int position)
     int i;
     struct MapEntry *cur;
     if ( self == NULL ) return NULL;
-    for(cur = self->head, i=0; cur != NULL ; cur = cur->next, i++ ) {
+    for(cur = self->__head, i=0; cur != NULL ; cur = cur->__next, i++ ) {
         if ( i >= position ) return cur;
     }
     return NULL;
@@ -162,11 +162,11 @@ void Map_put(struct Map* self, char *key, int value) {
 
     /* Not found - time to insert */
     new = malloc(sizeof(*new));
-    new->next = NULL;
-    if ( self->head == NULL ) self->head = new;
-    if ( self->tail != NULL ) self->tail->next = new;
-    new->prev = self->tail;
-    self->tail = new;
+    new->__next = NULL;
+    if ( self->__head == NULL ) self->__head = new;
+    if ( self->__tail != NULL ) self->__tail->__next = new;
+    new->__prev = self->__tail;
+    self->__tail = new;
 
     new_key = malloc(strlen(key)+1);
     strcpy(new_key, key);
@@ -174,7 +174,7 @@ void Map_put(struct Map* self, char *key, int value) {
 
     new->value = value;
 
-    self->count++;
+    self->__count++;
 }
 
 /**
@@ -211,7 +211,7 @@ int Map_get(struct Map* self, char *key, int def)
  */
 int Map_size(struct Map* self)
 {
-    return self->count;
+    return self->__count;
 }
 
 /**
@@ -228,14 +228,14 @@ int Map_size(struct Map* self)
  */
 struct MapEntry* MapIter_next(struct MapIter* self)
 {
-    if ( self->current == NULL) return NULL;
-    if ( self->reverse == 0 ) {
-        self->current = self->current->next;
+    if ( self->__current == NULL) return NULL;
+    if ( self->__reverse == 0 ) {
+        self->__current = self->__current->__next;
     } else {
-        self->current = self->current->prev;
+        self->__current = self->__current->__prev;
     }
 
-    return self->current;
+    return self->__current;
 }
 
 /**
@@ -255,8 +255,8 @@ struct MapEntry* MapIter_next(struct MapIter* self)
 struct MapIter* Map_first(struct Map* self)
 {
     struct MapIter *iter = malloc(sizeof(*iter));
-    iter->current = self->head;
-    iter->reverse = 0;
+    iter->__current = self->__head;
+    iter->__reverse = 0;
     iter->next = &MapIter_next;
     iter->del = &MapIter_del;
     return iter;
@@ -278,8 +278,8 @@ struct MapIter* Map_first(struct Map* self)
 struct MapIter* Map_last(struct Map* self)
 {
     struct MapIter *iter = malloc(sizeof(*iter));
-    iter->current = self->tail;
-    iter->reverse = 1;
+    iter->__current = self->__tail;
+    iter->__reverse = 1;
     iter->next = &MapIter_next;
     iter->del = &MapIter_del;
     return iter;
@@ -300,29 +300,29 @@ void Map_swap(struct Map* self, struct MapEntry* cur)
     struct MapEntry *prev, *next, *rest;
 
     /* Guardian pattern */
-    if ( cur == NULL || cur->next == NULL ) return;
+    if ( cur == NULL || cur->__next == NULL ) return;
 
     /* Grab these before we start changing things */
-    next = cur->next;
-    prev = cur->prev;
-    rest = cur->next->next;
+    next = cur->__next;
+    prev = cur->__prev;
+    rest = cur->__next->__next;
 
     if ( prev != NULL ) {
-        prev->next = next;
+        prev->__next = next;
     } else {
-        self->head = next;
+        self->__head = next;
     }
 
-    cur->next = rest;
-    cur->prev = next;
+    cur->__next = rest;
+    cur->__prev = next;
 
-    next->next = cur;
-    next->prev = prev;
+    next->__next = cur;
+    next->__prev = prev;
 
     if ( rest != NULL ) {
-        rest->prev = cur;
+        rest->__prev = cur;
     } else {
-        self->tail = cur;
+        self->__tail = cur;
     }
 }
 
@@ -349,14 +349,14 @@ void Map_ksort(struct Map* self) {
     struct MapEntry *prev, *cur, *next, *rest;
     int i, swapped;
 
-    if ( self->head == NULL ) return;
+    if ( self->__head == NULL ) return;
 
-    for (i=0; i<=self->count; i++) {
+    for (i=0; i<=self->__count; i++) {
         swapped = 0;
-        for(cur = self->head; cur != NULL ; cur = cur->next ) {
-            if ( cur->next == NULL ) continue;  // Last item in the list
+        for(cur = self->__head; cur != NULL ; cur = cur->__next ) {
+            if ( cur->__next == NULL ) continue;  // Last item in the list
             // In order already
-            if ( strcmp(cur->key, cur->next->key) <= 0 ) continue;
+            if ( strcmp(cur->key, cur->__next->key) <= 0 ) continue;
 
             // printf("Flipping %s %s\n", cur->key, cur->next->key);
             Map_swap(self, cur);
@@ -390,15 +390,15 @@ void Map_asort(struct Map* self) {
     struct MapEntry *cur;
     int i;
 
-    if ( self->head == NULL ) return;
+    if ( self->__head == NULL ) return;
 
-    for (i=0; i<=self->count; i++) {
-        for(cur = self->head; cur != NULL ; cur = cur->next ) {
-            if ( cur->next == NULL ) continue;  // Last item in the list
+    for (i=0; i<=self->__count; i++) {
+        for(cur = self->__head; cur != NULL ; cur = cur->__next ) {
+            if ( cur->__next == NULL ) continue;  // Last item in the list
             // In order already
-            if ( cur->value <= cur->next->value ) continue;
+            if ( cur->value <= cur->__next->value ) continue;
 
-            // printf("Flipping %d %d\n", cur->value, cur->next->value);
+            // printf("Flipping %d %d\n", cur->value, cur->__next->value);
             Map_swap(self, cur);
         }
     }
@@ -412,9 +412,9 @@ void Map_asort(struct Map* self) {
 struct Map * Map_new() {
     struct Map *p = malloc(sizeof(*p));
 
-    p->head = NULL;
-    p->tail = NULL;
-    p->count = 0;
+    p->__head = NULL;
+    p->__tail = NULL;
+    p->__count = 0;
 
     p->put = &Map_put;
     p->get = &Map_get;
@@ -428,7 +428,6 @@ struct Map * Map_new() {
     p->del = &Map_del;
     return p;
 }
-
 
 /**
  * The main program to test and exercise the Map 
