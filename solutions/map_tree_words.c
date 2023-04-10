@@ -16,6 +16,7 @@ int main(void)
     struct MapIter *iter;
     char name[100];  // Yes, this is dangerous
     char word[100];  // Yes, this is dangerous
+    int i,j;
     int count, maxvalue;
     char *maxkey;
 
@@ -26,9 +27,11 @@ int main(void)
     
     // Loop over each word in the file
     while (fscanf(fp, "%s", word) != EOF) {
-        for (int i = 0; word[i] != '\0'; i++) {
-            word[i] = tolower(word[i]);
+        for (i=0, j=0; word[i] != '\0'; i++) {
+            if ( ! isalpha(word[i]) ) continue;
+            word[j++] = tolower(word[i]);
         }
+        word[j] = '\0';
         count = map->get(map, word, 0);
         map->put(map, word, count+1);
     }
