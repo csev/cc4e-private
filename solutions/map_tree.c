@@ -11,7 +11,6 @@
 struct MapEntry {
     char *key;  /* public */
     int value;  /* public */
-    struct MapEntry *__prev;
     struct MapEntry *__next;
     struct MapEntry *__left;
     struct MapEntry *__right;
@@ -33,7 +32,6 @@ struct MapIter {
 struct Map {
    /* Attributes */
    struct MapEntry *__head;
-   struct MapEntry *__tail;
    struct MapEntry *__root;
    int __count;
 
@@ -73,11 +71,26 @@ void __MapIter_del(struct MapIter* self) {
 }
 
 /**
+ * __Map_dump_tree - traverse and print the tree
+ */
+void __Map_dump_tree(struct MapEntry *cur, int depth)
+{
+    if ( cur == NULL ) return;
+    for(int i=0;i<depth;i++) printf("| ");
+    printf("%s=%d\n", cur->key, cur->value);
+    if ( cur->__left != NULL ) {
+        __Map_dump_tree(cur->__left, depth+1);
+    }
+    if ( cur->__right != NULL ) {
+        __Map_dump_tree(cur->__right, depth+1);
+    }
+}
+
+/**
  * map->dump - In effect a toString() except we print the contents of the Map to stdout
  *
  * self - The pointer to the instance of this class.
  */
-
 void __Map_dump(struct Map* self)
 {
     struct MapEntry *cur;
@@ -85,32 +98,11 @@ void __Map_dump(struct Map* self)
     for(cur = self->__head; cur != NULL ; cur = cur->__next ) {
          printf("  %s=%d\n", cur->key, cur->value);
     }
-}
+    printf("\n");
 
-/**
- * map->find - Locate and return the entry with the matching key or the immediate predecessor key or NULL
- *
- * self - The pointer to the instance of this class.
- * key - A character pointer to the key value
- *
- * Returns a MapEntry or NULL.
- */
-struct MapEntry* __Map_find(struct Map* self, char *key)
-{
-    struct MapEntry *cur, *prev;
-    int cmp;
-    if ( self == NULL || key == NULL || self->__root == NULL ) return NULL;
-    cur = self->__root;
-    prev = NULL;
-    while(cur != NULL ) {
-        prev = cur;
-        cmp = strcmp(key, cur->key);
-        if(cmp == 0 ) return cur;
-        else if(cmp < 0 ) cur = cur->__left;
-        else cur = cur->__right;
-
-    }
-    return prev;
+    // Recursively print the tree view
+    __Map_dump_tree(self->__root, 0);
+    printf("\n");
 }
 
 /**
@@ -134,50 +126,94 @@ struct MapEntry* __Map_find(struct Map* self, char *key)
  */
 void __Map_put(struct Map* self, char *key, int value) {
 
+    struct MapEntry *cur, *left, *right;
+    int cmp;
     struct MapEntry *old, *new;
-    char *new_key, *new_value;
+    char *new_key;
 
     if ( key == NULL ) return;
 
-    /* First look up */
-    old = __Map_find(self, key);
-    if ( old != NULL && strcmp(key, old->key) == 0 ) {
-        old->value = value;
-        return;
+    // printf("searching for %s\n", key);
+
+    cur = self->__root;
+    left = NULL;
+    right = NULL;
+    while(cur != NULL ) {
+        cmp = strcmp(key, cur->key);
+        if(cmp == 0 ) {
+            // printf("replacing %s=%d\n",key, value);
+            cur->value = value;
+            return;
+        }
+        if( cmp < 0 ) {
+            right = cur;
+            cur = cur->__left;
+        } else {
+            left = cur;
+            cur = cur->__right;
+        }
     }
 
-    /* Not found - time to insert into the linked list */
+    /* Not found - time to insert into the linked list after old */
     new = malloc(sizeof(*new));
     new->__next = NULL;
-    if ( self->__head == NULL ) self->__head = new;
-    if ( self->__tail != NULL ) self->__tail->__next = new;
-    new->__prev = self->__tail;
-    self->__tail = new;
-
+    new->__left = NULL;
+    new->__right = NULL;
     new_key = malloc(strlen(key)+1);
     strcpy(new_key, key);
     new->key = new_key;
-
     new->value = value;
     self->__count++;
 
-    /* Now time to insert into the tree */
-    new->__left = NULL;
-    new->__right = NULL;
-    if ( old == NULL ) {
+    // Empty list - add first entry
+    if ( self->__head == NULL ) {
+        self->__head = new;
         self->__root = new;
+        // printf("First item inserted\n");
         return;
     }
 
-    /* Insert to the left or right of the previous node and it better be null! */
-    int cmp = strcmp(key, old->key);
-    if ( cmp < 0 ) {
-        if ( old->__left != NULL ) printf("WTF!!!\n");
-        old->__left = new;
+    /*
+    if ( left != NULL ) {
+        printf("left %s=%d\n", left->key, left->value);
     } else {
-        if ( old->__right != NULL ) printf("WTF!!!\n");
-        old->__right = new;
+        printf("left null\n");
     }
+    if ( right != NULL ) {
+        printf("right %s=%d\n", right->key, right->value);
+    } else {
+        printf("right null\n");
+    }
+    */
+
+    // Insert into the sorted linked list
+    if ( left == NULL ) {
+        if ( self->__head != right ) {
+            printf("FAIL self->__head != right\n");
+        }
+        new->__next = self->__head;
+        self->__head = new;
+        // printf("insert at beginning %s=%d\n",new->key, new->value);
+    } else {
+        if ( left->__next != right ) {
+            printf("FAIL left->__next != right\n");
+        }
+        // printf("insert after %s %s=%d\n",left->key, new->key, new->value);
+        new->__next = right;
+        left->__next = new;
+    }
+
+    // Insert into the tree
+    if ( right != NULL && right->__left == NULL ) {
+        // printf("insert left of %s %s=%d\n",right->key, new->key, new->value);
+        right->__left = new;
+    } else if ( left != NULL && left->__right == NULL ) {
+        // printf("insert right of %s %s=%d\n",left->key, new->key, new->value);
+        left->__right = new;
+    } else {
+        printf("FAIL Neither right->__left nor left->__right are available\n");
+    }
+
 }
 
 /**
@@ -200,9 +236,18 @@ void __Map_put(struct Map* self, char *key, int value) {
 int __Map_get(struct Map* self, char *key, int def)
 {
     int cmp;
-    struct MapEntry *retval = __Map_find(self, key);
-    if ( retval == NULL ) return def;
-    if ( strcmp(key, retval->key) == 0 ) return retval->value;
+    struct MapEntry *cur;
+
+    if ( self == NULL || key == NULL || self->__root == NULL ) return def;
+
+    cur = self->__root;
+    while(cur != NULL ) {
+        cmp = strcmp(key, cur->key);
+        if(cmp == 0 ) return cur->value;
+        else if(cmp < 0 ) cur = cur->__left;
+        else cur = cur->__right;
+
+    }
     return def;
 }
 
@@ -271,7 +316,6 @@ struct Map * Map_new() {
     struct Map *p = malloc(sizeof(*p));
 
     p->__head = NULL;
-    p->__tail = NULL;
     p->__root = NULL;
     p->__count = 0;
 
@@ -294,14 +338,14 @@ int main(void)
     struct MapEntry *cur;
     struct MapIter *iter;
 
-    map->put(map, "z", 8);
-    map->put(map, "z", 1);
+    map->put(map, "r", 8);
     map->put(map, "y", 2);
-    map->put(map, "b", 3);
     map->put(map, "a", 4);
+    map->put(map, "b", 3);
+    map->put(map, "r", 1);
     map->dump(map);
 
-    printf("z=%d\n", map->get(map, "z", 42));
+    printf("r=%d\n", map->get(map, "r", 42));
     printf("x=%d\n", map->get(map, "x", 42));
 
     printf("\nIterate\n");
