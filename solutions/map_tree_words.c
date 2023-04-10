@@ -14,11 +14,15 @@ int main(void)
     struct Map * map = Map_new();
     struct MapEntry *cur;
     struct MapIter *iter;
+    char name[100];  // Yes, this is dangerous
     char word[100];  // Yes, this is dangerous
     int count, maxvalue;
     char *maxkey;
 
-    FILE *fp = fopen("romeo.txt", "r");
+    printf("Enter file name: ");
+    scanf("%s", name);
+
+    FILE *fp = fopen(name, "r");
     
     // Loop over each word in the file
     while (fscanf(fp, "%s", word) != EOF) {
