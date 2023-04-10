@@ -173,18 +173,8 @@ void __Map_put(struct Map* self, char *key, int value) {
         return;
     }
 
-    /*
-    if ( left != NULL ) {
-        printf("left %s=%d\n", left->key, left->value);
-    } else {
-        printf("left null\n");
-    }
-    if ( right != NULL ) {
-        printf("right %s=%d\n", right->key, right->value);
-    } else {
-        printf("right null\n");
-    }
-    */
+    printf("%s < %s > %s\n", (left ? left->key : "0"),
+            key, (right ? right->key : "0") );
 
     // Insert into the sorted linked list
     if ( left == NULL ) {
@@ -193,22 +183,18 @@ void __Map_put(struct Map* self, char *key, int value) {
         }
         new->__next = self->__head;
         self->__head = new;
-        // printf("insert at beginning %s=%d\n",new->key, new->value);
     } else {
         if ( left->__next != right ) {
             printf("FAIL left->__next != right\n");
         }
-        // printf("insert after %s %s=%d\n",left->key, new->key, new->value);
         new->__next = right;
         left->__next = new;
     }
 
     // Insert into the tree
     if ( right != NULL && right->__left == NULL ) {
-        // printf("insert left of %s %s=%d\n",right->key, new->key, new->value);
         right->__left = new;
     } else if ( left != NULL && left->__right == NULL ) {
-        // printf("insert right of %s %s=%d\n",left->key, new->key, new->value);
         left->__right = new;
     } else {
         printf("FAIL Neither right->__left nor left->__right are available\n");
