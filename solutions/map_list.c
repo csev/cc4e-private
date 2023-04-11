@@ -3,60 +3,60 @@
 #include <string.h>
 
 /*
- * This is our map entry for Map<String,Integer>
+ * This is our map entry for MapList<String,Integer>
  *
  * The key is a string / character array which is allocated using malloc()
  * when a new entry is created.
  */
-struct MapEntry {
+struct MapListEntry {
     char *key;  /* public */
     int value;  /* public */
-    struct MapEntry *__prev;
-    struct MapEntry *__next;
+    struct MapListEntry *__prev;
+    struct MapListEntry *__next;
 };
 
 /*
- * A MapIter contains the current item and whether this is a forward or
+ * A MapListIter contains the current item and whether this is a forward or
  * reverse iterator.
  */
-struct MapIter {
-   struct MapEntry *__current;
+struct MapListIter {
+   struct MapListEntry *__current;
    int __reverse;
 
-   struct MapEntry* (*next)(struct MapIter* self);
-   void (*del)(struct MapIter* self);
+   struct MapListEntry* (*next)(struct MapListIter* self);
+   void (*del)(struct MapListIter* self);
 };
 
 /*
- * This is our Map class
+ * This is our MapList class
  */
-struct Map {
+struct MapList {
    /* Attributes */
-   struct MapEntry *__head;
-   struct MapEntry *__tail;
+   struct MapListEntry *__head;
+   struct MapListEntry *__tail;
    int __count;
 
    /* Methods */
-   void (*put)(struct Map* self, char *key, int value);
-   int (*get)(struct Map* self, char *key, int def);
-   int (*size)(struct Map* self);
-   void (*dump)(struct Map* self);
-   struct MapIter* (*iter)(struct Map* self);
-   struct MapIter* (*last)(struct Map* self);
-   void (*asort)(struct Map* self);
-   void (*ksort)(struct Map* self);
-   struct MapEntry* (*index)(struct Map* self, int position);
-   void (*del)(struct Map* self);
+   void (*put)(struct MapList* self, char *key, int value);
+   int (*get)(struct MapList* self, char *key, int def);
+   int (*size)(struct MapList* self);
+   void (*dump)(struct MapList* self);
+   struct MapListIter* (*iter)(struct MapList* self);
+   struct MapListIter* (*last)(struct MapList* self);
+   void (*asort)(struct MapList* self);
+   void (*ksort)(struct MapList* self);
+   struct MapListEntry* (*index)(struct MapList* self, int position);
+   void (*del)(struct MapList* self);
 };
 
 /**
- * Destructor for the Map Class
+ * Destructor for the MapList Class
  *
  * Loops through and frees all the keys and entries in the map.
  * The values are integers and so there is no need to free them.
  */
-void __Map_del(struct Map* self) {
-    struct MapEntry *cur, *next;
+void __MapList_del(struct MapList* self) {
+    struct MapListEntry *cur, *next;
     cur = self->__head;
     while(cur) {
         free(cur->key);
@@ -69,22 +69,22 @@ void __Map_del(struct Map* self) {
 }
 
 /**
- * Destructor for the MapIter Class
+ * Destructor for the MapListIter Class
  */
-void __MapIter_del(struct MapIter* self) {
+void __MapListIter_del(struct MapListIter* self) {
     free((void *)self);
 }
 
 /**
- * map->dump - In effect a toString() except we print the contents of the Map to stdout
+ * map->dump - In effect a toString() except we print the contents of the MapList to stdout
  *
  * self - The pointer to the instance of this class.
  */
 
-void __Map_dump(struct Map* self)
+void __MapList_dump(struct MapList* self)
 {
-    struct MapEntry *cur;
-    printf("Object Map@%p count=%d\n", self, self->__count);
+    struct MapListEntry *cur;
+    printf("Object MapList@%p count=%d\n", self, self->__count);
     for(cur = self->__head; cur != NULL ; cur = cur->__next ) {
          printf("  %s=%d\n", cur->key, cur->value);
     }
@@ -96,11 +96,11 @@ void __Map_dump(struct Map* self)
  * self - The pointer to the instance of this class.
  * key - A character pointer to the key value
  *
- * Returns a MapEntry or NULL.
+ * Returns a MapListEntry or NULL.
  */
-struct MapEntry* __Map_find(struct Map* self, char *key)
+struct MapListEntry* __MapList_find(struct MapList* self, char *key)
 {
-    struct MapEntry *cur;
+    struct MapListEntry *cur;
     if ( self == NULL || key == NULL ) return NULL;
     for(cur = self->__head; cur != NULL ; cur = cur->__next ) {
         if(strcmp(key, cur->key) == 0 ) return cur;
@@ -114,12 +114,12 @@ struct MapEntry* __Map_find(struct Map* self, char *key)
  * self - The pointer to the instance of this class.
  * position - A zero-based position in the list
  *
- * Returns a MapEntry or NULL.
+ * Returns a MapListEntry or NULL.
  */
-struct MapEntry* __Map_index(struct Map* self, int position)
+struct MapListEntry* __MapList_index(struct MapList* self, int position)
 {
     int i;
-    struct MapEntry *cur;
+    struct MapListEntry *cur;
     if ( self == NULL ) return NULL;
     for(cur = self->__head, i=0; cur != NULL ; cur = cur->__next, i++ ) {
         if ( i >= position ) return cur;
@@ -128,14 +128,14 @@ struct MapEntry* __Map_index(struct Map* self, int position)
 }
 
 /**
- * map->put - Add or update an entry in the Map
+ * map->put - Add or update an entry in the MapList
  *
  * self - The pointer to the instance of this class.
  * key - A character pointer to the key value
  * value - The value to be stored with the associated key
  *
- * If the key is not in the Map, an entry is added.  If there
- * is already an entry in the Map for the key, the value
+ * If the key is not in the MapList, an entry is added.  If there
+ * is already an entry in the MapList for the key, the value
  * is updated.
  *
  * Sample call:
@@ -146,15 +146,15 @@ struct MapEntry* __Map_index(struct Map* self, int position)
  *
  *   map["key"] = value
  */
-void __Map_put(struct Map* self, char *key, int value) {
+void __MapList_put(struct MapList* self, char *key, int value) {
 
-    struct MapEntry *old, *new;
+    struct MapListEntry *old, *new;
     char *new_key, *new_value;
 
     if ( key == NULL ) return;
 
     /* First look up */
-    old = __Map_find(self, key);
+    old = __MapList_find(self, key);
     if ( old != NULL ) {
         old->value = value;
         return;
@@ -182,7 +182,7 @@ void __Map_put(struct Map* self, char *key, int value) {
  *
  * self - The pointer to the instance of this class.
  * key - A character pointer to the key value
- * def - A default value to return if the key is not in the Map
+ * def - A default value to return if the key is not in the MapList
  *
  * Returns an integer
  *
@@ -194,28 +194,28 @@ void __Map_put(struct Map* self, char *key, int value) {
  *
  *   value = map.get("key", 42)
  */
-int __Map_get(struct Map* self, char *key, int def)
+int __MapList_get(struct MapList* self, char *key, int def)
 {
-    struct MapEntry *retval = __Map_find(self, key);
+    struct MapListEntry *retval = __MapList_find(self, key);
     if ( retval == NULL ) return def;
     return retval->value;
 }
 
 /**
- * map->size - Return the number of entries in the Map as an integer
+ * map->size - Return the number of entries in the MapList as an integer
  *
  * self - The pointer to the instance of this class.
  *
  * This medhod is like the Python len() function, but we name it
  * size() to pay homage to Java.
  */
-int __Map_size(struct Map* self)
+int __MapList_size(struct MapList* self)
 {
     return self->__count;
 }
 
 /**
- * MapIter_next - Advance the iterator forwards
+ * MapListIter_next - Advance the iterator forwards
  * or backwards and return the next item
  *
  * self - The pointer to the instance of this class.
@@ -226,9 +226,9 @@ int __Map_size(struct Map* self)
  *
  *   item = next(iterator, False)
  */
-struct MapEntry* __MapIter_next(struct MapIter* self)
+struct MapListEntry* __MapListIter_next(struct MapListIter* self)
 {
-    struct MapEntry * retval = self->__current;
+    struct MapListEntry * retval = self->__current;
 
     if ( retval == NULL) return NULL;
     if ( self->__reverse == 0 ) {
@@ -241,11 +241,11 @@ struct MapEntry* __MapIter_next(struct MapIter* self)
 }
 
 /**
- * map->iter - Create an iterator from the head of the Map
+ * map->iter - Create an iterator from the head of the MapList
  *
  * self - The pointer to the instance of this class.
  *
- * returns NULL when there are no entries in the Map
+ * returns NULL when there are no entries in the MapList
  *
  * This is inspired by the following Python code
  * that creates an iterator from a dictionary:
@@ -253,52 +253,52 @@ struct MapEntry* __MapIter_next(struct MapIter* self)
  *     x = {'a': 1, 'b': 2, 'c': 3}
  *     it = iter(x)
  */
-struct MapIter* __Map_iter(struct Map* self)
+struct MapListIter* __MapList_iter(struct MapList* self)
 {
-    struct MapIter *iter = malloc(sizeof(*iter));
+    struct MapListIter *iter = malloc(sizeof(*iter));
     iter->__current = self->__head;
     iter->__reverse = 0;
-    iter->next = &__MapIter_next;
-    iter->del = &__MapIter_del;
+    iter->next = &__MapListIter_next;
+    iter->del = &__MapListIter_del;
     return iter;
 }
 
 /**
  * map->last - Start an iterator at the tail of the
- * Map and mark the iterator as "going backwards"
+ * MapList and mark the iterator as "going backwards"
  *
  * self - The pointer to the instance of this class.
  *
- * returns NULL when there are no entries in the Map
+ * returns NULL when there are no entries in the MapList
  *
  * This is inspired by the following Python code:
  *
  *     x = {'a': 1, 'b': 2, 'c': 3}
  *     it = iter(reversed(x))
  */
-struct MapIter* __Map_last(struct Map* self)
+struct MapListIter* __MapList_last(struct MapList* self)
 {
-    struct MapIter *iter = malloc(sizeof(*iter));
+    struct MapListIter *iter = malloc(sizeof(*iter));
     iter->__current = self->__tail;
     iter->__reverse = 1;
-    iter->next = &__MapIter_next;
-    iter->del = &__MapIter_del;
+    iter->next = &__MapListIter_next;
+    iter->del = &__MapListIter_del;
     return iter;
 }
 
 /**
- * __Map_swap - Swap the current MapEntry with the its successor in the Map
+ * __MapList_swap - Swap the current MapListEntry with the its successor in the MapList
  *
  * self - The pointer to the instance of this class.
- * cur - A MapEntry in the Map
+ * cur - A MapListEntry in the MapList
  *
- * This code must deal with cur being the first item in the Map
- * is the last item in the Map.
+ * This code must deal with cur being the first item in the MapList
+ * is the last item in the MapList.
  */
-void __Map_swap(struct Map* self, struct MapEntry* cur)
+void __MapList_swap(struct MapList* self, struct MapListEntry* cur)
 {
 
-    struct MapEntry *prev, *next, *rest;
+    struct MapListEntry *prev, *next, *rest;
 
     /* Guardian pattern */
     if ( cur == NULL || cur->__next == NULL ) return;
@@ -337,17 +337,17 @@ void __Map_swap(struct Map* self, struct MapEntry* cur)
  * The inner loop goes through the map comparing successive
  * elements and when a pair of elements is in the wrong order they
  * are swapped.  The inner loop in effect insures that the largest
- * value tumbles down to the bottom of the Map.  And if this inner
- * loop is done size() times we are assured that the Map is sorted.
+ * value tumbles down to the bottom of the MapList.  And if this inner
+ * loop is done size() times we are assured that the MapList is sorted.
  * Is one tiny optimization, if we get through the inner loop with
  * no swaps, we can exit the outer loop.
  *
  * The inspiration for the name of this routine comes from the PHP
  * ksort() function.
  */
-void __Map_ksort(struct Map* self) {
+void __MapList_ksort(struct MapList* self) {
 
-    struct MapEntry *prev, *cur, *next, *rest;
+    struct MapListEntry *prev, *cur, *next, *rest;
     int i, swapped;
 
     if ( self->__head == NULL ) return;
@@ -360,7 +360,7 @@ void __Map_ksort(struct Map* self) {
             if ( strcmp(cur->key, cur->__next->key) <= 0 ) continue;
 
             // printf("Flipping %s %s\n", cur->key, cur->next->key);
-            __Map_swap(self, cur);
+            __MapList_swap(self, cur);
             swapped = 1;
         }
         // Stop early if nothing was swapped
@@ -378,17 +378,17 @@ void __Map_ksort(struct Map* self) {
  * The inner loop goes through the map comparing successive
  * elements and when a pair of elements is in the wrong order they
  * are swapped.  The inner loop in effect insures that the largest
- * value tumbles down to the bottom of the Map.  And if this inner
- * loop is done size() times we are assured that the Map is sorted.
+ * value tumbles down to the bottom of the MapList.  And if this inner
+ * loop is done size() times we are assured that the MapList is sorted.
  a Is one tiny optimization, if we get through the inner loop with
  * no swaps, we can exit the outer loop.
  *
  * The inspiration for the name of this routine comes from the (poorly
  * named) PHP * asort() function.
  */
-void __Map_asort(struct Map* self) {
+void __MapList_asort(struct MapList* self) {
 
-    struct MapEntry *cur;
+    struct MapListEntry *cur;
     int i;
 
     if ( self->__head == NULL ) return;
@@ -400,45 +400,45 @@ void __Map_asort(struct Map* self) {
             if ( cur->value <= cur->__next->value ) continue;
 
             // printf("Flipping %d %d\n", cur->value, cur->__next->value);
-            __Map_swap(self, cur);
+            __MapList_swap(self, cur);
         }
     }
 }
 
 /**
- * Constructor for the Map Class
+ * Constructor for the MapList Class
  *
  * Initialized both the attributes and methods
  */
-struct Map * Map_new() {
-    struct Map *p = malloc(sizeof(*p));
+struct MapList * MapList_new() {
+    struct MapList *p = malloc(sizeof(*p));
 
     p->__head = NULL;
     p->__tail = NULL;
     p->__count = 0;
 
-    p->put = &__Map_put;
-    p->get = &__Map_get;
-    p->size = &__Map_size;
-    p->dump = &__Map_dump;
-    p->iter = &__Map_iter;
-    p->last = &__Map_last;
-    p->asort = &__Map_asort;
-    p->ksort = &__Map_ksort;
-    p->index = &__Map_index;
-    p->del = &__Map_del;
+    p->put = &__MapList_put;
+    p->get = &__MapList_get;
+    p->size = &__MapList_size;
+    p->dump = &__MapList_dump;
+    p->iter = &__MapList_iter;
+    p->last = &__MapList_last;
+    p->asort = &__MapList_asort;
+    p->ksort = &__MapList_ksort;
+    p->index = &__MapList_index;
+    p->del = &__MapList_del;
     return p;
 }
 
 /**
- * The main program to test and exercise the Map 
- * and MapEntry classes.
+ * The main program to test and exercise the MapList 
+ * and MapListEntry classes.
  */
 int main(void)
 {
-    struct Map * map = Map_new();
-    struct MapEntry *cur;
-    struct MapIter *iter;
+    struct MapList * map = MapList_new();
+    struct MapListEntry *cur;
+    struct MapListIter *iter;
 
     map->put(map, "z", 8);
     map->put(map, "z", 1);
