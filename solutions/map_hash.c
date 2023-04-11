@@ -148,13 +148,12 @@ void __HashMap_put(struct HashMap* self, char *key, int value) {
 
     int bucket;
     struct HashMapEntry *old, *new;
-    char *new_key, *new_value;
-
-    bucket = getBucket(key, self->__buckets);
+    char *new_key;
 
     if ( key == NULL ) return;
 
     /* First look up */
+    bucket = getBucket(key, self->__buckets);
     old = __HashMap_find(self, key, bucket);
     if ( old != NULL ) {
         old->value = value;

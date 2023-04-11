@@ -149,7 +149,7 @@ struct MapEntry* __Map_index(struct Map* self, int position)
 void __Map_put(struct Map* self, char *key, int value) {
 
     struct MapEntry *old, *new;
-    char *new_key, *new_value;
+    char *new_key;
 
     if ( key == NULL ) return;
 
