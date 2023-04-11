@@ -5,14 +5,14 @@
 #include "map_tree.c"
 
 /**
- * The main program to test and exercise the Map 
- * and MapEntry classes.
+ * The main program to test and exercise the TreeMap 
+ * and TreeMapEntry classes.
  */
 int main(void)
 {
-    struct Map * map = Map_new();
-    struct MapEntry *cur;
-    struct MapIter *iter;
+    struct TreeMap * map = TreeMap_new();
+    struct TreeMapEntry *cur;
+    struct TreeMapIter *iter;
 
     map->put(map, "r", 8);
     map->put(map, "y", 2);

@@ -6,14 +6,14 @@
 #include "map_tree.c"
 
 /**
- * The main program to test and exercise the Map 
- * and MapEntry classes.
+ * The main program to test and exercise the TreeMap 
+ * and TreeMapEntry classes.
  */
 int main(void)
 {
-    struct Map * map = Map_new();
-    struct MapEntry *cur;
-    struct MapIter *iter;
+    struct TreeMap * map = TreeMap_new();
+    struct TreeMapEntry *cur;
+    struct TreeMapIter *iter;
     char name[100];  // Yes, this is dangerous
     char word[100];  // Yes, this is dangerous
     int i,j;
