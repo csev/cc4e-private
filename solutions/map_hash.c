@@ -77,15 +77,15 @@ void __HashMapIter_del(struct HashMapIter* self) {
     free((void *)self);
 }
 
-/** getHash - Compute a hash from a string */
-int getHash(char *str)
+/** getBucket - Compute a hash bucket from a string */
+int getBucket(char *str, int buckets)
 {
     int hash = 42;
     if ( str == NULL ) return 0;
     for( ; *str ; str++) {
         hash = ( hash << 3 ) ^ *str;
     }
-    return hash;
+    return hash % buckets;
 }
 
 /**
@@ -150,7 +150,7 @@ void __HashMap_put(struct HashMap* self, char *key, int value) {
     struct HashMapEntry *old, *new;
     char *new_key, *new_value;
 
-    bucket = getHash(key) % self->__buckets;
+    bucket = getBucket(key, self->__buckets);
 
     if ( key == NULL ) return;
 
@@ -198,7 +198,7 @@ void __HashMap_put(struct HashMap* self, char *key, int value) {
  */
 int __HashMap_get(struct HashMap* self, char *key, int def)
 {
-    int bucket = getHash(key) % self->__buckets;
+    int bucket = getBucket(key, self->__buckets);
     struct HashMapEntry *retval = __HashMap_find(self, key, bucket);
     if ( retval == NULL ) return def;
     return retval->value;
