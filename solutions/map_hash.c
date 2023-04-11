@@ -3,59 +3,59 @@
 #include <string.h>
 
 /*
- * This is our map entry for Map<String,Integer>
+ * This is our map entry for HashMap<String,Integer>
  *
  * The key is a string / character array which is allocated using malloc()
  * when a new entry is created.
  */
-struct MapEntry {
+struct HashMapEntry {
     char *key;  /* public */
     int value;  /* public */
-    struct MapEntry *__prev;
-    struct MapEntry *__next;
+    struct HashMapEntry *__prev;
+    struct HashMapEntry *__next;
 };
 
 /*
- * A MapIter contains the current item
+ * A HashMapIter contains the current item
  */
-struct MapIter {
+struct HashMapIter {
     int __bucket;
-    struct Map *__map;
-    struct MapEntry *__current;
+    struct HashMap *__map;
+    struct HashMapEntry *__current;
 
-    struct MapEntry* (*next)(struct MapIter* self);
-    void (*del)(struct MapIter* self);
+    struct HashMapEntry* (*next)(struct HashMapIter* self);
+    void (*del)(struct HashMapIter* self);
 };
 
 /*
- * This is our Map class
+ * This is our HashMap class
  */
-struct Map {
+struct HashMap {
     /* Attributes */
     int __buckets;
-    struct MapEntry *__heads[8];
-    struct MapEntry *__tails[8];
+    struct HashMapEntry *__heads[8];
+    struct HashMapEntry *__tails[8];
     int __count;
 
     /* Methods */
-    void (*put)(struct Map* self, char *key, int value);
-    int (*get)(struct Map* self, char *key, int def);
-    int (*size)(struct Map* self);
-    void (*dump)(struct Map* self);
-    struct MapIter* (*iter)(struct Map* self);
-    void (*del)(struct Map* self);
+    void (*put)(struct HashMap* self, char *key, int value);
+    int (*get)(struct HashMap* self, char *key, int def);
+    int (*size)(struct HashMap* self);
+    void (*dump)(struct HashMap* self);
+    struct HashMapIter* (*iter)(struct HashMap* self);
+    void (*del)(struct HashMap* self);
 };
 
 /**
- * Destructor for the Map Class
+ * Destructor for the HashMap Class
  *
  * Loops through and frees all the keys and entries in the map.
  * The values are integers and so there is no need to free them.
  */
-void __Map_del(struct Map* self)
+void __HashMap_del(struct HashMap* self)
 {
     int i;
-    struct MapEntry *cur, *next;
+    struct HashMapEntry *cur, *next;
 
     for(i=0; i<self->__buckets; i++) {
         cur = self->__heads[i];
@@ -71,9 +71,9 @@ void __Map_del(struct Map* self)
 }
 
 /**
- * Destructor for the MapIter Class
+ * Destructor for the HashMapIter Class
  */
-void __MapIter_del(struct MapIter* self) {
+void __HashMapIter_del(struct HashMapIter* self) {
     free((void *)self);
 }
 
@@ -89,16 +89,16 @@ int getHash(char *str)
 }
 
 /**
- * map->dump - In effect a toString() except we print the contents of the Map to stdout
+ * map->dump - In effect a toString() except we print the contents of the HashMap to stdout
  *
  * self - The pointer to the instance of this class.
  */
 
-void __Map_dump(struct Map* self)
+void __HashMap_dump(struct HashMap* self)
 {
     int i;
-    struct MapEntry *cur;
-    printf("Object HashMap@%p count=%d buckets=%d\n", self, self->__count, self->__buckets);
+    struct HashMapEntry *cur;
+    printf("Object HashHashMap@%p count=%d buckets=%d\n", self, self->__count, self->__buckets);
     for(i = 0; i < self->__buckets; i++ ) {
         for(cur = self->__heads[i]; cur != NULL ; cur = cur->__next ) {
             printf(" %s=%d [%d]\n", cur->key, cur->value, i);
@@ -113,11 +113,11 @@ void __Map_dump(struct Map* self)
  * key - A character pointer to the key value
  * bucket - The hash bucket
  *
- * Returns a MapEntry or NULL.
+ * Returns a HashMapEntry or NULL.
  */
-struct MapEntry* __Map_find(struct Map* self, char *key, int bucket)
+struct HashMapEntry* __HashMap_find(struct HashMap* self, char *key, int bucket)
 {
-    struct MapEntry *cur;
+    struct HashMapEntry *cur;
     if ( self == NULL || key == NULL ) return NULL;
     for(cur = self->__heads[bucket]; cur != NULL ; cur = cur->__next ) {
         if(strcmp(key, cur->key) == 0 ) return cur;
@@ -126,14 +126,14 @@ struct MapEntry* __Map_find(struct Map* self, char *key, int bucket)
 }
 
 /**
- * map->put - Add or update an entry in the Map
+ * map->put - Add or update an entry in the HashMap
  *
  * self - The pointer to the instance of this class.
  * key - A character pointer to the key value
  * value - The value to be stored with the associated key
  *
- * If the key is not in the Map, an entry is added.  If there
- * is already an entry in the Map for the key, the value
+ * If the key is not in the HashMap, an entry is added.  If there
+ * is already an entry in the HashMap for the key, the value
  * is updated.
  *
  * Sample call:
@@ -144,10 +144,10 @@ struct MapEntry* __Map_find(struct Map* self, char *key, int bucket)
  *
  *   map["key"] = value
  */
-void __Map_put(struct Map* self, char *key, int value) {
+void __HashMap_put(struct HashMap* self, char *key, int value) {
 
     int bucket;
-    struct MapEntry *old, *new;
+    struct HashMapEntry *old, *new;
     char *new_key, *new_value;
 
     bucket = getHash(key) % self->__buckets;
@@ -155,7 +155,7 @@ void __Map_put(struct Map* self, char *key, int value) {
     if ( key == NULL ) return;
 
     /* First look up */
-    old = __Map_find(self, key, bucket);
+    old = __HashMap_find(self, key, bucket);
     if ( old != NULL ) {
         old->value = value;
         return;
@@ -184,7 +184,7 @@ void __Map_put(struct Map* self, char *key, int value) {
  *
  * self - The pointer to the instance of this class.
  * key - A character pointer to the key value
- * def - A default value to return if the key is not in the Map
+ * def - A default value to return if the key is not in the HashMap
  *
  * Returns an integer
  *
@@ -196,29 +196,29 @@ void __Map_put(struct Map* self, char *key, int value) {
  *
  *   value = map.get("key", 42)
  */
-int __Map_get(struct Map* self, char *key, int def)
+int __HashMap_get(struct HashMap* self, char *key, int def)
 {
     int bucket = getHash(key) % self->__buckets;
-    struct MapEntry *retval = __Map_find(self, key, bucket);
+    struct HashMapEntry *retval = __HashMap_find(self, key, bucket);
     if ( retval == NULL ) return def;
     return retval->value;
 }
 
 /**
- * map->size - Return the number of entries in the Map as an integer
+ * map->size - Return the number of entries in the HashMap as an integer
  *
  * self - The pointer to the instance of this class.
  *
  * This medhod is like the Python len() function, but we name it
  * size() to pay homage to Java.
  */
-int __Map_size(struct Map* self)
+int __HashMap_size(struct HashMap* self)
 {
     return self->__count;
 }
 
 /**
- * MapIter_next - Advance the iterator forwards
+ * HashMapIter_next - Advance the iterator forwards
  * or backwards and return the next item
  *
  * self - The pointer to the instance of this class.
@@ -229,9 +229,9 @@ int __Map_size(struct Map* self)
  *
  *   item = next(iterator, False)
  */
-struct MapEntry* __MapIter_next(struct MapIter* self)
+struct HashMapEntry* __HashMapIter_next(struct HashMapIter* self)
 {
-    struct MapEntry* retval;
+    struct HashMapEntry* retval;
 
     // self->__current is the next item, so we grab it
     // to return it and *then* advance the pointer
@@ -254,11 +254,11 @@ struct MapEntry* __MapIter_next(struct MapIter* self)
 }
 
 /**
- * map->iter - Create an iterator from the head of the Map 
+ * map->iter - Create an iterator from the head of the HashMap 
  *
  * self - The pointer to the instance of this class.
  *
- * returns NULL when there are no entries in the Map
+ * returns NULL when there are no entries in the HashMap
  *
  * This is inspired by the following Python code
  * that creates an iterator from a dictionary:
@@ -266,24 +266,24 @@ struct MapEntry* __MapIter_next(struct MapIter* self)
  *     x = {'a': 1, 'b': 2, 'c': 3}
  *     it = iter(x)
  */
-struct MapIter* __Map_iter(struct Map* map)
+struct HashMapIter* __HashMap_iter(struct HashMap* map)
 {
-    struct MapIter *iter = malloc(sizeof(*iter));
+    struct HashMapIter *iter = malloc(sizeof(*iter));
     iter->__map = map;
     iter->__bucket = 0;
     iter->__current = map->__heads[iter->__bucket];
-    iter->next = &__MapIter_next;
-    iter->del = &__MapIter_del;
+    iter->next = &__HashMapIter_next;
+    iter->del = &__HashMapIter_del;
     return iter;
 }
 
 /**
- * Constructor for the Map Class
+ * Constructor for the HashMap Class
  *
  * Initialized both the attributes and methods
  */
-struct Map * Map_new() {
-    struct Map *p = malloc(sizeof(*p));
+struct HashMap * HashMap_new() {
+    struct HashMap *p = malloc(sizeof(*p));
 
     p->__buckets = 8;
     for(int i=0; i < p->__buckets; i++ ) {
@@ -293,24 +293,24 @@ struct Map * Map_new() {
 
     p->__count = 0;
 
-    p->put = &__Map_put;
-    p->get = &__Map_get;
-    p->size = &__Map_size;
-    p->dump = &__Map_dump;
-    p->iter = &__Map_iter;
-    p->del = &__Map_del;
+    p->put = &__HashMap_put;
+    p->get = &__HashMap_get;
+    p->size = &__HashMap_size;
+    p->dump = &__HashMap_dump;
+    p->iter = &__HashMap_iter;
+    p->del = &__HashMap_del;
     return p;
 }
 
 /**
- * The main program to test and exercise the Map 
- * and MapEntry classes.
+ * The main program to test and exercise the HashMap 
+ * and HashMapEntry classes.
  */
 int main(void)
 {
-    struct Map * map = Map_new();
-    struct MapEntry *cur;
-    struct MapIter *iter;
+    struct HashMap * map = HashMap_new();
+    struct HashMapEntry *cur;
+    struct HashMapIter *iter;
 
     map->put(map, "z", 8);
     map->put(map, "z", 1);
