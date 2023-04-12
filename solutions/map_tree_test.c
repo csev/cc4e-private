@@ -14,11 +14,15 @@ int main(void)
     struct TreeMapEntry *cur;
     struct TreeMapIter *iter;
 
-    map->put(map, "r", 8);
-    map->put(map, "y", 2);
-    map->put(map, "a", 4);
-    map->put(map, "b", 3);
-    map->put(map, "r", 1);
+    map->put(map, "h", 42);
+    map->put(map, "d", 8);
+    map->put(map, "f", 5);
+    map->put(map, "b", 123);
+    map->dump(map);
+    map->put(map, "k", 9);
+    map->put(map, "m", 67);
+    map->put(map, "j", 12);
+    map->put(map, "f", 6);
     map->dump(map);
 
     printf("r=%d\n", map->get(map, "r", 42));

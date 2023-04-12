@@ -133,15 +133,12 @@ void __TreeMap_put(struct TreeMap* self, char *key, int value) {
 
     if ( key == NULL ) return;
 
-    // printf("searching for %s\n", key);
-
     cur = self->__root;
     left = NULL;
     right = NULL;
     while(cur != NULL ) {
         cmp = strcmp(key, cur->key);
         if(cmp == 0 ) {
-            // printf("replacing %s=%d\n",key, value);
             cur->value = value;
             return;
         }
@@ -169,7 +166,6 @@ void __TreeMap_put(struct TreeMap* self, char *key, int value) {
     if ( self->__head == NULL ) {
         self->__head = new;
         self->__root = new;
-        // printf("First item inserted\n");
         return;
     }
 
@@ -177,18 +173,18 @@ void __TreeMap_put(struct TreeMap* self, char *key, int value) {
             key, (right ? right->key : "0") );
 
     // Insert into the sorted linked list
-    if ( left == NULL ) {
-        if ( self->__head != right ) {
-            printf("FAIL self->__head != right\n");
-        }
-        new->__next = self->__head;
-        self->__head = new;
-    } else {
+    if ( left != NULL ) {
         if ( left->__next != right ) {
             printf("FAIL left->__next != right\n");
         }
         new->__next = right;
         left->__next = new;
+    } else {
+        if ( self->__head != right ) {
+            printf("FAIL self->__head != right\n");
+        }
+        new->__next = self->__head;
+        self->__head = new;
     }
 
     // Insert into the tree
