@@ -6,8 +6,7 @@
 #include "map_tree.c"
 
 /**
- * The main program to test and exercise the TreeMap 
- * and TreeMapEntry classes.
+ * The main program to test and exercise the TreeMap classes.
  */
 int main(void)
 {
@@ -52,7 +51,7 @@ int main(void)
         }
     }
     iter->del(iter);
-    printf("\nMAX %s=%d\n", maxkey, maxvalue);
+    printf("\n%s %d\n", maxkey, maxvalue);
 
     map->del(map);
 }
