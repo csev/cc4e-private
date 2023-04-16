@@ -232,23 +232,16 @@ struct HashMapEntry* __HashMapIter_next(struct HashMapIter* self)
 {
     struct HashMapEntry* retval;
 
-    // self->__current is the next item, so we grab it
-    // to return it and *then* advance the pointer
-    if ( self->__current != NULL ) {
-        retval = self->__current;
-        self->__current = self->__current->__next;
-        if ( retval != NULL ) return retval;
-    }
-
-    // We might be at the end of a chain so advance the bucket until 
-    // we find a non-empty bucket
+    /* If we are at the end of a chain and there are still more buckets
+     * scan for a bucket that is not NULL */
     while ( self->__current == NULL) {
-        if ( self->__bucket >= self->__map->__buckets ) return NULL;
         self->__bucket++;
+        if ( self->__bucket >= self->__map->__buckets ) return NULL;
         self->__current = self->__map->__heads[self->__bucket];
     }
+
     retval = self->__current;
-    self->__current = self->__current->__next;
+    if ( self->__current != NULL ) self->__current = self->__current->__next;
     return retval;
 }
 
