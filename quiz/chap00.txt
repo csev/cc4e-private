@@ -125,7 +125,7 @@ Where do C developers find Input/Output capabilities when writing C?
 ::Q7::Before UNIX, what was the most popular portable operating system?
 {
 =None of these
-~Lunix
+~Linux
 ~Minix
 ~MTS (Michigan Terminal System)
 ~ARPANET
@@ -140,7 +140,7 @@ Where do C developers find Input/Output capabilities when writing C?
 }
 
 ::Q11::What operating system powers most of the AWS
-(Amazon Web Servces) server resources?
+(Amazon Web Services) server resources?
 {
 =Linux
 ~UNIX
@@ -160,7 +160,7 @@ Where do C developers find Input/Output capabilities when writing C?
 UNIX distribution in the 1970's?
 {
 =University of Berkeley
-~Stanford Univerity
+~Stanford University
 ~MIT
 ~Harvard
 }

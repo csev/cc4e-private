@@ -6,7 +6,7 @@
 ~Use the print statement
 }
 
-::Q2::What is 20 degrees Farenheight converted to Celsius by a program in Chapter 1?
+::Q2::What is 20 degrees Fahrenheit converted to Celsius by a program in Chapter 1?
 {
 =-6.7
 ~41

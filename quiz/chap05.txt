@@ -25,7 +25,7 @@ to buffer overflow?
 }
 
 ::Q4::What is the printf conversion code in modern C to print out a pointer in
-hexidecimal format like '0x16f5b31ec'?
+hexadecimal format like '0x16f5b31ec'?
 {
 =%p
 ~%d
