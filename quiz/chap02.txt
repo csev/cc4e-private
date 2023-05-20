@@ -102,7 +102,7 @@ x = 1 + 2 * 3 - 5 / 6;
 ~14.5
 }
 
-::Q8::If the result of the logical expression (12>10) is assigned to an integer variable in C,
+::Q8::If the result of the logical expression (10>12) is assigned to an integer variable in C,
 what is the value that is assigned?
 {
 =0
