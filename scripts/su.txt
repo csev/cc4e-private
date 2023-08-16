@@ -4,3 +4,10 @@
 
 su -s "/bin/bash" www-data
 
+su -s "/bin/bash" www-data
+www-data@ip-172-31-1-195:~/sites/sakai.tsugicloud.org$ cd tsugi/
+www-data@ip-172-31-1-195:~/sites/sakai.tsugicloud.org/tsugi$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+nothing to commit, working tree clean
