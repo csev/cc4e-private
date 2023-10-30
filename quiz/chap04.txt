@@ -32,17 +32,7 @@ when a function is entered?
 ~273
 }
 
-::Q5::Which of the following web site names is inspired by the situation when
-a recursive function mistakenly calls itself an infinite number of times?
-{
-=Stack Overflow
-~Medium
-~linkedIn
-~Twitter
-~W3 Schools
-}
-
-::Q6::Why can a function change the contents of an array of characters even though
+::Q5::Why can a function change the contents of an array of characters even though
 the array is passed into the function "by value".
 {
 =Because the location of the array data is passed into the function
@@ -59,24 +49,7 @@ the array is passed into the function "by value".
 ~Refactoring best practice
 }
 
-::Q7::What is the output of the C pre-processor?
-{
-=C Source Code
-~Assembly language
-~Machine code
-~Pre-optimization intermediate code
-}
-
-::Q8::Which of the following commands are handled by the C pre-processor?
-{
-=\#ifdef
-~break
-~continue
-~\#while
-~elif :
-}
-
-::Q9::In modern C, what does it mean when the type of a function is 'void'?
+::Q7::In modern C, what does it mean when the type of a function is 'void'?
 {
 =The function does not return a value
 ~The function return value must be explicitly converted to an int
@@ -84,7 +57,7 @@ the array is passed into the function "by value".
 ~The function body is empty and will be defined after the program starts
 }
 
-::Q10::In the 1978 C dialect, what is the default return type for a function?
+::Q8::In the 1978 C dialect, what is the default return type for a function?
 {
 =int
 ~void
@@ -93,7 +66,7 @@ the array is passed into the function "by value".
 ~list
 }
 
-::Q11::What is the scope of a extern variable?
+::Q9::What is the scope of a extern variable?
 {
 ~The block in which it is defined
 ~The function in which it is defined
@@ -101,7 +74,7 @@ the array is passed into the function "by value".
 =The application in which it is defined.
 }
 
-::Q12::What is the scope of an automatic variable?
+::Q10::What is the scope of an automatic variable?
 {
 =The block in which it is defined
 ~The function in which it is defined
@@ -109,7 +82,7 @@ the array is passed into the function "by value".
 ~The application in which it is defined.
 }
 
-::Q13::What is the scope of a function parameter variable?
+::Q11::What is the scope of a function parameter variable?
 {
 ~The block in which it is defined
 =The function in which it is defined
@@ -117,7 +90,7 @@ the array is passed into the function "by value".
 ~The application in which it is defined.
 }
 
-::Q14::What is the scope of a static variable?
+::Q12::What is the scope of a static variable?
 {
 ~The block in which it is defined
 ~The function in which it is defined
@@ -125,7 +98,17 @@ the array is passed into the function "by value".
 ~The application in which it is defined.
 }
 
-::Q15::What is the best data structure to use when implementing a reverse polish
+::Q13::Which of the following web site names is inspired by the situation when
+a recursive function mistakenly calls itself an infinite number of times?
+{
+=Stack Overflow
+~Medium
+~linkedIn
+~Twitter
+~W3 Schools
+}
+
+::Q14::What is the best data structure to use when implementing a reverse polish
 calculator.
 {
 =Stack
@@ -134,5 +117,53 @@ calculator.
 ~FIFO Queue
 }
 
+::Q15::What is the element of the C runtime environment that makes recursive function
+calls possible?
+{
+=Stack
+~Heap
+~Garbage Collection
+~Global Interepreter Lock (GIL) 
+}
 
+::Q16::Which of these computations is a poor use of recursion?
+{
+=Computing the factorial of a number 
+~Parsing mathematical expressions with numbers, operators, and parenthesis
+~Traversing tree-like structures 
+}
+
+::Q17::Which of these problems is *not* an example of a problem we solve using C Pre-processor directives?
+{
+=Checking the syntax of C code before compiling
+~Dealing with extensions which differ from one C compiler to another
+~Generating different code for different variants of the C language
+~Matching our C code to different library support in different operating systems
+}
+
+::Q18::(challenge question) Why does the 'lint' tool exist?
+{
+=In order to keep the c-compiler small and fast
+=To scan code to make sure that variable types match between function calls and the functions definitions
+=To allow the compiler to run using less memory
+=To check for possible logic errors in the code
+~To insure that small bits of 'cruft' are removed from clothing
+}
+
+::Q19::What is the output of the C pre-processor?
+{
+=C Source Code
+~Assembly language
+~Machine code
+~Pre-optimization intermediate code
+}
+
+::Q20::Which of the following commands are handled by the C pre-processor?
+{
+=\#ifdef
+~break
+~continue
+~\#while
+~elif :
+}
 

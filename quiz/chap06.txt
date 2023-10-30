@@ -148,37 +148,3 @@ beautifully in Section 6.5.2 in the K&R textbook?
 ~NP-Completeness
 ~Floating point formats
 }
-
-::Q17::What is the element of the C runtime environment that makes recursive function
-calls possible?
-{
-=Stack
-~Heap
-~Garbage Collection
-~Global Interepreter Lock (GIL)
-}
-
-::Q18::Which of these computations is a poor use of recursion?
-{
-=Computing the factorial of a number
-~Parsing mathematical expressions with numbers, operators, and parenthesis
-~Traversing tree-like structures
-}
-
-::Q18::Which of these problems is *not* an example of where the C Pre-processor?
-{
-=Checking the syntax of C code before compiling
-~Dealing with extensions which differ from one C compiler to another
-~Generating different code for different variants of the C language
-~Matching our C code to different library support in different operating systems
-}
-
-::Q19::(challenge question) Why does the 'lint' tool exist?
-{
-=In order to keep the c-compiler small and fast
-=To scan code to make sure that variable types match between function calls and the functions definitions
-=To allow the compiler to run using less memory
-=To check for possible logic errors in the code
-~To insure that small bits of 'cruft' are removed from clothing
-}
-
