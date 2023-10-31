@@ -51,26 +51,7 @@ a variable.
 ~A marketing message (i.e. "See Python")
 }
 
-::Q7::When you add two to an integer pointer (assuming integers are 32-bits),
-what happens to the actual address stored in the integer pointer?
-{
-=It is increased by 8
-~It is increased by 2
-~It is increased by 4
-~It is increased by 16
-}
-
-::Q8::What new type was added to C shortly after 1978 that allowed
-functions like alloc() to return a generic address that can be cast to
-point to any type.
-{
-=void *
-~generic *
-~pointer *
-~char *
-}
-
-::Q9::Which of these languages supports call by reference for simple variables
+::Q7::Which of these languages supports call by reference for simple variables
 like float or int?
 {
 =Pascal
@@ -79,9 +60,18 @@ like float or int?
 ~Java
 }
 
-::Q10::When calling functions, FORTRAN uses call by reference. {T}
+::Q8::When calling functions, FORTRAN uses call by reference. {T}
 
-::Q11::According to the Wikipedia article on Buffer Overflow, what is the best way
+::Q9::Which of the following languages does Dr. Chuck think has the most elegant
+implementation of call by reference?
+{
+=PHP
+~Python
+~Pascal
+~JavaScript
+}
+
+::Q10::According to the Wikipedia article on Buffer Overflow, what is the best way
 to copy data from one copy to another?
 {
 =strlcpy
@@ -90,7 +80,7 @@ to copy data from one copy to another?
 ~Copy constructor
 }
 
-::Q12::According to the Wikipedia article on Stack Buffer Overflow, what is the
+::Q11::According to the Wikipedia article on Stack Buffer Overflow, what is the
 technique used to detect when a stack variable has been over-referenced in an
 attempt to overwrite a return value on the stack?
 {
@@ -119,7 +109,33 @@ about various security threats on the Internet.
 ~Coursera
 }
 
-::Q14::[html]In the following C code:
+::Q14::When you add two to an integer pointer (assuming integers are 32-bits),
+what happens to the actual address stored in the integer pointer?
+{
+=It is increased by 8
+~It is increased by 2
+~It is increased by 4
+~It is increased by 16
+}
+
+::Q15::If you where programming in C in 1978, a 32-bit integer was large enough to hold most
+pointer values {T}
+
+::Q16::If you are programming in C after 2020, a 32-bit integer will be large enough to hold most
+pointer values {F}
+
+::Q17::What new type was added to C shortly after 1978 that allowed
+functions like alloc() to return a generic address that can be cast to
+point to any type.
+{
+=void *
+~generic *
+~pointer *
+~char *
+}
+
+
+::Q18::[html]In the following C code:
 <pre>
 int *ip;
 ip = (int *) alloc(sizeof(int)*4);
@@ -132,16 +148,7 @@ What is sizeof?
 ~An object
 }
 
-::Q15::Which of the following languages does Dr. Chuck think has the most elegant
-implementation of call by reference?
-{
-=PHP
-~Python
-~Pascal
-~JavaScript
-}
-
-::Q16::When you define an array of characters with 10 elements and reference the
+::Q19::When you define an array of characters with 10 elements and reference the
 name of the array without a subscript, what is its value?
 {
 =A pointer to the address of the first character in the array
@@ -150,7 +157,7 @@ name of the array without a subscript, what is its value?
 ~The location of the string terminating character '\\0'
 }
 
-::Q17::[html]If you had the following array:
+::Q20::[html]If you had the following array:
 <pre>
 int ia[100];
 </pre>
@@ -162,7 +169,7 @@ Which of the following is equivalent to a[5]?
 ~*(a+8)
 }
 
-::Q18::In the 1978 edition of the the K&R C textbook, what is the type of the
+::Q21::In the 1978 edition of the the K&R C textbook, what is the type of the
 value returned by the alloc() function?
 {
 =char *
@@ -171,7 +178,7 @@ value returned by the alloc() function?
 ~char &
 }
 
-::Q19::In the 1983 edition of the the K&R C textbook, what is the type of the
+::Q22::In the 1983 edition of the the K&R C textbook, what is the type of the
 value returned by the malloc() function?
 {
 ~char *
@@ -180,7 +187,7 @@ value returned by the malloc() function?
 ~char &
 }
 
-::Q20::[html]What does the following lines of code accomplish?
+::Q23::[html]What does the following lines of code accomplish?
 <pre>
 char *s, *t;
 \{
@@ -193,10 +200,4 @@ char *s, *t;
 ~Compares the length of the string s to the length of string t
 ~It has a bug because it does not copy the end-of-string indicator
 }
-
-::Q21::If you where programming in C in 1978, a 32-bit integer was large enough to hold most
-pointer values {T}
-
-::Q22::If you are programming in C after 2020, a 32-bit integer will be large enough to hold most
-pointer values {F}
 
