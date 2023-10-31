@@ -51,7 +51,7 @@ function, which of the following is true?
 ~None of the above
 }
 
-::Q6::What is the routine we use to allocate dynamic memory in C?
+::Q7::What is the routine we use to allocate dynamic memory in C?
 {
 =malloc()
 ~challoc()
@@ -59,7 +59,7 @@ function, which of the following is true?
 ~free()
 }
 
-::Q7::When you are allocating dynamic memory in C, what is the unit of allocation?
+::Q8::When you are allocating dynamic memory in C, what is the unit of allocation?
 {
 =char
 ~int
@@ -67,7 +67,7 @@ function, which of the following is true?
 ~byte
 }
 
-::Q8::[html]What is wrong with this code?
+::Q9::[html]What is wrong with this code?
 <pre>
 struct lnode \{
     char *text;
@@ -81,7 +81,7 @@ struct lnode \{
 ~You cannot allocate pointers to a structure within the definition of a structure
 }
 
-::Q9::How do we know we have reached the end of a linked list in C?
+::Q10::How do we know we have reached the end of a linked list in C?
 {
 =The "next" pointer in the item we are looking at is NULL
 ~We check the length of the pre-allocated list array
@@ -89,7 +89,7 @@ struct lnode \{
 ~The return value for the call is -1 or 0
 }
 
-::Q10::What is a typical reason to use a doubly linked list over a singly linked list?
+::Q11::What is a typical reason to use a doubly linked list over a singly linked list?
 {
 =So you can traverse the list in reverse
 ~To save memory by combining two pointers into one
@@ -97,7 +97,7 @@ struct lnode \{
 ~Each entry can store two string values in a doubly linked list
 }
 
-::Q11::The primary difference between a C union and a C structure is:
+::Q12::The primary difference between a C union and a C structure is:
 {
 =The union allocates the members in a single overlapped memory space
 ~The structure allocates the members in a single overlapped memory space
@@ -106,7 +106,7 @@ struct lnode \{
 ~A union will expand when new data members are added after allocation
 }
 
-::Q12::When you are using bit fields in an C union, what aspect of computer architecture must be considered?
+::Q13::When you are using bit fields in an C union, what aspect of computer architecture must be considered?
 {
 =The endianness of memory storage
 ~The relative sizes of int and pointer values
@@ -114,7 +114,7 @@ struct lnode \{
 ~Whether or not stack frames are allocated upwards or downwards in memory
 }
 
-::Q13::What is the simple hashing function used in Section 6.6 of the
+::Q14::What is the simple hashing function used in Section 6.6 of the
 K\&R textbook?
 {
 =Sum up character values and apply the modulo operator
@@ -123,7 +123,7 @@ K\&R textbook?
 ~Use the SHA-256 algorithm and a modulo operator
 }
 
-::Q14::Why would one use a binary tree to store data instead of a linked list?
+::Q15::Why would one use a binary tree to store data instead of a linked list?
 {
 =To avoid quadratic running time
 ~To reduce memory use
@@ -131,7 +131,7 @@ K\&R textbook?
 ~Because it does not require the use of self-referential pointers
 }
 
-::Q15::In Section 6.6 of K&R, what other data structure is being used to implement a hash map to store key/value pairs?
+::Q16::In Section 6.6 of K&R, what other data structure is being used to implement a hash map to store key/value pairs?
 {
 =A linked list
 ~A doubly linked list
@@ -139,7 +139,7 @@ K\&R textbook?
 ~An AVL tree
 }
 
-::Q16::What computer science concept is difficult to explain in general
+::Q17::What computer science concept is difficult to explain in general
 and ignored in Dr. Chuck's Python book, but demonstrated simply and
 beautifully in Section 6.5.2 in the K&R textbook?
 {
