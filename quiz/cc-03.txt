@@ -107,7 +107,7 @@ an area of dynamically allocated memory larger?
 }
 
 
-::Q1::[html]These questions come from the Guido van Rossum blog post titled, 
+::Q12::[html]These questions come from the Guido van Rossum blog post titled, 
 "Support for User-defined Classes", written by Guido van Rossum.
 <p>
 Which language provided most of the inspiration for user classes in Python?
@@ -118,7 +118,7 @@ Which language provided most of the inspiration for user classes in Python?
 ~perl
 }
 
-::Q2::Where did the initial implementation of classes in Python store attribute values?
+::Q13::Where did the initial implementation of classes in Python store attribute values?
 {
 =The instance dictionary
 ~As pickled strings
@@ -126,7 +126,7 @@ Which language provided most of the inspiration for user classes in Python?
 ~In cookies as created by the Python "cookie cutter"
 }
 
-::Q3::Where did the initial implementation of classes in Python store method pointers?
+::Q14::Where did the initial implementation of classes in Python store method pointers?
 {
 =The class dictionary
 ~As pickled strings

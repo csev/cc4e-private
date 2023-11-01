@@ -1,0 +1,83 @@
+
+::Q1-03::Which of these is not a core principle of Object Oriented programming?
+{
+=Invertability
+~Encapsulation
+~Abstraction
+~Inheritance
+}
+
+::Q2-08::Why might a person building the code for an object want a "private" attribute?
+{
+=They want to be able to change how the attribute is used without breaking the internal object code
+~They want a single instance of the attribute to be shared across all instances of the object
+~They do not want to pre-initialize the sttribute before the constructor executes
+~They want to be able to allocate the attribute to a CPU register for maximum performance
+}
+
+::Q3-10::In Java and C++ Objects have an access level between "public" and "private".
+What is the name of this access level?
+{
+=protected
+~between
+~translucent
+~intermediate
+}
+
+::Q4-12::What is the Python equivalent of marking an attribute "private" in Java.
+{
+=A double underscore prefix
+~Labelling the attribute as "protected"
+~Using the NonPublic label
+~Defining the attribute outside the constructor
+}
+
+::Q5-13::What is the Python equivalent of Java's "this" (i.e. a pre-defined
+pointer to the object instance)?
+{
+=self
+~This
+~that
+~instance
+~inst
+}
+
+::Q6-16::What is the PHP equivalent of a C++ map object?
+{
+~dictionary
+~Map
+=array
+~Tree
+~Hash
+}
+
+::Q7-16::What is the Python equivalent of a C++ map object?
+{
+=dictionary
+~Map
+~array
+~Tree
+~Hash
+}
+
+::Q8-25::According to the lecture in this course, what is the correct ordering of the dates
+these languages were invented from earliest to most recent?
+{
+=C C++ Python
+~Python C++ C
+~C++ C-- C
+~C C+ C++
+}
+
+::Q8-27::What Object Oriented feature is found in C++ and no other mainstream
+OO languages?
+{
+=operator overloading
+~public
+~private
+~inheritance
+~incapsulation
+}
+
+
+
