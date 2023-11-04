@@ -1,0 +1,53 @@
+::Q1::How is a C structure different from a Python dictionary?
+{
+=A the C structure allocated all of its data are the moment it is defined
+~All the members in a C structure must be the same type 
+~A C structure expands automatically as new data is added
+~A C structure uses strings as keys to look up data
+}
+
+::Q2::What is the operator used in C structures to access a member value
+in a structure variable?
+{
+=The dot operator (.)
+~The arrow operator (\-\>)
+~The ampersand operator (\&)
+~The asterisk operator (\*)
+}
+
+::Q3::What is the operator used in C structures to access a member value
+when you have a pointer to a structure?
+{
+~The dot operator (\.)
+=The arrow operator (\-\>)
+~The ampersand operator (\&)
+~The asterisk operator (\*)
+}
+
+::Q4::When you pass a structure (not a pointer to a structure) into a
+function, which of the following is true?
+{
+=The entire structure is copied into the stack frame (i.e. call by value)
+~A pointer to the structure is copied into the stack frame
+~When structures are being used, the stack frame is not involved
+~All structures must be allocated with the "extern" storage class
+~You cannot pass structures into functions as parameters
+~If you change the value of a member of a structure in a function, that value is changed in the calling context
+}
+
+::Q5::What happens to a stack frame when a C function returns?
+{
+=The stack frame is removed from the stack
+~The stack frame is copied into function-local storage and available in a later function call
+~The stack frame is moved to the former-stack area and later garbage collected
+~The contents of the stack frame are copied back into their corresponding variables in the calling context
+}
+
+::Q6::What is the printf() formatting code typically used to print pointer values?
+{
+=\%p
+~\%ld
+~\%s
+~None of the above
+}
+
