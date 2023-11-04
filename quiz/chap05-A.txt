@@ -1,0 +1,72 @@
+::Q1::What is the C operator that gives you the address of a variable?
+{
+=&
+~*
+~\-\>
+~.
+}
+
+::Q2::What is the C operator that takes an address of a variable and retrieves
+the value pointed to by the address?
+{
+~&
+=*
+~\-\>
+~.
+}
+
+::Q3::What is the C library function that is famous for exposing a C application
+to buffer overflow?
+{
+=gets
+~fgets
+~printf
+~main
+}
+
+::Q4::What is the printf conversion code in modern C to print out a pointer in
+hexadecimal format like '0x16f5b31ec'?
+{
+=%p
+~%d
+~%x
+~%f
+}
+
+::Q5::What function in Python is roughly equivalent to finding the address of a
+a variable.
+{
+=id()
+~dir()
+~deref()
+~type()
+~loc()
+}
+
+::Q6::What is CPython?
+{
+=The Python implementation written in C
+~Python 3 - (i.e. Python2 was BPython)
+~Compact Python
+~A marketing message (i.e. "See Python")
+}
+
+::Q7::Which of these languages supports call by reference for simple variables
+like float or int?
+{
+=Pascal
+~Python
+~JavaScript
+~Java
+}
+
+::Q8::When calling functions, FORTRAN uses call by reference. {T}
+
+::Q9::Which of the following languages does Dr. Chuck think has the most elegant
+implementation of call by reference?
+{
+=PHP
+~Python
+~Pascal
+~JavaScript
+}
