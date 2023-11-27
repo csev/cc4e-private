@@ -11,7 +11,7 @@
 {
 =They want to be able to change how the attribute is used without breaking the internal object code
 ~They want a single instance of the attribute to be shared across all instances of the object
-~They do not want to pre-initialize the sttribute before the constructor executes
+~They do not want to pre-initialize the attribute before the constructor executes
 ~They want to be able to allocate the attribute to a CPU register for maximum performance
 }
 

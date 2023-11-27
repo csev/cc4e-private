@@ -4,7 +4,7 @@
 {
 =Because you need a branch table
 ~Because you have more than two 'else if' statements in an if
-~Because it impresses other programmers with your C skillz
+~Because it impresses other programmers with your C skills
 }
 
 ::Q3::Which of these statements makes sure that code in one 'case' clause
@@ -31,7 +31,7 @@ does not 'drop down' into the next 'case' clause?
 =To initialize two variables in a for loop
 ~To create a block of statements in if-the-else without using curly braces
 ~To use in place of a semicolon when there are several short C statements in a row
-~To indicate that one should pause pause while reading code aloud
+~To indicate that one should pause while reading code aloud
 ~To support the 'Oxford comma' style of code in logical expressions
 }
 

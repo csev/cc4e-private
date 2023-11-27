@@ -1,4 +1,4 @@
-::Q1::Looking at the Object Oriented Patterns aross various languages,
+::Q1::Looking at the Object Oriented Patterns across various languages,
 which of the languages does not use the "new" operator to create an
 instance from a class?
 {
@@ -39,8 +39,8 @@ operator to access an attribute within an instance
 }
 
 
-::Q5::What is the country where the creator of C++ was pursuing a Ph.D. when 
-he laid down the concepts that would become C++;
+::Q5::What is the country where the creator of C++ was pursuing a Ph.D. when
+he laid down the concepts that would become C++?
 {
 ~Finland
 ~Switzerland
@@ -75,16 +75,16 @@ concept in Python.
 ~__init__
 }
 
-::Q9::Which of the languages in the lecture away from being a hybrid
-OO approach and towards a more "pure" OO apprach?
+::Q9::Which of the languages described in the lecture moved away from being a hybrid
+OO approach and towards a more "pure" OO approach?
 {
 =JavaScript
 ~Java
 ~perl
-~C-Sharp
+~PHP
 }
 
-::Q10::What is the C library routine that can be used to make a
+::Q10::What is the C library routine that can be used to make
 an area of dynamically allocated memory larger?
 {
 =realloc()
@@ -107,7 +107,7 @@ an area of dynamically allocated memory larger?
 }
 
 
-::Q12::[html]These questions come from the Guido van Rossum blog post titled, 
+::Q12::[html]These questions come from the Guido van Rossum blog post titled,
 "Support for User-defined Classes", written by Guido van Rossum.
 <p>
 Which language provided most of the inspiration for user classes in Python?
