@@ -1,6 +1,6 @@
 ::Q1::How is a C structure different from a Python dictionary?
 {
-=A the C structure allocated all of its data are the moment it is defined
+=The C structure allocates all of its data are the moment it is created
 ~All the members in a C structure must be the same type 
 ~A C structure expands automatically as new data is added
 ~A C structure uses strings as keys to look up data
