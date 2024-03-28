@@ -11,8 +11,8 @@ struct dnode {
 
 struct dict {
     int buckets;
-    struct dnode *heads[8];
-    struct dnode *tails[8];
+    struct dnode *heads[4];
+    struct dnode *tails[4];
     int count;
 };
 
@@ -117,7 +117,7 @@ int dict_size(struct dict* self)
 struct dict * dict_new() {
     struct dict *p = malloc(sizeof(*p));
 
-    p->buckets = 8;
+    p->buckets = 4;
     for(int i=0; i < p->buckets; i++ ) {
         p->heads[i] = NULL;
         p->tails[i] = NULL;
