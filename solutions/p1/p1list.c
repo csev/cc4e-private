@@ -52,8 +52,8 @@ void p1list_append(struct p1list* self, char *str) {
     
     // Extend if necessary
     if ( self->length >= self->alloc ) {
+        printf("Extending from %d to %d\n", self->alloc, self->alloc + 10);
         self->alloc = self->alloc + 10;
-        printf("Extending...\n");
         self->items = (char **) realloc(self->items, (self->alloc * sizeof(char *)));
     }
 

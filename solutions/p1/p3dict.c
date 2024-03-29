@@ -7,6 +7,7 @@ struct dnode {
     char *value;
 };
 
+/* Index will always be 2x the length of dnode - load factor 50% */
 struct p3dict {
    int alloc;
    int length;
@@ -29,7 +30,7 @@ struct p3dict * p3dict_new() {
     int i;
     struct p3dict *p = malloc(sizeof(*p));
     p->length = 0;
-    p->alloc = 8;
+    p->alloc = 2;
     p->items = malloc(p->alloc * sizeof(struct dnode));
     p->index = malloc(p->alloc * 2 * sizeof(int));
     for(i=0; i < (p->alloc*2); i++ ) p->index[i] = -1;
@@ -102,7 +103,7 @@ char* p3dict_get(struct p3dict* self, char *key)
 /* x[key] = value; Insert or replace the value associated with a key */
 void p3dict_put(struct p3dict* self, char *key, char *value) {
 
-    int position;
+    int i, position;
 
     struct dnode node;
 
@@ -122,6 +123,28 @@ void p3dict_put(struct p3dict* self, char *key, char *value) {
     }
 
     /* Not found - time to insert */
+
+    /* Extend if necessary */
+    if ( self->length >= self->alloc ) {
+        printf("Extending from %d to %d\n", self->alloc, self->alloc*2);
+
+        self->alloc = self->alloc * 2;
+
+        /* Extend items */
+        self->items = realloc(self->items, self->alloc * sizeof(struct dnode));
+
+        /* Rebuild empty index */
+        free(self->index);
+        self->index = malloc(self->alloc * 2 * sizeof(int));
+        for(i=0; i < (self->alloc*2); i++ ) self->index[i] = -1;
+
+        /* Refill index - tricky but clever */
+        for(i=0; i < self->length; i++ ) {
+            position = p3dict_find(self, self->items[i].key);
+            self->index[position] = i;
+        }
+    }
+
     new_value = malloc(strlen(value)+1);
     strcpy(new_value, value);
 
