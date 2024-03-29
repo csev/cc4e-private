@@ -54,7 +54,7 @@ void p1list_append(struct p1list* self, char *str) {
     if ( self->length >= self->alloc ) {
         self->alloc = self->alloc + 10;
         printf("Extending...\n");
-        self->items = (char **) realloc(self->items, (self->alloc * sizeof(char *))i );
+        self->items = (char **) realloc(self->items, (self->alloc * sizeof(char *)));
     }
 
     char *saved = malloc(strlen(str)+1);
@@ -83,7 +83,7 @@ int main(void)
     p1list_print(lst);
     p1list_append(lst, "Brian");
     p1list_print(lst);
-    printf("Length = %d\n", p1list_len(lst));
+    printf("Length=%d\n", p1list_len(lst));
     printf("Brian? %d\n", p1list_index(lst, "Brian"));
     printf("Bob? %d\n", p1list_index(lst, "Bob"));
     p1list_del(lst);

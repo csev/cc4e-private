@@ -137,7 +137,7 @@ int main(void)
     p1dict_put(dct, "c", "C");
     p1dict_put(dct, "a", "D");
     p1dict_print(dct);
-    printf("Length =%d\n",p1dict_len(dct));
+    printf("Length=%d\n",p1dict_len(dct));
 
     printf("z=%s\n", p1dict_get(dct, "z"));
     printf("x=%s\n", p1dict_get(dct, "x"));

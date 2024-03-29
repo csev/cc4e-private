@@ -11,7 +11,18 @@ struct p3dict {
    int alloc;
    int length;
    struct dnode *items;
+   int *index;
 };
+
+int getBucket(char *str, int buckets)
+{
+    unsigned int hash = 123456;
+    if ( str == NULL ) return 0;
+    for( ; *str ; str++) {
+        hash = ( hash << 3 ) ^ *str;
+    }
+    return hash % buckets;
+}
 
 /* Constructor - dct = dict() */
 struct p3dict * p3dict_new() {
@@ -20,21 +31,20 @@ struct p3dict * p3dict_new() {
     p->length = 0;
     p->alloc = 8;
     p->items = malloc(p->alloc * sizeof(struct dnode));
-    for(i=0; i < p->alloc; i++) {
-        p->items[i].key = NULL;
-        p->items[i].value = NULL;
-    }
+    p->index = malloc(p->alloc * 2 * sizeof(int));
+    for(i=0; i < (p->alloc*2); i++ ) p->index[i] = -1;
     return p;
 }
 
 /* Destructor - del(dct) */
 void p3dict_del(struct p3dict* self) {
     int i;
-    for(i=0; i < self->alloc; i++) {
-        if ( self->items[i].key != NULL ) free(self->items[i].key);
-        if ( self->items[i].value != NULL ) free(self->items[i].value);
+    for(i=0; i < self->length; i++) {
+        free(self->items[i].key);
+        free(self->items[i].value);
     }
     free((void *) self->items);
+    free((void *) self->index);
     free((void *) self);
 }
 
@@ -43,12 +53,17 @@ void p3dict_del(struct p3dict* self) {
 void p3dict_print(struct p3dict* self)
 {
     int first = 1;
-    int i;
+    int i, j;
     printf("{");
     for(i=0; i < self->length; i++) {
          if ( ! first ) printf(", ");
          printf("'%s': ", self->items[i].key);
          printf("'%s'", self->items[i].value);
+         for(j=0; j < (self->alloc*2); j++) {
+             if ( self->index[j] == i ) {
+                 printf(" [%d]", j);
+             }
+         }
          first = 0;
     }
     printf("}\n");
@@ -60,41 +75,49 @@ int p3dict_len(const struct p3dict* self)
 }
 
 /* find a node - used in get and put */
-struct dnode *p3dict_find(struct p3dict* self, char *key)
+int p3dict_find(struct p3dict* self, char *key)
 {
-    int i;
-    if ( key == NULL ) return NULL;
-    for(i=0; i < self->alloc; i++) {
-        if ( self->items[i].key == NULL ) continue;
-        if(strcmp(key, self->items[i].key) == 0 ) return &(self->items[i]);
+    int i, bucket, offset;
+    bucket = getBucket(key, self->alloc);
+
+    if ( key == NULL ) return -1;
+
+    for(offset=0; offset < (self->alloc*2); offset++) {
+        i = (offset + bucket) % (self->alloc*2);
+        if ( self->index[i] == -1 ) return i;
+        if ( strcmp(key, self->items[self->index[i]].key) == 0 ) return i;
     }
-    return NULL;
+
+    return -1; // Bad news
 }
 
 /* x.get(key) - Returns NULL if not found */
 char* p3dict_get(struct p3dict* self, char *key)
 {
-    struct dnode *retval = p3dict_find(self, key);
-    if ( retval == NULL ) return NULL;
-    return retval->value;
+    int position = p3dict_find(self, key);
+    if ( self->index[position] == -1 ) return NULL;
+    return self->items[position].value;
 }
 
 /* x[key] = value; Insert or replace the value associated with a key */
 void p3dict_put(struct p3dict* self, char *key, char *value) {
 
-    int i;
-    struct dnode *old, *new;
+    int position;
+
+    struct dnode node;
+
     char *new_key, *new_value;
 
     if ( key == NULL || value == NULL ) return;
 
     /* First look up */
-    old = p3dict_find(self, key);
-    if ( old != NULL ) {
-        free(old->value);
+    position = p3dict_find(self, key);
+    if ( self->index[position] != -1 ) {
+        node = self->items[self->index[position]];
+        free(node.value);
         new_value = malloc(strlen(value)+1);
         strcpy(new_value, value);
-        old->value = new_value;
+        node.value = new_value;
         return;
     }
 
@@ -107,6 +130,7 @@ void p3dict_put(struct p3dict* self, char *key, char *value) {
 
     self->items[self->length].key = new_key;
     self->items[self->length].value = new_value;
+    self->index[position] = self->length;
 
     self->length++;
 }
@@ -124,17 +148,10 @@ int main(void)
     p3dict_put(dct, "c", "C");
     p3dict_put(dct, "a", "D");
     p3dict_print(dct);
-    printf("Length =%d\n", p3dict_len(dct));
+    printf("Length=%d\n", p3dict_len(dct));
 
     printf("z=%s\n", p3dict_get(dct, "z"));
     printf("x=%s\n", p3dict_get(dct, "x"));
-
-    /*
-    printf("\nDump\n");
-    for(cur = dct->head; cur != NULL ; cur = cur->next ) {
-        printf("%s=%s\n", cur.key, cur.value);
-    }
-    */
 
     p3dict_del(dct);
 }

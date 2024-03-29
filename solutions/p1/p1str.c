@@ -96,14 +96,14 @@ int main(void)
     p1str_dump(x);
 
     p1str_set(x, "A completely new string");
-    printf("String = %s\n", p1str_str(x));
-    printf("Length = %d\n", p1str_len(x));
+    printf("String %s\n", p1str_str(x));
+    printf("Length=%d\n", p1str_len(x));
 
     struct p1str * y = p1str_assign(x);
-    printf("String x = %s @ %p\n", p1str_str(x), (void *) x);
-    printf("String y = %s @ %p\n", p1str_str(y), (void *) y);
+    printf("String x=%s @ %p\n", p1str_str(x), (void *) x);
+    printf("String y=%s @ %p\n", p1str_str(y), (void *) y);
     p1str_del(x);
-    printf("String y = %s @ %p\n", p1str_str(y), (void *) y);
+    printf("String y=%s @ %p\n", p1str_str(y), (void *) y);
     p1str_del(y);
 }
 
