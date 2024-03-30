@@ -63,7 +63,7 @@ void p1dict_print(struct p1dict* self)
         first = 0;
         printf(" [%d]", i);
     }
-    printf("}\n");
+    printf("} [%d, %d]\n", self->length, self->alloc);
 }
 
 int p1dict_len(const struct p1dict* self)
@@ -119,7 +119,7 @@ void p1dict_put(struct p1dict* self, char *key, char *value) {
     }
 
     /* TODO: Check if we need to re-hash the items */
-    if ( self->length >= self->alloc ) {
+    if ( self->length >= (self->alloc*0.7) ) {
         printf("We are making space for %s\n", key);
         old_alloc = self->alloc;
         old_items = self->items;
@@ -134,9 +134,10 @@ void p1dict_put(struct p1dict* self, char *key, char *value) {
 
         /* We need to loop through old items and add them */
         for(i=0; i<old_alloc; i++) {
+            if ( old_items[i].key == NULL ) continue;
             new_item = p1dict_find(self, old_items[i].key);
             if ( new_item == NULL || new_item->key != NULL ) {
-                printf("Bery bad news!!!!\n");
+                printf("Very bad news new_item=%p\n", new_item);
             }
             new_item->key = old_items[i].key;
             new_item->value = old_items[i].value;
@@ -166,9 +167,10 @@ int main(void)
     p1dict_print(dct);
     p1dict_put(dct, "z", "W");
     p1dict_print(dct);
-    p1dict_put(dct, "y", "B");
+    p1dict_put(dct, "SAKAI", "B");
     p1dict_print(dct);
-    p1dict_put(dct, "c", "C");
+    p1dict_put(dct, "sally", "C");
+    p1dict_print(dct);
     p1dict_put(dct, "a", "D");
     p1dict_print(dct);
     printf("Length=%d\n",p1dict_len(dct));
