@@ -28,7 +28,7 @@ struct p1dict * p1dict_new() {
     int i;
     struct p1dict *p = malloc(sizeof(*p));
     p->length = 0;
-    p->alloc = 8;
+    p->alloc = 2;
     p->items = malloc(p->alloc * sizeof(struct dnode));
     for(i=0; i < p->alloc; i++) {
         p->items[i].key = NULL;
@@ -61,6 +61,7 @@ void p1dict_print(struct p1dict* self)
         printf("'%s': ", self->items[i].key);
         printf("'%s'", self->items[i].value);
         first = 0;
+        printf(" [%d]", i);
     }
     printf("}\n");
 }
@@ -86,7 +87,9 @@ struct dnode *p1dict_find(struct p1dict* self, char *key)
         }
     }
 
-    printf("Could not find empty or matching key - failure!!");
+    /* This should never happen as long as the resize is implemented */
+
+    printf("Could not find slot for key %s\n", key);
     return NULL;
 }
 
@@ -101,8 +104,8 @@ char* p1dict_get(struct p1dict* self, char *key)
 /* x[key] = value; Insert or replace the value associated with a key */
 void p1dict_put(struct p1dict* self, char *key, char *value) {
 
-    int i;
-    struct dnode *old;
+    int i, old_alloc, bucket;
+    struct dnode *old, *new_item, *old_items;
 
     if ( key == NULL || value == NULL ) return;
 
@@ -113,6 +116,36 @@ void p1dict_put(struct p1dict* self, char *key, char *value) {
         old->value = malloc(strlen(value)+1);
         strcpy(old->value, value);
         return;
+    }
+
+    /* TODO: Check if we need to re-hash the items */
+    if ( self->length >= self->alloc ) {
+        printf("We are making space for %s\n", key);
+        old_alloc = self->alloc;
+        old_items = self->items;
+
+        /* make new "empty items" */
+        self->alloc = self->alloc * 2;
+        self->items = malloc(self->alloc * sizeof(struct dnode));
+        for(i=0; i < self->alloc; i++) {
+            self->items[i].key = NULL;
+            self->items[i].value = NULL;
+        }
+
+        /* We need to loop through old items and add them */
+        for(i=0; i<old_alloc; i++) {
+            new_item = p1dict_find(self, old_items[i].key);
+            if ( new_item == NULL || new_item->key != NULL ) {
+                printf("Bery bad news!!!!\n");
+            }
+            new_item->key = old_items[i].key;
+            new_item->value = old_items[i].value;
+        }
+        free(old_items);
+        old = p1dict_find(self, key);
+        if ( old == NULL || old->key != NULL ) {
+            printf("Very very bad news!!!!\n");
+        }
     }
 
     /* Not found - time to insert */
@@ -134,6 +167,7 @@ int main(void)
     p1dict_put(dct, "z", "W");
     p1dict_print(dct);
     p1dict_put(dct, "y", "B");
+    p1dict_print(dct);
     p1dict_put(dct, "c", "C");
     p1dict_put(dct, "a", "D");
     p1dict_print(dct);
