@@ -88,12 +88,12 @@ name of the array without a subscript, what is its value?
 <pre>
 int ia[100];
 </pre>
-Which of the following is equivalent to a[5]?
+Which of the following is equivalent to ia[5]?
 {
-=*(a+5)
-~*(a+20)
-~*(a+4)
-~*(a+8)
+=*(ia+5)
+~*(ia+20)
+~*(ia+4)
+~*(ia+8)
 }
 
 ::Q21::In the 1978 edition of the the K&R C textbook, what is the type of the
