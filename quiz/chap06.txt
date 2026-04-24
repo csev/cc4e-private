@@ -64,7 +64,7 @@ function, which of the following is true?
 =char
 ~int
 ~long
-~byte
+~double
 }
 
 ::Q9::[html]What is wrong with this code?

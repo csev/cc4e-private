@@ -11,7 +11,7 @@
 =char
 ~int
 ~long
-~byte
+~float
 }
 
 ::Q9::[html]What is wrong with this code?
